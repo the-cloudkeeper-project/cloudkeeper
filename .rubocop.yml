@@ -1,0 +1,12 @@
+AllCops:
+  Exclude:
+    - 'vendor/**/*'
+
+Metrics/LineLength:
+    Max: 135
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 15

@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'cloud_keeper/version'
+require 'cloudkeeper/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'cloud-keeper'
-  spec.version       = CloudKeeper::VERSION
+  spec.name          = 'cloudkeeper'
+  spec.version       = Cloudkeeper::VERSION
   spec.authors       = ['Michal Kimle']
   spec.email         = ['kimle.michal@gmail.com']
 
   spec.summary       = 'Synchronize cloud appliances between AppDB and cloud platforms'
   spec.description   = 'Synchronize cloud appliances between AppDB and cloud platforms'
-  spec.homepage      = 'https://github.com/Misenko/cloud-keeper'
+  spec.homepage      = 'https://github.com/Misenko/cloudkeeper'
   spec.license       = 'Apache License, Version 2.0'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }

@@ -1,6 +1,6 @@
 require 'http'
 
-module CloudKeeper
+module Cloudkeeper
   class ImageListManager
     attr_reader :image_list
 

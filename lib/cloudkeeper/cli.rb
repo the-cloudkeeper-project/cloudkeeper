@@ -1,7 +1,7 @@
 require 'thor'
 require 'yell'
 
-module CloudKeeper
+module Cloudkeeper
   class CLI < Thor
     class_option :debug,
                  default: false,

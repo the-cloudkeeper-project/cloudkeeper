@@ -5,7 +5,7 @@ SimpleCov.start do
   add_filter '/vendor'
 end
 
-require 'cloud_keeper'
+require 'cloudkeeper'
 
 RSpec.configure do |config|
   config.color = true

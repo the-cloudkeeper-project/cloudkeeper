@@ -31,7 +31,8 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'mixlib-shellout', '~> 2.2'
   spec.add_runtime_dependency 'grpc', '~> 1.0'
   spec.add_runtime_dependency 'settingslogic', '~> 2.0'
-  spec.add_runtime_dependency 'http', '~> 2.0'
+  spec.add_runtime_dependency 'zaru', '~> 0.1'
+  spec.add_runtime_dependency 'activesupport', '~> 5.0'
 
   spec.required_ruby_version = '>= 2.0.0'
 end

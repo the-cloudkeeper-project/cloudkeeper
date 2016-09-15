@@ -1,5 +1,10 @@
-module Cloudkeeper; end
+require 'active_support/all'
 
-require 'cloudkeeper/version'
-require 'cloudkeeper/cli'
-require 'cloudkeeper/image_list_manager'
+module Cloudkeeper
+  autoload :Version, 'cloudkeeper/version'
+  autoload :Settings, 'cloudkeeper/settings'
+  autoload :CLI, 'cloudkeeper/cli'
+  autoload :Entities, 'cloudkeeper/entities'
+  autoload :Managers, 'cloudkeeper/managers'
+  autoload :Errors, 'cloudkeeper/errors'
+end

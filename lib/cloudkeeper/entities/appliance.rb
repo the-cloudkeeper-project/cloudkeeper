@@ -4,9 +4,14 @@ module Cloudkeeper
       attr_accessor :identifier, :description, :mpuri, :title, :group, :ram, :core, :version, :architecture, :operating_system
       attr_accessor :image, :attributes, :vo, :expiration_date, :image_list_identifier
 
+      def initialize
+        @attributes = {}
+      end
+
       class << self
         def from_hash(appliance_hash)
           appliance_hash.deep_symbolize_keys!
+          check_appliance_hash! appliance_hash
 
           appliance = populate_appliance appliance_hash
 
@@ -26,13 +31,31 @@ module Cloudkeeper
           appliance.core = appliance_hash[:'ad:core_recommended']
           appliance.version = appliance_hash[:'hv:version']
           appliance.architecture = appliance_hash[:'sl:arch']
-          appliance.operating_system = "#{appliance_hash[:'sl:os']} - #{appliance_hash[:'sl:osname']} \
-                                        #{appliance_hash[:'sl:osversion']}"
+
+          construct_name(appliance, appliance_hash)
+          populate_attributes(appliance, appliance_hash)
+
           appliance.vo = appliance_hash[:vo]
           appliance.expiration_date = appliance_hash[:expiration]
           appliance.image_list_identifier = appliance_hash[:image_list_identifier]
 
           appliance
+        end
+
+        def construct_name(appliance, appliance_hash)
+          appliance.operating_system = appliance_hash[:'sl:os'].to_s
+          appliance.operating_system = "#{appliance.operating_system} #{appliance_hash[:'sl:osname']}".strip
+          appliance.operating_system = "#{appliance.operating_system} #{appliance_hash[:'sl:osversion']}".strip
+        end
+
+        def populate_attributes(appliance, appliance_hash)
+          appliance.attributes = appliance_hash.clone
+        end
+
+        def check_appliance_hash!(appliance_hash)
+          raise Cloudkeeper::Errors::InvalidApplianceHashError, "appliance hash #{appliance_hash.inspect} doesn't contain all " \
+          'necessary data' unless appliance_hash[:'dc:identifier'] && appliance_hash[:'ad:mpuri'] && \
+                                  appliance_hash[:vo] && appliance_hash[:image_list_identifier]
         end
       end
     end

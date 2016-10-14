@@ -7,7 +7,7 @@ require 'json'
 module Cloudkeeper
   module Managers
     class ImageListManager
-      attr_reader :image_lists
+      attr_reader :image_lists, :openssl_store
 
       def initialize(options = {})
         @image_lists = []
@@ -30,6 +30,8 @@ module Cloudkeeper
       private
 
       def download_image_list(url, dir)
+        raise InvalidURLError, "#{url.inspect} is not a valid URL" unless url =~ /\A#{URI.regexp(%w(http https))}\z/
+
         uri = URI.parse url
         user = uri.user
         password = uri.password
@@ -53,14 +55,14 @@ module Cloudkeeper
       def load_image_list(file)
         file_content = File.read file
         pkcs7 = OpenSSL::PKCS7.read_smime file_content
-        verify_image_list(pkcs7, file)
+        verify_image_list!(pkcs7, file)
 
         JSON.parse pkcs7.data
       end
 
-      def verify_image_list(pkcs7, file)
+      def verify_image_list!(pkcs7, file)
         raise Cloudkeeper::Errors::ImageListVerificationError,
-              "image list #{file.inspect} cannot be verified" unless pkcs7.verify([], @openssl_store)
+              "image list #{file.inspect} cannot be verified" unless pkcs7.verify([], openssl_store)
       end
     end
   end

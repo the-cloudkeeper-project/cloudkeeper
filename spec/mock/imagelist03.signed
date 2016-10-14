@@ -1,0 +1,139 @@
+MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----4608B3A0369B77D5D7C6872B462E953F"
+
+This is an S/MIME signed message
+
+------4608B3A0369B77D5D7C6872B462E953F
+{
+   "hv:imagelist": {
+      "dc:date:created": "2015-06-18T21:14:00Z",
+      "dc:date:expires": "2499-12-31T22:00:00Z",
+      "dc:description": "This is a VO-wide image list for some3.vo.net VO.",
+      "dc:identifier": "76fdee70-8119-5d33-eeee-3c57e1c60df1",
+      "dc:source": "https://some.unknown.source/",
+      "dc:title": "Dummy image list number 3.",
+      "ad:vo": "some3.vo.net",
+      "hv:endorser": {
+         "hv:x509": {
+            "dc:creator": "Applications Database",
+            "hv:ca": "/DC=XXX/DC=YYY/CN=SOME TEST CA",
+            "hv:dn": "/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source",
+            "hv:email": "dontwriteme@please.net"
+         }
+      },
+      "hv:images": [
+         {
+            "hv:image": {
+               "dc:description": "This version of CERNVM has been modified - default OS extended to 40GB of disk - updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources",
+               "dc:identifier": "c0482bc2-bf41-5d49-eeee-a750174a186b",
+               "ad:mpuri": "https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-eeee-a750174a186b:484/",
+               "dc:title": "Image for CernVM [Scientific Linux/6.0/KVM]",
+               "ad:group": "General group",
+               "hv:hypervisor": "KVM",
+               "hv:format": "OVA",
+               "hv:ram_minimum": "512",
+               "ad:ram_recommended": "1024",
+               "hv:core_minimum": "1",
+               "ad:core_recommended": "4",
+               "hv:size": "121243136",
+               "hv:uri": "https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova",
+               "hv:version": "3.3.0-1",
+               "sl:arch": "x86_64",
+               "sl:checksum:sha512": "5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4b5dc3d68a3b22581b3318db35dd3364e83dab0",
+               "sl:comments": "",
+               "sl:os": "Linux",
+               "sl:osname": "Scientific Linux",
+               "sl:osversion": "6.0",
+               "ad:user:fullname": "Arthur Curry",
+               "ad:user:guid": "9d9dd6cf-b61a-eeee-b1df-b5731adf717c",
+               "ad:user:uri": "https://appdb.somewhere.net/store/person/arthur.curry"
+            }
+         },
+         {
+            "hv:image": {
+               "dc:description": "",
+               "dc:identifier": "662b0e71-3e21-ffff-b6a1-cc2f51319fa7",
+               "ad:mpuri": "https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-ffff-b6a1-cc2f51319fa7:485/",
+               "dc:title": "Image for CentOS 6 minimal [CentOS/6.x/KVM]",
+               "ad:group": "General group",
+               "hv:hypervisor": "KVM",
+               "hv:format": "OVA",
+               "hv:size": "581816320",
+               "hv:uri": "https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova",
+               "hv:version": "20141029",
+               "sl:arch": "x86_64",
+               "sl:checksum:sha512": "02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a854654ff645097c47da236e46ad54806c6fc72a29ce",
+               "sl:comments": "",
+               "sl:os": "Linux",
+               "sl:osname": "CentOS",
+               "sl:osversion": "6.6",
+               "ad:user:fullname": "Ray Palmer",
+               "ad:user:guid": "e85470d8-2af9-ffff-8c26-0014c23dfd8c",
+               "ad:user:uri": "https://appdb.somewhere.net/store/person/ray.palmer"
+            }
+         }
+      ],
+      "hv:uri": "https://appdb.somewhere.net/store/vo/some3.vo.net/image.list",
+      "hv:version": "20150618211400"
+   }
+}
+
+
+------4608B3A0369B77D5D7C6872B462E953F
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+
+MIIJQAYJKoZIhvcNAQcCoIIJMTCCCS0CAQExDzANBglghkgBZQMEAgEFADALBgkq
+hkiG9w0BBwGgggWLMIIFhzCCA2+gAwIBAgIJAK23jjoxtkh4MA0GCSqGSIb3DQEB
+CwUAMFoxCzAJBgNVBAYTAk5BMQ8wDQYDVQQIDAZOYXJuaWExDTALBgNVBAcMBEF2
+ZXIxDTALBgNVBAoMBFRFU1QxDTALBgNVBAsMBFRFU1QxDTALBgNVBAMMBFRFU1Qw
+HhcNMTYxMDEyMTIzMzI0WhcNMjExMDExMTIzMzI0WjBaMQswCQYDVQQGEwJOQTEP
+MA0GA1UECAwGTmFybmlhMQ0wCwYDVQQHDARBdmVyMQ0wCwYDVQQKDARURVNUMQ0w
+CwYDVQQLDARURVNUMQ0wCwYDVQQDDARURVNUMIICIjANBgkqhkiG9w0BAQEFAAOC
+Ag8AMIICCgKCAgEAwjcoOoGTeqBAyiQF4dxuaow9ViOWmcJofsku6wH+/cVMRGAX
+qxLTHA1F5BLc7aDJ01h3m2eu3/ZRg1Mi6G4mPCb6KZlyXr9jTkQEhwA0rILbeUAg
+4ULWA+ngwAg0tobVVNs8cSBevgRCjQABY9cr+HhVXSPCz1mPc8UdNxHS/YeXUvI0
+zFcUzXyFHY8weMS3T1HiCaOTWa96LjXdRmBHWszC72WTCulZxzb/e0YsFUo/16dM
+npc3HP0IVG5EF7MYqhgVBlpObRru1+28O4NhtXUL8YN7DEHuKdJmyKiRyS9BkacI
+r9tZ9NpfQRacZh3x/tW+U2A3cg1SK3ye7W8/h2kIXbUP665uuPw8GR+wCbvx38GX
+I4rEqmOqxsO712GwTT//MKrfaHPktj+rPgy8mAUEVEPsPmkhUqxXiFNKurgF2mx/
+9wxWW09pGe200kFhcC3PH4QWFcUaDdMsmRF+cTvxoVHqt2VBXKrO3lOrb7PvFNTb
+xvL1LnM9BoEMSf/9fO0n3ZDclU3+e0b+dpRPhLyXYcy9BEaBoWZiJSa0n4LzDVNo
+0WlWYjo1mv/eK3XRr7/iDLCctUvmQOwkC20I/nKkP717uC27iuEHdwaQIMP9KoYD
+KELkqytYdUaCm0jCtxzzPiuxdNkEioa+OvkE/jQkjcq4lGLlZRvNnimyJcUCAwEA
+AaNQME4wHQYDVR0OBBYEFCAToop9lucWYJvUadZbZUeK4mXhMB8GA1UdIwQYMBaA
+FCAToop9lucWYJvUadZbZUeK4mXhMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEL
+BQADggIBABsvThBZ50SeBwr4KBGDmd3IXR86RdK5av/UfJIKfWzgaLZY3g/87sNg
+00p6NwvPwkisY7bp490dRB1KW2egzcw4Cr/y/Mj9BTpTOJLL8REEMXLm7e4JW7Kx
+h6CzPABdOubl7z6o9rPd5Z0eG0LMbaj4jK9mnFcMGIRfGI6gIq3UtCYzP78eZu4+
+lKoCOkyp/jhVkrQkD829fvN2t3yVNp/0LJA9IVvdFn6CA0SBaZHOMoWzx3f892x2
+H9E8n7fFq3sdnhj0hOfrpUGJZOvKHLHIbhkf0LFhlp18hf4qkjQljkBU7WefDmTg
+jmG1HyJb3Gaia2LHJ4x4sIOt9pCLK/KgJd1V4PKSvs00nZBF3xd4r646zWysA43I
+5dxzuHVMJnBOrjaCL6b9n4dCHJeMUQYVgQRwXlidZ+sxXdIqZRjwcEb8au4MzFJN
+I1pCbzD1E5J31q+TXkeCEEtDmSe22QvpEGyvaHvQ77+zZyvs6hCw7fvNv2KYV757
+dbdno9mrjPD8kybejp9EOdlpTMEh3isESdsNQHX1yJdkd7h3KDGun9YBwzgNLBEB
+pwu4Z5vHBasvmsxdMot5tch6aNetBSTgWqHtZQMncucMxeFaHeMS0/Ft0L34of5j
+lPdZRQBVNOBeJoMZGM7ZlQUtmn1I4K+IS5QnSFzdH/19jn8sYXpfMYIDeTCCA3UC
+AQEwZzBaMQswCQYDVQQGEwJOQTEPMA0GA1UECAwGTmFybmlhMQ0wCwYDVQQHDARB
+dmVyMQ0wCwYDVQQKDARURVNUMQ0wCwYDVQQLDARURVNUMQ0wCwYDVQQDDARURVNU
+AgkArbeOOjG2SHgwDQYJYIZIAWUDBAIBBQCggeQwGAYJKoZIhvcNAQkDMQsGCSqG
+SIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTYxMDEyMTQwNTM0WjAvBgkqhkiG9w0B
+CQQxIgQgLYJ2ZsezVGz8ZKvVg2NrTneCwF63vQ6HmxzTFiZOiqEweQYJKoZIhvcN
+AQkPMWwwajALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAK
+BggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAwBwYFKw4D
+AgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggIAaamgvdb22XsUiJjH
+l/5wD/iBShr12R6boU/x+JcKqVvUcfpT/gdnm5Yq2d18fVsCys0celRYjyglW4pm
+Ev2D3c9V7zR5pNKt4Ac1KDkxgbTxBPkyee9N6GoBoC4yESUv9WEflHjO6c2KJP/D
+0IT4yZyDUhcgvoiWQnxD0VnfjVwg3TrWqmaW9TwNYAfrh/4BwSVAABfBlYSS0AQn
+3gAnIqFWeV+oBJlqtXAaz2+5yvc0QqDIlAguBjUPqsM/8izyqcCgg6l5HE/eHVZ9
+t2V4q7FVNFMHZFjpYtRhRk/dOhWcCld0F9fPCnmMj9SnL8eWeCLJolshCgQetM/b
+n8XHbgHLXf7ZPWfN6xym5L28P2k1bzzn/MOR6H9ke+0lIj21uVOKz8daGWb9/6FE
+zsjbPz9JiTiNS6jNOvnQkdeG2sPYGOw3hxFyNGNV15CfvjA7eRLTW8udaSTdN6aN
+iWJfvUERII/hscuBPpO4eIsRWMozwBKJW8iVG84r+EIlOIMBf61mCgY3slljr0SG
+5u/FjhqK3KLTOjr3av+wIQ+gvU65JGwOkM3UcyVbmo87jQJdqPc0Q/FaCHHWjwwl
+AvqcrZshedCmqJ0nJA+G+0zQ5f10o4uZwINDF7EXlOn+Cpwp/GEVBD+8t9T7Iyhv
+vQMHIml2YNsAYqlEaYiH6jcHQ7k=
+
+------4608B3A0369B77D5D7C6872B462E953F--
+

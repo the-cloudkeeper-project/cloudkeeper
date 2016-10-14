@@ -3,7 +3,7 @@ sudo: false
 language: ruby
 rvm:
   - ruby-head
-  - 2.2
+  - 2.2.2
 
 matrix:
   allow_failures:

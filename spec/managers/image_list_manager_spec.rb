@@ -3,6 +3,13 @@ require 'spec_helper'
 describe Cloudkeeper::Managers::ImageListManager do
   subject(:ilm) { Cloudkeeper::Managers::ImageListManager.new }
 
+  before :example do
+    VCR.configure do |config|
+      config.cassette_library_dir = File.join(MOCK_DIR, 'cassettes')
+      config.hook_into :webmock
+    end
+  end
+
   APPLIANCE_ATTRS = [:image_lists, :openssl_store].freeze
 
   APPLIANCE_ATTRS.each do |attr|
@@ -174,13 +181,6 @@ describe Cloudkeeper::Managers::ImageListManager do
 
   describe '#download_image_lists' do
     let(:tmpdir) { Dir.mktmpdir('cloudkeeper-test') }
-
-    before :example do
-      VCR.configure do |config|
-        config.cassette_library_dir = File.join(MOCK_DIR, 'cassettes')
-        config.hook_into :webmock
-      end
-    end
 
     after :example do
       FileUtils.remove_entry tmpdir

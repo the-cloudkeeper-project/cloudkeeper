@@ -1,6 +1,4 @@
 AllCops:
-  Exclude:
-    - 'vendor/**/*'
   TargetRubyVersion: 2.0
 
 Metrics/LineLength:
@@ -23,3 +21,10 @@ Metrics/MethodLength:
 Style/StructInheritance:
   Exclude:
     - 'lib/cloudkeeper/entities/*.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'spec/**/*.rb'
+    - '*.gemspec'

@@ -3,9 +3,9 @@ require 'spec_helper'
 describe Cloudkeeper::Entities::ImageList do
   subject(:image_list) { Cloudkeeper::Entities::ImageList.new }
 
-  APPLIANCE_ATTRS = [:identifier, :creation_date, :description, :title, :source, :appliances].freeze
+  IMAGE_LIST_ATTRS = [:identifier, :creation_date, :description, :title, :source, :appliances].freeze
 
-  APPLIANCE_ATTRS.each do |attr|
+  IMAGE_LIST_ATTRS.each do |attr|
     it "has #{attr} accessor" do
       is_expected.to have_attr_accessor attr.to_sym
     end

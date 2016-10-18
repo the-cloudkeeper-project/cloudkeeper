@@ -10,14 +10,6 @@ describe Cloudkeeper::Managers::ImageListManager do
     end
   end
 
-  APPLIANCE_ATTRS = [:image_lists, :openssl_store].freeze
-
-  APPLIANCE_ATTRS.each do |attr|
-    it "has #{attr} accessor" do
-      is_expected.to have_attr_reader_only attr.to_sym
-    end
-  end
-
   describe '#new' do
     it 'returns instance of ImageListManager' do
       is_expected.to be_instance_of Cloudkeeper::Managers::ImageListManager

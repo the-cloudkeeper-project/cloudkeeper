@@ -14,6 +14,6 @@ module Cloudkeeper
 
     source "#{File.dirname(__FILE__)}/../../config/#{CONFIGURATION}"
 
-    namespace 'production'
+    namespace 'cloudkeeper'
   end
 end

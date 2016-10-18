@@ -1,7 +1,7 @@
-production:
+cloudkeeper:
   image-lists: # List of image lists
   ca_dir: /etc/grid-security/certificates/
   logging:
     level: ERROR # Logging level
-    file: /var/log/nifty/nifty.log # File to write log to. To turn off file logging leave this field empty.
+    file: /var/log/cloudkeeper/cloudkeeper.log # File to write log to. To turn off file logging leave this field empty.
   debug: false # Debug mode

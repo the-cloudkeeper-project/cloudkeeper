@@ -20,8 +20,7 @@ module Cloudkeeper
       def download_image_lists(urls)
         Dir.mktmpdir('cloudkeeper') do |dir|
           urls.each do |url|
-            image_list_file = download_image_list(url, dir)
-            image_list_hash = load_image_list image_list_file
+            image_list_hash = load_image_list(download_image_list(url, dir))
             image_lists << convert_image_list(image_list_hash)
           end
         end
@@ -38,8 +37,7 @@ module Cloudkeeper
         uri.user = nil
         uri.password = nil
         filename = generate_filename(uri, dir)
-        download_stream = open(uri, http_basic_authentication: [user, password])
-        IO.copy_stream(download_stream, filename)
+        IO.copy_stream(open(uri, http_basic_authentication: [user, password]), filename)
 
         filename
       end
@@ -53,8 +51,7 @@ module Cloudkeeper
       end
 
       def load_image_list(file)
-        file_content = File.read file
-        pkcs7 = OpenSSL::PKCS7.read_smime file_content
+        pkcs7 = OpenSSL::PKCS7.read_smime(File.read(file))
         verify_image_list!(pkcs7, file)
 
         JSON.parse pkcs7.data

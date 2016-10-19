@@ -32,8 +32,8 @@ module Cloudkeeper
           appliance.version = appliance_hash[:'hv:version']
           appliance.architecture = appliance_hash[:'sl:arch']
 
-          construct_name(appliance, appliance_hash)
-          populate_attributes(appliance, appliance_hash)
+          construct_name!(appliance, appliance_hash)
+          populate_attributes!(appliance, appliance_hash)
 
           appliance.vo = appliance_hash[:vo]
           appliance.expiration_date = appliance_hash[:expiration]
@@ -42,13 +42,13 @@ module Cloudkeeper
           appliance
         end
 
-        def construct_name(appliance, appliance_hash)
+        def construct_name!(appliance, appliance_hash)
           appliance.operating_system = appliance_hash[:'sl:os'].to_s
           appliance.operating_system = "#{appliance.operating_system} #{appliance_hash[:'sl:osname']}".strip
           appliance.operating_system = "#{appliance.operating_system} #{appliance_hash[:'sl:osversion']}".strip
         end
 
-        def populate_attributes(appliance, appliance_hash)
+        def populate_attributes!(appliance, appliance_hash)
           appliance.attributes = appliance_hash.clone
         end
 

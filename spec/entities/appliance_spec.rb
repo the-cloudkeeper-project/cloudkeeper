@@ -44,9 +44,9 @@ describe Cloudkeeper::Entities::Appliance do
     end
   end
 
-  describe '#populate_attributes' do
+  describe '#populate_attributes!' do
     it 'copies all values from hash to attributes attribute' do
-      Cloudkeeper::Entities::Appliance.populate_attributes(appliance, hash)
+      Cloudkeeper::Entities::Appliance.populate_attributes!(appliance, hash)
       expect(appliance.attributes).to eq(hash)
     end
   end
@@ -70,10 +70,10 @@ describe Cloudkeeper::Entities::Appliance do
     end
   end
 
-  describe '#construct_name' do
+  describe '#construct_name!' do
     context 'with all name attributes available' do
       it 'sets appliance operating system to full name' do
-        Cloudkeeper::Entities::Appliance.construct_name(appliance, hash)
+        Cloudkeeper::Entities::Appliance.construct_name!(appliance, hash)
         expect(appliance.operating_system).to eq('Linux Other TinyCoreLinux')
       end
     end
@@ -84,7 +84,7 @@ describe Cloudkeeper::Entities::Appliance do
       end
 
       it 'sets appliance operating system to partial name' do
-        Cloudkeeper::Entities::Appliance.construct_name(appliance, hash)
+        Cloudkeeper::Entities::Appliance.construct_name!(appliance, hash)
         expect(appliance.operating_system).to eq('Other TinyCoreLinux')
       end
     end
@@ -95,7 +95,7 @@ describe Cloudkeeper::Entities::Appliance do
       end
 
       it 'sets appliance operating system to partial name' do
-        Cloudkeeper::Entities::Appliance.construct_name(appliance, hash)
+        Cloudkeeper::Entities::Appliance.construct_name!(appliance, hash)
         expect(appliance.operating_system).to eq('Linux TinyCoreLinux')
       end
     end
@@ -108,7 +108,7 @@ describe Cloudkeeper::Entities::Appliance do
       end
 
       it 'sets appliance operating system to empty string' do
-        Cloudkeeper::Entities::Appliance.construct_name(appliance, hash)
+        Cloudkeeper::Entities::Appliance.construct_name!(appliance, hash)
         expect(appliance.operating_system).to be_empty
       end
     end

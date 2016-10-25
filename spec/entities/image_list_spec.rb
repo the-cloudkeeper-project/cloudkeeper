@@ -3,14 +3,6 @@ require 'spec_helper'
 describe Cloudkeeper::Entities::ImageList do
   subject(:image_list) { Cloudkeeper::Entities::ImageList.new }
 
-  IMAGE_LIST_ATTRS = [:identifier, :creation_date, :description, :title, :source, :appliances].freeze
-
-  IMAGE_LIST_ATTRS.each do |attr|
-    it "has #{attr} accessor" do
-      is_expected.to have_attr_accessor attr.to_sym
-    end
-  end
-
   describe '#new' do
     it 'returns an instance of ImageList' do
       is_expected.to be_instance_of Cloudkeeper::Entities::ImageList

@@ -24,15 +24,6 @@ describe Cloudkeeper::Entities::Appliance do
     }
   end
 
-  APPLIANCE_ATTRS = [:identifier, :description, :mpuri, :title, :group, :ram, :core, :version, :architecture, :operating_system,
-                     :image, :attributes, :vo, :expiration_date, :image_list_identifier].freeze
-
-  APPLIANCE_ATTRS.each do |attr|
-    it "has #{attr} accessor" do
-      is_expected.to have_attr_accessor attr.to_sym
-    end
-  end
-
   describe '#new' do
     it 'returns instance of Appliance' do
       is_expected.to be_instance_of Cloudkeeper::Entities::Appliance

@@ -1,7 +1,6 @@
 module Cloudkeeper
   module Entities
-    class ImageFile
-      attr_accessor :file, :checksum, :format, :original
+    class ImageFile < Struct.new(:file, :checksum, :format, :original)
     end
   end
 end

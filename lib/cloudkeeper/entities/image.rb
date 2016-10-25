@@ -1,10 +1,8 @@
 module Cloudkeeper
   module Entities
-    class Image
-      attr_accessor :image_files, :size, :uri, :checksum
-
+    class Image < Struct.new(:image_files, :size, :uri, :checksum)
       def initialize
-        @image_files = []
+        self.image_files = []
       end
 
       def self.from_hash(image_hash)

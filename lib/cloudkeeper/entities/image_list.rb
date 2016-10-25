@@ -2,19 +2,19 @@ require 'date'
 
 module Cloudkeeper
   module Entities
-    class ImageList
-      attr_accessor :identifier, :creation_date, :description, :title, :source, :appliances
+    class ImageList < Struct.new(:identifier, :creation_date, :description,
+                                 :title, :source, :appliances)
 
       DATE_FORMAT = '%Y-%m-%dT%H:%M:%SZ'.freeze
 
       def initialize
-        @appliances = []
+        self.appliances = []
       end
 
       def add_appliance(appliance)
         raise Cloudkeeper::Errors::ArgumentError, 'appliance cannot be nil' unless appliance
 
-        @appliances << appliance
+        appliances << appliance
       end
 
       class << self

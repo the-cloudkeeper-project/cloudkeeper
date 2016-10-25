@@ -3,14 +3,6 @@ require 'spec_helper'
 describe Cloudkeeper::Entities::Image do
   subject(:image) { Cloudkeeper::Entities::Image.new }
 
-  IMAGE_ATTRS = [:image_files, :size, :uri, :checksum].freeze
-
-  IMAGE_ATTRS.each do |attr|
-    it "has #{attr} accessor" do
-      is_expected.to have_attr_accessor attr.to_sym
-    end
-  end
-
   describe '#new' do
     it 'returns instance of Image' do
       is_expected.to be_instance_of Cloudkeeper::Entities::Image

@@ -3,26 +3,7 @@ require 'spec_helper'
 describe Cloudkeeper::Entities::Appliance do
   subject(:appliance) { Cloudkeeper::Entities::Appliance.new }
 
-  let(:date) { Date.new }
-  let(:hash) do
-    {
-      :'dc:identifier' => '2a5451eb-91f3-46a2-95a7-9cff7362d553',
-      :'dc:description' => 'This is a special Virtual Appliance entry used only for monitoring purposes.',
-      :'ad:mpuri' => 'https://appdb.somewhere.net/store/vm/image/2a5451eb-91f3-aaaa-95a7-9cff7362d553:6450:1469784811/',
-      :'dc:title' => 'Some Image',
-      :'ad:group' => 'General group',
-      :'ad:ram_recommended' => 2048,
-      :'ad:core_recommended' => 4,
-      :'hv:version' => '0.0.5867',
-      :'sl:arch' => 'x86_64',
-      :'sl:os' => 'Linux',
-      :'sl:osname' => 'Other',
-      :'sl:osversion' => 'TinyCoreLinux',
-      :vo => 'some.dummy.vo',
-      :expiration => date,
-      :image_list_identifier => '76fdee70-8119-5d33-aaaa-3c57e1c60df1'
-    }
-  end
+  let(:hash) { load_file 'appliance01.json', symbolize: true }
 
   describe '#new' do
     it 'returns instance of Appliance' do
@@ -121,7 +102,7 @@ describe Cloudkeeper::Entities::Appliance do
         expect(appliance.architecture).to eq('x86_64')
         expect(appliance.operating_system).to eq('Linux Other TinyCoreLinux')
         expect(appliance.vo).to eq('some.dummy.vo')
-        expect(appliance.expiration_date).to eq(date)
+        expect(appliance.expiration_date).to eq('2016-10-25T15:57:45+02:00')
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
       end
     end
@@ -146,7 +127,7 @@ describe Cloudkeeper::Entities::Appliance do
         expect(appliance.architecture).to eq('x86_64')
         expect(appliance.operating_system).to eq('Linux Other TinyCoreLinux')
         expect(appliance.vo).to eq('some.dummy.vo')
-        expect(appliance.expiration_date).to eq(date)
+        expect(appliance.expiration_date).to eq('2016-10-25T15:57:45+02:00')
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
       end
     end
@@ -192,36 +173,14 @@ describe Cloudkeeper::Entities::Appliance do
         expect(appliance.architecture).to eq('x86_64')
         expect(appliance.operating_system).to eq('Linux Other TinyCoreLinux')
         expect(appliance.vo).to eq('some.dummy.vo')
-        expect(appliance.expiration_date).to eq(date)
+        expect(appliance.expiration_date).to eq('2016-10-25T15:57:45+02:00')
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
       end
     end
   end
 
   describe '#from_hash' do
-    let(:hash) do
-      {
-        'dc:identifier' => '2a5451eb-91f3-46a2-95a7-9cff7362d553',
-        'dc:description' => 'This is a special Virtual Appliance entry used only for monitoring purposes.',
-        'ad:mpuri' => 'https://appdb.somewhere.net/store/vm/image/2a5451eb-91f3-aaaa-95a7-9cff7362d553:6450:1469784811/',
-        'dc:title' => 'Some Image',
-        'ad:group' => 'General group',
-        'ad:ram_recommended' => 2048,
-        'ad:core_recommended' => 4,
-        'hv:version' => '0.0.5867',
-        'sl:arch' => 'x86_64',
-        'sl:os' => 'Linux',
-        'sl:osname' => 'Other',
-        'sl:osversion' => 'TinyCoreLinux',
-        'vo' => 'some.dummy.vo',
-        'expiration' => date,
-        'image_list_identifier' => '76fdee70-8119-5d33-aaaa-3c57e1c60df1',
-        'hv:size' => 42,
-        'hv:uri' => 'http://some.uri.net/some/path',
-        'sl:checksum:sha512' => '81a106e4f352b2ff21c691280d9bfd3dfafdbe07154f414ae563d1786ff55a254e66e94e6644ae1f175'\
-                               '70a502cd46d3e7f2ece043fcd211818eed871f4aaef53'
-      }
-    end
+    let(:hash) { load_file 'appliance02.json' }
 
     it 'creates Appliance instance from given hash' do
       appliance = Cloudkeeper::Entities::Appliance.from_hash hash
@@ -237,7 +196,7 @@ describe Cloudkeeper::Entities::Appliance do
       expect(appliance.architecture).to eq('x86_64')
       expect(appliance.operating_system).to eq('Linux Other TinyCoreLinux')
       expect(appliance.vo).to eq('some.dummy.vo')
-      expect(appliance.expiration_date).to eq(date)
+      expect(appliance.expiration_date).to eq('2016-10-25T15:57:45+02:00')
       expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
       expect(appliance.image.size).to eq(42)
       expect(appliance.image.uri).to eq('http://some.uri.net/some/path')

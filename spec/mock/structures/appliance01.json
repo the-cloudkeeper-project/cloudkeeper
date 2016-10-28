@@ -1,0 +1,17 @@
+{
+  "dc:identifier": "2a5451eb-91f3-46a2-95a7-9cff7362d553",
+  "dc:description": "This is a special Virtual Appliance entry used only for monitoring purposes.",
+  "ad:mpuri": "https://appdb.somewhere.net/store/vm/image/2a5451eb-91f3-aaaa-95a7-9cff7362d553:6450:1469784811/",
+  "dc:title": "Some Image",
+  "ad:group": "General group",
+  "ad:ram_recommended": 2048,
+  "ad:core_recommended": 4,
+  "hv:version": "0.0.5867",
+  "sl:arch": "x86_64",
+  "sl:os": "Linux",
+  "sl:osname": "Other",
+  "sl:osversion": "TinyCoreLinux",
+  "vo": "some.dummy.vo",
+  "expiration": "2016-10-25T15:57:45+02:00",
+  "image_list_identifier": "76fdee70-8119-5d33-aaaa-3c57e1c60df1"
+}

@@ -10,4 +10,10 @@ matrix:
     - rvm: ruby-head
 fast_finish: true
 
-before_install: gem install bundler -v 1.13.0
+branches:
+  only:
+    - master
+
+before_install: 'gem install bundler -v 1.13.0'
+
+script: 'bundle exec rake acceptance'

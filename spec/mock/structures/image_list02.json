@@ -1,0 +1,8 @@
+{
+  "hv:x509": {
+    "dc:creator": "Applications Database",
+    "hv:ca": "/DC=XXX/DC=YYY/CN=SOME TEST CA",
+    "hv:dn": "/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source",
+    "hv:email": "dontwriteme@please.net"
+  }
+}

@@ -1,6 +1,7 @@
 AllCops:
   Exclude:
     - 'vendor/**/*'
+  TargetRubyVersion: 2.0
 
 Metrics/LineLength:
     Max: 135
@@ -10,3 +11,15 @@ Style/Documentation:
 
 Metrics/MethodLength:
   Max: 15
+
+Metrics/AbcSize:
+  Exclude:
+    - 'lib/cloudkeeper/entities/appliance.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'lib/cloudkeeper/entities/appliance.rb'
+
+Style/StructInheritance:
+  Exclude:
+    - 'lib/cloudkeeper/entities/*.rb'

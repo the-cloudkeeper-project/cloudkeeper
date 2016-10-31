@@ -1,0 +1,14 @@
+{
+  "index": 0,
+  "guid": "fb3a9972-c960-4c4a-b7e3-a6f466f9b0e8",
+  "isActive": false,
+  "balance": "$3,966.45",
+  "picture": "http://placehold.it/32x32",
+  "age": 32,
+  "eyeColor": "green",
+  "name": "Sanford Lawson",
+  "gender": "male",
+  "company": "ZENCO",
+  "email": "sanfordlawson@zenco.com",
+  "phone": "+1 (933) 570-2123"
+}

@@ -11,7 +11,7 @@ describe Cloudkeeper::Managers::ImageListManager do
   end
 
   describe '#new' do
-    it 'returns instance of ImageListManager' do
+    it 'returns an instance of ImageListManager' do
       is_expected.to be_instance_of Cloudkeeper::Managers::ImageListManager
     end
 

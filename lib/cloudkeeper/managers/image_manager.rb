@@ -1,6 +1,8 @@
 module Cloudkeeper
   module Managers
     class ImageManager
+      extend Cloudkeeper::Entities::ImageFormats::Ova
+
       FORMATS = {
         qcow2: /qemu qcow image/i,
         ova: /posix tar archive/i,
@@ -11,7 +13,7 @@ module Cloudkeeper
       class << self
         def format(file)
           check_file!(file)
-          recognize_format(file_description(file))
+          recognize_format(file)
         rescue Cloudkeeper::Errors::CommandExecutionError, Cloudkeeper::Errors::NoSuchFileError,
                Cloudkeeper::Errors::PermissionDeniedError, Cloudkeeper::Errors::NoImageFormatRecognizedError => ex
           raise Cloudkeeper::Errors::ImageFormatRecognitionError, ex, "Cannot recognize image format for file #{file.inspect}"
@@ -34,11 +36,18 @@ module Cloudkeeper
           raise Cloudkeeper::Errors::PermissionDeniedError, "Cannot read file #{file.inspect}" unless File.readable?(file)
         end
 
-        def recognize_format(file_format_string)
-          FORMATS.each { |format, regex| return format if regex =~ file_format_string }
+        def recognize_format(file)
+          file_format_string = file_description(file)
+          FORMATS.each do |format, regex|
+            next unless regex =~ file_format_string
 
-          raise Cloudkeeper::Errors::NoImageFormatRecognizedError, 'No image format recognizes from file description ' \
-                                                                   "#{file_format_string.inspect}"
+            format_test_method = "#{format}?".to_sym
+            additional_test_result = respond_to?(format_test_method) ? send(format_test_method, file) : true
+
+            return format if additional_test_result
+          end
+
+          raise Cloudkeeper::Errors::NoImageFormatRecognizedError, "No image format recognized for file #{file.inspect}"
         end
       end
     end

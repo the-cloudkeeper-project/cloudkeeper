@@ -46,44 +46,98 @@ describe Cloudkeeper::Managers::ImageManager do
   end
 
   describe '#recognize_format' do
-    context 'with ova image format' do
+    let(:file) { File.join(MOCK_DIR, 'image_formats', 'image.ova') }
+
+    context 'with ova image' do
       let(:outputs) { load_outputs 'ova' }
 
       it 'recognizes image as OVA image' do
-        outputs.each { |output| expect(Cloudkeeper::Managers::ImageManager.recognize_format(output)).to eq(:ova) }
+        outputs.each do |output|
+          allow(Cloudkeeper::Managers::ImageManager).to receive(:file_description).with(file) { output }
+          expect(Cloudkeeper::Managers::ImageManager.recognize_format(file)).to eq(:ova)
+        end
       end
     end
 
-    context 'with vmdk image format' do
+    context 'with fake ova image' do
+      let(:outputs) { load_outputs 'ova' }
+      let(:file) { File.join(MOCK_DIR, 'image_formats', 'fake-image01.ova') }
+
+      it 'raise NoImageFormatRecognizedError exception' do
+        outputs.each do |output|
+          allow(Cloudkeeper::Managers::ImageManager).to receive(:file_description).with(file) { output }
+          expect { Cloudkeeper::Managers::ImageManager.recognize_format(file) }.to \
+            raise_error(Cloudkeeper::Errors::NoImageFormatRecognizedError)
+        end
+      end
+    end
+
+    context 'with fake ova image' do
+      let(:outputs) { load_outputs 'ova' }
+      let(:file) { File.join(MOCK_DIR, 'image_formats', 'fake-image02.ova') }
+
+      it 'recognizes image as OVA image' do
+        outputs.each do |output|
+          allow(Cloudkeeper::Managers::ImageManager).to receive(:file_description).with(file) { output }
+          expect { Cloudkeeper::Managers::ImageManager.recognize_format(file) }.to \
+            raise_error(Cloudkeeper::Errors::NoImageFormatRecognizedError)
+        end
+      end
+    end
+
+    context 'with fake ova image' do
+      let(:outputs) { load_outputs 'ova' }
+      let(:file) { File.join(MOCK_DIR, 'image_formats', 'fake-image03.ova') }
+
+      it 'recognizes image as OVA image' do
+        outputs.each do |output|
+          allow(Cloudkeeper::Managers::ImageManager).to receive(:file_description).with(file) { output }
+          expect { Cloudkeeper::Managers::ImageManager.recognize_format(file) }.to \
+            raise_error(Cloudkeeper::Errors::NoImageFormatRecognizedError)
+        end
+      end
+    end
+
+    context 'with vmdk image' do
       let(:outputs) { load_outputs 'vmdk' }
 
       it 'recognizes image as VMDK image' do
-        outputs.each { |output| expect(Cloudkeeper::Managers::ImageManager.recognize_format(output)).to eq(:vmdk) }
+        outputs.each do |output|
+          allow(Cloudkeeper::Managers::ImageManager).to receive(:file_description).with(file) { output }
+          expect(Cloudkeeper::Managers::ImageManager.recognize_format(file)).to eq(:vmdk)
+        end
       end
     end
 
-    context 'with qcow2 image format' do
+    context 'with qcow2 image' do
       let(:outputs) { load_outputs 'qcow2' }
 
       it 'recognizes image as QCOW2 image' do
-        outputs.each { |output| expect(Cloudkeeper::Managers::ImageManager.recognize_format(output)).to eq(:qcow2) }
+        outputs.each do |output|
+          allow(Cloudkeeper::Managers::ImageManager).to receive(:file_description).with(file) { output }
+          expect(Cloudkeeper::Managers::ImageManager.recognize_format(file)).to eq(:qcow2)
+        end
       end
     end
 
-    context 'with raw image format' do
+    context 'with raw image' do
       let(:outputs) { load_outputs 'raw' }
 
       it 'recognizes image as RAW image' do
-        outputs.each { |output| expect(Cloudkeeper::Managers::ImageManager.recognize_format(output)).to eq(:raw) }
+        outputs.each do |output|
+          allow(Cloudkeeper::Managers::ImageManager).to receive(:file_description).with(file) { output }
+          expect(Cloudkeeper::Managers::ImageManager.recognize_format(file)).to eq(:raw)
+        end
       end
     end
 
-    context 'with unknown image format' do
+    context 'with unknown image' do
       let(:outputs) { load_outputs 'unknown' }
 
       it 'raise NoImageFormatRecognizedError exception' do
         outputs.each do |output|
-          expect { Cloudkeeper::Managers::ImageManager.recognize_format(output) }.to \
+          allow(Cloudkeeper::Managers::ImageManager).to receive(:file_description).with(file) { output }
+          expect { Cloudkeeper::Managers::ImageManager.recognize_format(file) }.to \
             raise_error(Cloudkeeper::Errors::NoImageFormatRecognizedError)
         end
       end
@@ -127,7 +181,7 @@ describe Cloudkeeper::Managers::ImageManager do
   describe '#format' do
     let(:file) { File.join(MOCK_DIR, 'image_formats', 'ova') }
     let(:command) { instance_double(Mixlib::ShellOut) }
-    let(:output) { 'POSIX tar archive (GNU)' }
+    let(:output) { 'QEMU QCOW Image (v3), 20971520 bytes' }
 
     before :example do
       allow(Mixlib::ShellOut).to receive(:new).with('file', '-b', file) { command }
@@ -140,7 +194,7 @@ describe Cloudkeeper::Managers::ImageManager do
 
     context 'if everything goes well' do
       it 'returns image format' do
-        expect(Cloudkeeper::Managers::ImageManager.format(file)).to eq(:ova)
+        expect(Cloudkeeper::Managers::ImageManager.format(file)).to eq(:qcow2)
       end
     end
 

@@ -4,5 +4,6 @@ module Cloudkeeper
     autoload :Image, 'cloudkeeper/entities/image'
     autoload :Appliance, 'cloudkeeper/entities/appliance'
     autoload :ImageList, 'cloudkeeper/entities/image_list'
+    autoload :ImageFormats, 'cloudkeeper/entities/image_formats'
   end
 end

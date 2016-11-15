@@ -1,0 +1,9 @@
+DOS/MBR boot sector; partition 1 : ID=0xc, active, start-CHS (0x0,0,2), end-CHS (0x13f,3,32), startsector 1, 40959 sectors
+DOS/MBR boot sector; partition 1 : ID=0x83, active, start-CHS (0x0,32,33), end-CHS (0x2,140,10), startsector 2048, 38912 sectors
+DOS/MBR boot sector; partition 1 : ID=0xee, start-CHS (0x0,0,1), end-CHS (0x3ff,254,63), startsector 1, 40959 sectors, extended partition table (last)
+DOS/MBR boot sector; partition 1 : ID=0x83, start-CHS (0x0,32,33), end-CHS (0x0,195,3), startsector 2048, 10240 sectors; partition 2 : ID=0x83, start-CHS (0x0,195,4), end-CHS (0x2,140,10), startsector 12288, 28672 sectors
+x86 boot sector
+x86 boot sector; partition 1: ID=0xc, active, starthead 0, startsector 1, 40959 sectors, code offset 0xb8
+x86 boot sector; partition 1: ID=0x83, starthead 32, startsector 2048, 10240 sectors; partition 2: ID=0x83, starthead 195, startsector 12288, 28672 sectors, code offset 0x0
+x86 boot sector; partition 1: ID=0xee, starthead 0, startsector 1, 40959 sectors, extended partition table (last)\011, code offset 0x0
+DOS/MBR boot sector, LInux i386 boot LOader; partition 1 : ID=0x83, start-CHS (0x0,1,1), end-CHS (0x50,15,63), startsector 63, 81585 sectors

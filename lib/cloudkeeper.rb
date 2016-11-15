@@ -1,4 +1,5 @@
 require 'active_support/all'
+require 'mixlib/shellout'
 
 module Cloudkeeper
   autoload :Version, 'cloudkeeper/version'

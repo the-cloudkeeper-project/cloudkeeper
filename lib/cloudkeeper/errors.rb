@@ -11,5 +11,6 @@ module Cloudkeeper
     autoload :NoSuchFileError, 'cloudkeeper/errors/no_such_file_error'
     autoload :PermissionDeniedError, 'cloudkeeper/errors/permission_denied_error'
     autoload :ImageFormatRecognitionError, 'cloudkeeper/errors/image_format_recognition_error'
+    autoload :InvalidArchiveError, 'cloudkeeper/errors/invalid_archive_error'
   end
 end

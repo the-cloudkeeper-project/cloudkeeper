@@ -1,5 +1,3 @@
-require 'rubygems/package'
-
 module Cloudkeeper
   module Entities
     module ImageFormats

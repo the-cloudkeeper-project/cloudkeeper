@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Cloudkeeper::Managers::ImageListManager do
-  subject(:ilm) { Cloudkeeper::Managers::ImageListManager.new }
+  subject(:ilm) { described_class.new }
 
-  before :example do
+  before do
     VCR.configure do |config|
       config.cassette_library_dir = File.join(MOCK_DIR, 'cassettes')
       config.hook_into :webmock
@@ -12,11 +12,14 @@ describe Cloudkeeper::Managers::ImageListManager do
 
   describe '#new' do
     it 'returns an instance of ImageListManager' do
-      is_expected.to be_instance_of Cloudkeeper::Managers::ImageListManager
+      is_expected.to be_instance_of described_class
+    end
+
+    it 'prepares image_lists attribute as an array instance' do
+      expect(ilm.image_lists).to be_instance_of Array
     end
 
     it 'prepares image_lists attribute as an empty array' do
-      expect(ilm.image_lists).to be_instance_of Array
       expect(ilm.image_lists).to be_empty
     end
 
@@ -27,26 +30,26 @@ describe Cloudkeeper::Managers::ImageListManager do
     context 'with custom CA directory' do
       let(:openssl_dummy_store) { instance_double OpenSSL::X509::Store }
 
-      before :example do
+      before do
         expect(OpenSSL::X509::Store).to receive(:new) { openssl_dummy_store }
         expect(openssl_dummy_store).to receive(:add_path).with('/some/ca/directory')
       end
 
       it 'prepares openssl_store attribute as OpenSSL::X509::Store instance with custom CA directory' do
-        Cloudkeeper::Managers::ImageListManager.new ca_dir: '/some/ca/directory'
+        described_class.new ca_dir: '/some/ca/directory'
       end
     end
 
     context 'with invalid custom CA directory' do
       let(:openssl_dummy_store) { instance_double OpenSSL::X509::Store }
 
-      before :example do
+      before do
         expect(OpenSSL::X509::Store).to receive(:new) { openssl_dummy_store }
         expect(openssl_dummy_store).not_to receive(:add_path)
       end
 
       it 'prepares openssl_store attribute as OpenSSL::X509::Store instance without custom CA directory' do
-        Cloudkeeper::Managers::ImageListManager.new ca_dir: nil
+        described_class.new ca_dir: nil
       end
     end
   end
@@ -63,7 +66,7 @@ describe Cloudkeeper::Managers::ImageListManager do
 
   describe '.verify_image_list!' do
     let(:pkcs7) { OpenSSL::PKCS7.read_smime(File.read(image_list_file)) }
-    let(:ilm) { Cloudkeeper::Managers::ImageListManager.new ca_dir: File.join(MOCK_DIR, 'ca') }
+    let(:ilm) { described_class.new ca_dir: File.join(MOCK_DIR, 'ca') }
 
     context 'with valid image list' do
       let(:image_list_file) { File.join(MOCK_DIR, 'imagelist01.signed') }
@@ -84,7 +87,7 @@ describe Cloudkeeper::Managers::ImageListManager do
   end
 
   describe '.load_image_list' do
-    let(:ilm) { Cloudkeeper::Managers::ImageListManager.new ca_dir: File.join(MOCK_DIR, 'ca') }
+    let(:ilm) { described_class.new ca_dir: File.join(MOCK_DIR, 'ca') }
 
     context 'with valid image list' do
       let(:image_list_file) { File.join(MOCK_DIR, 'imagelist01.signed') }
@@ -174,7 +177,7 @@ describe Cloudkeeper::Managers::ImageListManager do
   describe '#download_image_lists' do
     let(:tmpdir) { Dir.mktmpdir('cloudkeeper-test') }
 
-    after :example do
+    after do
       FileUtils.remove_entry tmpdir
     end
 
@@ -202,7 +205,7 @@ describe Cloudkeeper::Managers::ImageListManager do
   end
 
   describe '.download_image_lists' do
-    let(:ilm) { Cloudkeeper::Managers::ImageListManager.new ca_dir: File.join(MOCK_DIR, 'ca') }
+    let(:ilm) { described_class.new ca_dir: File.join(MOCK_DIR, 'ca') }
     let(:urls) do
       [
         'http://localhost:9292/imagelist01.signed',

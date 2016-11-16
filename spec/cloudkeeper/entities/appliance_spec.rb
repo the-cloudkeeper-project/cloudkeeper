@@ -1,43 +1,46 @@
 require 'spec_helper'
 
 describe Cloudkeeper::Entities::Appliance do
-  subject(:appliance) { Cloudkeeper::Entities::Appliance.new }
+  subject(:appliance) { described_class.new }
 
   let(:hash) { load_file 'appliance01.json', symbolize: true }
 
   describe '#new' do
     it 'returns instance of Appliance' do
-      is_expected.to be_instance_of Cloudkeeper::Entities::Appliance
+      is_expected.to be_instance_of described_class
+    end
+
+    it 'prepares attributes attribute as a hash instance' do
+      expect(appliance.attributes).to be_instance_of Hash
     end
 
     it 'prepares attributes attribute as an empty hash' do
-      expect(appliance.attributes).to be_instance_of Hash
       expect(appliance.attributes).to be_empty
     end
   end
 
   describe '#populate_attributes!' do
     it 'copies all values from hash to attributes attribute' do
-      Cloudkeeper::Entities::Appliance.populate_attributes!(appliance, hash)
+      described_class.populate_attributes!(appliance, hash)
       expect(appliance.attributes).to eq(hash)
     end
   end
 
   describe '#check_appliance_hash!' do
     context 'with mandatory attributes missing' do
-      before :example do
+      before do
         hash[:'dc:identifier'] = nil
       end
 
       it 'raises an InvalidApplianceHashError exceptiong' do
-        expect { Cloudkeeper::Entities::Appliance.check_appliance_hash! hash }.to \
+        expect { described_class.check_appliance_hash! hash }.to \
           raise_error ::Cloudkeeper::Errors::InvalidApplianceHashError
       end
     end
 
     context 'with all mandatory attributes are available' do
       it 'keeps quite when ' do
-        expect { Cloudkeeper::Entities::Appliance.check_appliance_hash! hash }.not_to raise_error
+        expect { described_class.check_appliance_hash! hash }.not_to raise_error
       end
     end
   end
@@ -45,42 +48,42 @@ describe Cloudkeeper::Entities::Appliance do
   describe '#construct_name!' do
     context 'with all name attributes available' do
       it 'sets appliance operating system to full name' do
-        Cloudkeeper::Entities::Appliance.construct_name!(appliance, hash)
+        described_class.construct_name!(appliance, hash)
         expect(appliance.operating_system).to eq('Linux Other TinyCoreLinux')
       end
     end
 
     context 'with "sl:os" attribute missing' do
-      before :example do
+      before do
         hash[:'sl:os'] = nil
       end
 
       it 'sets appliance operating system to partial name' do
-        Cloudkeeper::Entities::Appliance.construct_name!(appliance, hash)
+        described_class.construct_name!(appliance, hash)
         expect(appliance.operating_system).to eq('Other TinyCoreLinux')
       end
     end
 
     context 'with "sl:osname" attribute missing' do
-      before :example do
+      before do
         hash[:'sl:osname'] = nil
       end
 
       it 'sets appliance operating system to partial name' do
-        Cloudkeeper::Entities::Appliance.construct_name!(appliance, hash)
+        described_class.construct_name!(appliance, hash)
         expect(appliance.operating_system).to eq('Linux TinyCoreLinux')
       end
     end
 
     context 'with no attributes available' do
-      before :example do
+      before do
         hash[:'sl:os'] = nil
         hash[:'sl:osname'] = nil
         hash[:'sl:osversion'] = nil
       end
 
       it 'sets appliance operating system to empty string' do
-        Cloudkeeper::Entities::Appliance.construct_name!(appliance, hash)
+        described_class.construct_name!(appliance, hash)
         expect(appliance.operating_system).to be_empty
       end
     end
@@ -89,7 +92,7 @@ describe Cloudkeeper::Entities::Appliance do
   describe '#populate_appliance' do
     context 'with hash with correct values' do
       it 'populates and returns Appliance instance' do
-        appliance = Cloudkeeper::Entities::Appliance.populate_appliance hash
+        appliance = described_class.populate_appliance hash
 
         expect(appliance.identifier).to eq('2a5451eb-91f3-46a2-95a7-9cff7362d553')
         expect(appliance.description).to eq('This is a special Virtual Appliance entry used only for monitoring purposes.')
@@ -108,13 +111,13 @@ describe Cloudkeeper::Entities::Appliance do
     end
 
     context 'with hash with missing values' do
-      before :example do
+      before do
         hash[:'ad:core_recommended'] = nil
         hash[:'hv:version'] = nil
       end
 
       it 'populates and returns Image instance with missing values as nils' do
-        appliance = Cloudkeeper::Entities::Appliance.populate_appliance hash
+        appliance = described_class.populate_appliance hash
 
         expect(appliance.identifier).to eq('2a5451eb-91f3-46a2-95a7-9cff7362d553')
         expect(appliance.description).to eq('This is a special Virtual Appliance entry used only for monitoring purposes.')
@@ -136,7 +139,7 @@ describe Cloudkeeper::Entities::Appliance do
       let(:hash) { {} }
 
       it 'populates and returns Image instance with missing values as nils' do
-        appliance = Cloudkeeper::Entities::Appliance.populate_appliance hash
+        appliance = described_class.populate_appliance hash
 
         expect(appliance.identifier).to be_nil
         expect(appliance.description).to be_nil
@@ -155,12 +158,12 @@ describe Cloudkeeper::Entities::Appliance do
     end
 
     context 'with hash with redundant values' do
-      before :example do
+      before do
         hash['redundant_key'] = 'redundant_value'
       end
 
       it 'populates and returns Appliance instance ignoring redundant values' do
-        appliance = Cloudkeeper::Entities::Appliance.populate_appliance hash
+        appliance = described_class.populate_appliance hash
 
         expect(appliance.identifier).to eq('2a5451eb-91f3-46a2-95a7-9cff7362d553')
         expect(appliance.description).to eq('This is a special Virtual Appliance entry used only for monitoring purposes.')
@@ -183,7 +186,7 @@ describe Cloudkeeper::Entities::Appliance do
     let(:hash) { load_file 'appliance02.json' }
 
     it 'creates Appliance instance from given hash' do
-      appliance = Cloudkeeper::Entities::Appliance.from_hash hash
+      appliance = described_class.from_hash hash
 
       expect(appliance.identifier).to eq('2a5451eb-91f3-46a2-95a7-9cff7362d553')
       expect(appliance.description).to eq('This is a special Virtual Appliance entry used only for monitoring purposes.')

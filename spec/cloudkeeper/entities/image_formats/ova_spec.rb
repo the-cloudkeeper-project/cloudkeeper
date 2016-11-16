@@ -2,7 +2,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
   subject(:ova_class) { Class.new { extend Cloudkeeper::Entities::ImageFormats::Ova } }
   let(:command) { instance_double(Mixlib::ShellOut) }
 
-  before :example do
+  before do
     allow(Mixlib::ShellOut).to receive(:new) { command }
     allow(command).to receive(:run_command)
     allow(command).to receive(:error?) { false }
@@ -14,7 +14,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
     context 'with ova image file' do
       let(:file) { File.join(MOCK_DIR, 'image_formats', 'image.ova') }
 
-      before :example do
+      before do
         allow(command).to receive(:stdout) { "image.ovf\nimage.vmdk\n" }
       end
 
@@ -26,7 +26,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
     context 'with fake ova image file - missing vmdk file' do
       let(:file) { File.join(MOCK_DIR, 'image_formats', 'fake-image01.ova') }
 
-      before :example do
+      before do
         allow(command).to receive(:stdout) { "dummy-file\nimage.ovf\n" }
       end
 
@@ -38,7 +38,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
     context 'with fake ova image file - missing ovf file' do
       let(:file) { File.join(MOCK_DIR, 'image_formats', 'fake-image02.ova') }
 
-      before :example do
+      before do
         allow(command).to receive(:stdout) { "dummy-file\nimage.vmdk\n" }
       end
 
@@ -50,7 +50,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
     context 'with fake ova image file - missing both ovf and vmdk file' do
       let(:file) { File.join(MOCK_DIR, 'image_formats', 'fake-image03.ova') }
 
-      before :example do
+      before do
         allow(command).to receive(:stdout) { "dummy-file\n" }
       end
 
@@ -62,7 +62,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
     context 'with fake ova image file - not an archive' do
       let(:file) { File.join(MOCK_DIR, 'image_formats', 'fake-image04.ova') }
 
-      before :example do
+      before do
         expect(command).to receive(:error?) { true }
       end
 
@@ -74,7 +74,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
     context 'with fake ova image file - too many files' do
       let(:file) { File.join(MOCK_DIR, 'image_formats', 'fake-image05.ova') }
 
-      before :example do
+      before do
         allow(command).to receive(:stdout) { File.read(File.join(MOCK_DIR, 'image_formats', 'fake-image05-output')) }
       end
 

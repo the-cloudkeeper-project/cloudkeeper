@@ -1,15 +1,18 @@
 require 'spec_helper'
 
 describe Cloudkeeper::Entities::Image do
-  subject(:image) { Cloudkeeper::Entities::Image.new }
+  subject(:image) { described_class.new }
 
   describe '#new' do
     it 'returns instance of Image' do
-      is_expected.to be_instance_of Cloudkeeper::Entities::Image
+      is_expected.to be_instance_of described_class
     end
 
-    it 'prepares image_files attribute as an empty array' do
+    it 'prepares image_files attribute as an array instance' do
       expect(image.image_files).to be_instance_of Array
+    end
+
+    it 'prepares image_files attribute as empty array' do
       expect(image.image_files).to be_empty
     end
   end
@@ -26,7 +29,7 @@ describe Cloudkeeper::Entities::Image do
       end
 
       it 'populates and returns Image instance' do
-        image_instance = Cloudkeeper::Entities::Image.from_hash hash
+        image_instance = described_class.from_hash hash
 
         expect(image_instance.size).to eq(42)
         expect(image_instance.uri).to eq('http://some.uri.net/some/path')
@@ -45,7 +48,7 @@ describe Cloudkeeper::Entities::Image do
       end
 
       it 'populates and returns Image instance with missing values as nils' do
-        image_instance = Cloudkeeper::Entities::Image.from_hash hash
+        image_instance = described_class.from_hash hash
 
         expect(image_instance.size).to be_nil
         expect(image_instance.uri).to eq('http://some.uri.net/some/path')
@@ -64,7 +67,7 @@ describe Cloudkeeper::Entities::Image do
       end
 
       it 'fails with an InvalidImageHashError exception' do
-        expect { Cloudkeeper::Entities::Image.from_hash hash }.to raise_error ::Cloudkeeper::Errors::InvalidImageHashError
+        expect { described_class.from_hash hash }.to raise_error ::Cloudkeeper::Errors::InvalidImageHashError
       end
     end
 
@@ -72,7 +75,7 @@ describe Cloudkeeper::Entities::Image do
       let(:hash) { {} }
 
       it 'fails with an InvalidImageHashError exception' do
-        expect { Cloudkeeper::Entities::Image.from_hash hash }.to raise_error ::Cloudkeeper::Errors::InvalidImageHashError
+        expect { described_class.from_hash hash }.to raise_error ::Cloudkeeper::Errors::InvalidImageHashError
       end
     end
 
@@ -88,7 +91,7 @@ describe Cloudkeeper::Entities::Image do
       end
 
       it 'populates and returns Image instance ignoring redundant values' do
-        image_instance = Cloudkeeper::Entities::Image.from_hash hash
+        image_instance = described_class.from_hash hash
 
         expect(image_instance.size).to eq(42)
         expect(image_instance.uri).to eq('http://some.uri.net/some/path')

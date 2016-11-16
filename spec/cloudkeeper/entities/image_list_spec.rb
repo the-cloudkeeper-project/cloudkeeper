@@ -1,15 +1,18 @@
 require 'spec_helper'
 
 describe Cloudkeeper::Entities::ImageList do
-  subject(:image_list) { Cloudkeeper::Entities::ImageList.new }
+  subject(:image_list) { described_class.new }
 
   describe '#new' do
     it 'returns an instance of ImageList' do
-      is_expected.to be_instance_of Cloudkeeper::Entities::ImageList
+      is_expected.to be_instance_of described_class
+    end
+
+    it 'prepares appliances attributes as an array instance' do
+      expect(image_list.appliances).to be_instance_of Array
     end
 
     it 'prepares appliances attributes as an empty array' do
-      expect(image_list.appliances).to be_instance_of Array
       expect(image_list.appliances).to be_empty
     end
   end
@@ -25,7 +28,6 @@ describe Cloudkeeper::Entities::ImageList do
       let(:appliance) { instance_double Cloudkeeper::Entities::Appliance }
 
       it 'adds appliance to image list' do
-        expect(image_list.appliances).to be_empty
         image_list.add_appliance appliance
         expect(image_list.appliances).to have(1).items
       end
@@ -40,14 +42,14 @@ describe Cloudkeeper::Entities::ImageList do
     let(:endorser) { load_file 'image_list02.json', symbolize: true }
     let(:appliance_hash) { load_file 'image_list03.json', symbolize: true }
 
-    before :example do
+    before do
       appliance_hash[:expiration] = expiration
     end
 
     context 'with all the data' do
       it 'creates full appliance hash' do
-        expect(Cloudkeeper::Entities::ImageList.prepare_appliance_hash(image_hash, endorser, expiration, vo, \
-                                                                       image_list_identifier)).to eq(appliance_hash)
+        expect(described_class.prepare_appliance_hash(image_hash, endorser, expiration, vo, \
+                                                      image_list_identifier)).to eq(appliance_hash)
       end
     end
 
@@ -56,8 +58,8 @@ describe Cloudkeeper::Entities::ImageList do
       let(:appliance_hash) { load_file 'image_list04.json', symbolize: true }
 
       it 'creates partial appliance hash' do
-        expect(Cloudkeeper::Entities::ImageList.prepare_appliance_hash(image_hash, endorser, expiration, vo, \
-                                                                       image_list_identifier)).to eq(appliance_hash)
+        expect(described_class.prepare_appliance_hash(image_hash, endorser, expiration, vo, \
+                                                      image_list_identifier)).to eq(appliance_hash)
       end
     end
 
@@ -66,8 +68,8 @@ describe Cloudkeeper::Entities::ImageList do
       let(:appliance_hash) { load_file 'image_list13.json', symbolize: true }
 
       it 'creates partial appliance hash' do
-        expect(Cloudkeeper::Entities::ImageList.prepare_appliance_hash(image_hash, endorser, expiration, vo, \
-                                                                       image_list_identifier)).to eq(appliance_hash)
+        expect(described_class.prepare_appliance_hash(image_hash, endorser, expiration, vo, \
+                                                      image_list_identifier)).to eq(appliance_hash)
       end
     end
   end
@@ -75,7 +77,7 @@ describe Cloudkeeper::Entities::ImageList do
   describe '#populate_image_list' do
     context 'with invalid image list hash' do
       it 'returns empty ImageList instance' do
-        il = Cloudkeeper::Entities::ImageList.populate_image_list nil
+        il = described_class.populate_image_list nil
 
         expect(il.identifier).to be_nil
         expect(il.creation_date).to be_nil
@@ -89,7 +91,7 @@ describe Cloudkeeper::Entities::ImageList do
       let(:image_list_hash) { load_file 'image_list05.json', symbolize: true }
 
       it 'returns populated ImageList instance' do
-        il = Cloudkeeper::Entities::ImageList.populate_image_list image_list_hash
+        il = described_class.populate_image_list image_list_hash
 
         expect(il.identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
         expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
@@ -103,7 +105,7 @@ describe Cloudkeeper::Entities::ImageList do
       let(:image_list_hash) { load_file 'image_list06.json', symbolize: true }
 
       it 'returns populated ImageList instance' do
-        il = Cloudkeeper::Entities::ImageList.populate_image_list image_list_hash
+        il = described_class.populate_image_list image_list_hash
 
         expect(il.identifier).to be_nil
         expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
@@ -120,7 +122,7 @@ describe Cloudkeeper::Entities::ImageList do
     let(:attributes1) { load_file 'image_list08.json', symbolize: true }
     let(:attributes2) { load_file 'image_list09.json', symbolize: true }
 
-    before :example do
+    before do
       image_list.identifier = '76fdee70-8119-5d33-aaaa-3c57e1c60df1'
       attributes1[:expiration] = expiration
       attributes2[:expiration] = expiration
@@ -128,7 +130,7 @@ describe Cloudkeeper::Entities::ImageList do
 
     context 'with two appliances in the hash' do
       it 'will contain two populated Appliance instances' do
-        Cloudkeeper::Entities::ImageList.populate_appliances!(image_list, image_list_hash)
+        described_class.populate_appliances!(image_list, image_list_hash)
 
         appliance = image_list.appliances.first
 
@@ -175,13 +177,13 @@ describe Cloudkeeper::Entities::ImageList do
       let(:attributes1) { load_file 'image_list11.json', symbolize: true }
       let(:attributes2) { load_file 'image_list12.json', symbolize: true }
 
-      before :example do
+      before do
         attributes1[:expiration] = expiration
         attributes2[:expiration] = expiration
       end
 
       it 'returns fully populated image list' do
-        il = Cloudkeeper::Entities::ImageList.from_hash image_list_hash
+        il = described_class.from_hash image_list_hash
 
         expect(il.identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
         expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))

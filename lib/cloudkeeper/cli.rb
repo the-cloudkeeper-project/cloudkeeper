@@ -15,8 +15,12 @@ module Cloudkeeper
     class_option :debug,
                  default: Cloudkeeper::Settings['debug'],
                  type: :boolean,
-                 desc: 'Runs cloudkeeper in debug mode.'
+                 desc: 'Runs cloudkeeper in debug mode'
 
+    method_option :'qemu-img-binary',
+                  default: Cloudkeeper::Settings['binaries']['qemu-img'],
+                  type: :string,
+                  desc: 'Path to qemu-img binary (image conversion)'
     desc 'sync', 'Runs synchronization process'
     def sync
       initialize_action(options, __method__)

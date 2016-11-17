@@ -58,7 +58,7 @@ module Cloudkeeper
       end
 
       def verify_image_list!(pkcs7, file)
-        raise Cloudkeeper::Errors::ImageListVerificationError, "image list #{file.inspect} cannot be verified" \
+        raise Cloudkeeper::Errors::ImageList::VerificationError, "image list #{file.inspect} cannot be verified" \
           unless pkcs7.verify([], openssl_store)
       end
     end

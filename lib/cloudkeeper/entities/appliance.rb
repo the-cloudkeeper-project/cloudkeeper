@@ -55,8 +55,8 @@ module Cloudkeeper
         def check_appliance_hash!(appliance_hash)
           unless Cloudkeeper::Utils::Hash.values? appliance_hash, :'dc:identifier', :'ad:mpuri', :vo, \
                                                   :image_list_identifier
-            raise Cloudkeeper::Errors::InvalidApplianceHashError, "appliance hash #{appliance_hash.inspect} doesn't contain all " \
-                                                                  'necessary data'
+            raise Cloudkeeper::Errors::Parsing::InvalidApplianceHashError, 'appliance hash ' \
+              "#{appliance_hash.inspect} doesn't contain all necessary data"
           end
         end
       end

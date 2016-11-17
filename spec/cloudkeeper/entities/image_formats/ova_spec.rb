@@ -67,7 +67,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
       end
 
       it 'raises a CommandExecutionError exception' do
-        expect { ova_class.ova?(file) }.to raise_error(Cloudkeeper::Errors::CommandExecutionError)
+        expect { ova_class.ova?(file) }.to raise_error(Cloudkeeper::Errors::ImageFormat::Ova::OvaFormatError)
       end
     end
 
@@ -79,7 +79,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
       end
 
       it 'raises a CommandExecutionError exception' do
-        expect { ova_class.ova?(file) }.to raise_error(Cloudkeeper::Errors::InvalidArchiveError)
+        expect { ova_class.ova?(file) }.to raise_error(Cloudkeeper::Errors::ImageFormat::Ova::OvaFormatError)
       end
     end
   end

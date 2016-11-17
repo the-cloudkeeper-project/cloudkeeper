@@ -67,7 +67,7 @@ describe Cloudkeeper::Managers::ImageManager do
         outputs.each do |output|
           allow(described_class).to receive(:file_description).with(file) { output }
           expect { described_class.recognize_format(file) }.to \
-            raise_error(Cloudkeeper::Errors::NoImageFormatRecognizedError)
+            raise_error(Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError)
         end
       end
     end
@@ -80,7 +80,7 @@ describe Cloudkeeper::Managers::ImageManager do
         outputs.each do |output|
           allow(described_class).to receive(:file_description).with(file) { output }
           expect { described_class.recognize_format(file) }.to \
-            raise_error(Cloudkeeper::Errors::NoImageFormatRecognizedError)
+            raise_error(Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError)
         end
       end
     end
@@ -93,7 +93,7 @@ describe Cloudkeeper::Managers::ImageManager do
         outputs.each do |output|
           allow(described_class).to receive(:file_description).with(file) { output }
           expect { described_class.recognize_format(file) }.to \
-            raise_error(Cloudkeeper::Errors::NoImageFormatRecognizedError)
+            raise_error(Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError)
         end
       end
     end
@@ -138,7 +138,7 @@ describe Cloudkeeper::Managers::ImageManager do
         outputs.each do |output|
           allow(described_class).to receive(:file_description).with(file) { output }
           expect { described_class.recognize_format(file) }.to \
-            raise_error(Cloudkeeper::Errors::NoImageFormatRecognizedError)
+            raise_error(Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError)
         end
       end
     end
@@ -204,7 +204,7 @@ describe Cloudkeeper::Managers::ImageManager do
       end
 
       it 'raises ImageFormatRecognitionError exception' do
-        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormatRecognitionError)
+        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormat::RecognitionError)
       end
     end
 
@@ -212,7 +212,7 @@ describe Cloudkeeper::Managers::ImageManager do
       let(:file) { File.join('nonexisting', 'file') }
 
       it 'raises ImageFormatRecognitionError exception' do
-        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormatRecognitionError)
+        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormat::RecognitionError)
       end
     end
 
@@ -225,7 +225,7 @@ describe Cloudkeeper::Managers::ImageManager do
       end
 
       it 'raises ImageFormatRecognitionError exception' do
-        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormatRecognitionError)
+        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormat::RecognitionError)
       end
 
       after do
@@ -237,7 +237,7 @@ describe Cloudkeeper::Managers::ImageManager do
       let(:output) { 'unknown output' }
 
       it 'raises ImageFormatRecognitionError exception' do
-        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormatRecognitionError)
+        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormat::RecognitionError)
       end
     end
   end

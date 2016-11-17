@@ -34,7 +34,7 @@ describe Cloudkeeper::Entities::Appliance do
 
       it 'raises an InvalidApplianceHashError exceptiong' do
         expect { described_class.check_appliance_hash! hash }.to \
-          raise_error ::Cloudkeeper::Errors::InvalidApplianceHashError
+          raise_error ::Cloudkeeper::Errors::Parsing::InvalidApplianceHashError
       end
     end
 

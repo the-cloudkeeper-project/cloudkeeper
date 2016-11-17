@@ -81,7 +81,7 @@ describe Cloudkeeper::Managers::ImageListManager do
 
       it 'raise ImageListVerificationError exception' do
         expect { ilm.send(:verify_image_list!, pkcs7, image_list_file) }.to \
-          raise_error(Cloudkeeper::Errors::ImageListVerificationError)
+          raise_error(Cloudkeeper::Errors::ImageList::VerificationError)
       end
     end
   end
@@ -169,7 +169,7 @@ describe Cloudkeeper::Managers::ImageListManager do
 
       it 'raise ImageListVerificationError exception' do
         expect { ilm.send(:load_image_list, image_list_file) }.to \
-          raise_error(Cloudkeeper::Errors::ImageListVerificationError)
+          raise_error(Cloudkeeper::Errors::ImageList::VerificationError)
       end
     end
   end

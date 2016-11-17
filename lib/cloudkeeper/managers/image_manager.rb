@@ -15,8 +15,9 @@ module Cloudkeeper
           check_file!(file)
           recognize_format(file)
         rescue Cloudkeeper::Errors::CommandExecutionError, Cloudkeeper::Errors::NoSuchFileError,
-               Cloudkeeper::Errors::PermissionDeniedError, Cloudkeeper::Errors::NoImageFormatRecognizedError => ex
-          raise Cloudkeeper::Errors::ImageFormatRecognitionError, ex, "Cannot recognize image format for file #{file.inspect}"
+               Cloudkeeper::Errors::PermissionDeniedError, Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError,
+               Cloudkeeper::Errors::ImageFormat::Ova::OvaFormatError => ex
+          raise Cloudkeeper::Errors::ImageFormat::RecognitionError, ex, "Cannot recognize image format for file #{file.inspect}"
         end
 
         def file_description(file)
@@ -47,7 +48,7 @@ module Cloudkeeper
             return format if additional_test_result
           end
 
-          raise Cloudkeeper::Errors::NoImageFormatRecognizedError, "No image format recognized for file #{file.inspect}"
+          raise Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError, "No image format recognized for file #{file.inspect}"
         end
       end
     end

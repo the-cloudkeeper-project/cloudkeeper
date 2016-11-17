@@ -67,7 +67,7 @@ describe Cloudkeeper::Entities::Image do
       end
 
       it 'fails with an InvalidImageHashError exception' do
-        expect { described_class.from_hash hash }.to raise_error ::Cloudkeeper::Errors::InvalidImageHashError
+        expect { described_class.from_hash hash }.to raise_error ::Cloudkeeper::Errors::Parsing::InvalidImageHashError
       end
     end
 
@@ -75,7 +75,7 @@ describe Cloudkeeper::Entities::Image do
       let(:hash) { {} }
 
       it 'fails with an InvalidImageHashError exception' do
-        expect { described_class.from_hash hash }.to raise_error ::Cloudkeeper::Errors::InvalidImageHashError
+        expect { described_class.from_hash hash }.to raise_error ::Cloudkeeper::Errors::Parsing::InvalidImageHashError
       end
     end
 

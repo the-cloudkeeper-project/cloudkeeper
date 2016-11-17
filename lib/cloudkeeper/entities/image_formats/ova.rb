@@ -8,6 +8,8 @@ module Cloudkeeper
 
         def ova?(archive)
           ova_structure?(archive_files(archive))
+        rescue Cloudkeeper::Errors::CommandExecutionError, Cloudkeeper::Errors::ImageFormat::Ova::InvalidArchiveError => ex
+          raise Cloudkeeper::Errors::ImageFormat::Ova::OvaFormatError, ex
         end
 
         def archive_files(archive)
@@ -38,7 +40,8 @@ module Cloudkeeper
         def check_count!(files)
           return unless files.count > ARCHIVE_MAX_FILES
 
-          raise Cloudkeeper::Errors::InvalidArchiveError, "Too many files in archive: #{files.count}. Maximum is #{ARCHIVE_MAX_FILES}"
+          raise Cloudkeeper::Errors::ImageFormat::Ova::InvalidArchiveError, "Too many files in archive: #{files.count}. "\
+                                                                            "Maximum is #{ARCHIVE_MAX_FILES}"
         end
       end
     end

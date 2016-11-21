@@ -47,8 +47,8 @@ module Cloudkeeper
     end
 
     def initialize_configuration(options)
-      Settings.clear
-      Settings.merge! options.to_hash
+      Cloudkeeper::Settings.clear
+      Cloudkeeper::Settings.merge! options.to_hash
     end
 
     # Inits logging according to the settings
@@ -57,10 +57,10 @@ module Cloudkeeper
     # @option parameters [String] logging-file file to log to
     # @option parameters [TrueClass, FalseClass] debug debug mode
     def initialize_logger
-      Settings[:'logging-level'] = 'DEBUG' if Settings[:debug]
+      Cloudkeeper::Settings[:'logging-level'] = 'DEBUG' if Cloudkeeper::Settings[:debug]
 
-      logging_file = Settings[:'logging-file']
-      logging_level = Settings[:'logging-level']
+      logging_file = Cloudkeeper::Settings[:'logging-file']
+      logging_level = Cloudkeeper::Settings[:'logging-level']
 
       Yell.new :stdout, name: Object, level: logging_level.downcase, format: Yell::DefaultFormat
       Object.send :include, Yell::Loggable

@@ -19,12 +19,12 @@ module Cloudkeeper
 
     desc 'sync', 'Runs synchronization process'
     def sync
-      # parameters = initialize_action(options, __method__)
+      initialize_action(options, __method__)
     end
 
     desc 'migrate', 'Discovers and prepares already uploaded appliances'
     def migrate
-      # parameters = initialize_action(options, __method__)
+      initialize_action(options, __method__)
     end
 
     desc 'version', 'Prints cloudkeeper version'
@@ -37,25 +37,26 @@ module Cloudkeeper
     private
 
     def initialize_action(options, action)
-      parameters = options.to_hash.deep_symbolize_keys
-      initialize_logger parameters
-      logger.debug "Cloudkeeper action #{action.inspect} called with parameters: #{parameters.inspect}"
+      initialize_configuration options
+      initialize_logger
+      logger.debug "Cloudkeeper action #{action.inspect} called with parameters: #{Settings.to_hash.inspect}"
+    end
 
-      parameters
+    def initialize_configuration(options)
+      Settings.clear
+      Settings.merge! options.to_hash
     end
 
     # Inits logging according to the settings
     #
-    # @param [Hash] parameters
     # @option parameters [String] logging-level
     # @option parameters [String] logging-file file to log to
     # @option parameters [TrueClass, FalseClass] debug debug mode
-    # @return [Type] description of returned object
-    def initialize_logger(parameters)
-      parameters[:'logging-level'] = 'DEBUG' if parameters[:debug]
+    def initialize_logger
+      Settings[:'logging-level'] = 'DEBUG' if Settings[:debug]
 
-      logging_file = parameters[:'logging-file']
-      logging_level = parameters[:'logging-level']
+      logging_file = Settings[:'logging-file']
+      logging_level = Settings[:'logging-level']
 
       Yell.new :stdout, name: Object, level: logging_level.downcase, format: Yell::DefaultFormat
       Object.send :include, Yell::Loggable

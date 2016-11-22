@@ -29,7 +29,7 @@ module Cloudkeeper
 
         def convert(output_format)
           vmdk_image = to_vmdk
-          final_image = vmdk_image.send("to_#{output_format.to_s}".to_sym)
+          final_image = vmdk_image.send("to_#{output_format}".to_sym)
           File.delete vmdk_image.file
 
           final_image

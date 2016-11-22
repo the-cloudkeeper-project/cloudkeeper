@@ -7,7 +7,8 @@ module Cloudkeeper
         super(*argv)
 
         format_const_symbol = format.to_s.classify.to_sym
-        extend(Cloudkeeper::Entities::Convertables.const_get format_const_symbol) if Cloudkeeper::Entities::Convertables.const_defined? format_const_symbol
+        extend(Cloudkeeper::Entities::Convertables.const_get(format_const_symbol)) \
+          if Cloudkeeper::Entities::Convertables.const_defined? format_const_symbol
       end
     end
   end

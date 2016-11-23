@@ -7,9 +7,16 @@ module Cloudkeeper
         CONVERT_OUTPUT_FORMATS = [:raw, :qcow2, :vmdk].freeze
         FORMAT_REGEX = /^to_(?<format>.*)$/
 
+        def self.included(base)
+          raise Cloudkeeper::Errors::Convertables::ConvertabilityError, "#{base.inspect} cannot become a convertable" \
+            unless base.method_defined?(:file) && base.method_defined?(:format)
+
+          super
+        end
+
         def method_missing(method, *arguments, &block)
           result = method.to_s.match(FORMAT_REGEX)
-          return convert(result[:format]) if result[:format] && convert_output_formats.include?(result[:format].to_sym)
+          return convert(result[:format]) if result && result[:format] && convert_output_formats.include?(result[:format].to_sym)
 
           super
         end
@@ -19,7 +26,7 @@ module Cloudkeeper
         end
 
         def to_ova
-          raise NotImplementedError, 'converison to OVA format is not supported'
+          raise Cloudkeeper::Errors::NotImplementedError, 'converison to OVA format is not supported'
         end
 
         private
@@ -49,7 +56,7 @@ module Cloudkeeper
         end
 
         def image_file(converted_file, output_format)
-          Cloudkeeper::Entities::ImageFile.new converted_file, compute_checksum(converted_file), output_format, false
+          Cloudkeeper::Entities::ImageFile.new converted_file, compute_checksum(converted_file), output_format.to_sym, false
         end
 
         def compute_checksum(converted_file)

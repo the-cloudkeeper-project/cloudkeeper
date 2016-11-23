@@ -2,13 +2,13 @@ module Cloudkeeper
   module Entities
     module Convertables
       module Ova
-        include Cloudkeeper::Entities::Convertables::Convertable
-
         CONVERT_OUTPUT_FORMATS = [:raw, :qcow2].freeze
 
         def self.extended(base)
           raise Cloudkeeper::Errors::Convertables::ConvertabilityError, "#{base.inspect} cannot become OVA convertable" \
-          unless base.respond_to?(:file) && base.respond_to?(:format)
+            unless base.respond_to?(:file) && \
+                   base.respond_to?(:format) && \
+                   base.class.included_modules.include?(Cloudkeeper::Entities::Convertables::Convertable)
 
           super
         end

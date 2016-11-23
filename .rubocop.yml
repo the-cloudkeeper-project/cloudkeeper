@@ -25,17 +25,10 @@ Style/StructInheritance:
     - 'lib/cloudkeeper/entities/*.rb'
 
 RSpec/MultipleExpectations:
-  Exclude:
-    - 'spec/cloudkeeper/entities/image_spec.rb'
-    - 'spec/cloudkeeper/entities/image_list_spec.rb'
-    - 'spec/cloudkeeper/entities/appliance_spec.rb'
-    - 'spec/cloudkeeper/managers/image_list_manager_spec.rb'
+  Enabled: false
 
 RSpec/ExampleLength:
-  Exclude:
-    - 'spec/cloudkeeper/entities/image_list_spec.rb'
-    - 'spec/cloudkeeper/entities/appliance_spec.rb'
-    - 'spec/cloudkeeper/managers/image_list_manager_spec.rb'
+  Enabled: false
 
 RSpec/NestedGroups:
   MaxNesting: 3

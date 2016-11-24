@@ -49,41 +49,19 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
   end
 
   describe '.run_convert_command' do
-    let(:command) { instance_double(Mixlib::ShellOut) }
-
     before do
-      expect(Mixlib::ShellOut).to receive(:new).with(Cloudkeeper::Settings[:'qemu-img-binary'],
-                                                     'convert',
-                                                     '-f',
-                                                     'raw',
-                                                     '-O',
-                                                     'qcow2',
-                                                     convertable_instance_raw.file,
-                                                     convertable_instance_qcow2.file) { command }
-      allow(command).to receive(:run_command)
-      allow(command).to receive(:command) { 'command' }
-      allow(command).to receive(:stderr) { 'stderr' }
+      expect(Cloudkeeper::CommandExecutioner).to receive(:execute).with(Cloudkeeper::Settings[:'qemu-img-binary'],
+                                                                        'convert',
+                                                                        '-f',
+                                                                        'raw',
+                                                                        '-O',
+                                                                        'qcow2',
+                                                                        convertable_instance_raw.file,
+                                                                        convertable_instance_qcow2.file)
     end
 
-    context 'when error occures' do
-      before do
-        allow(command).to receive(:error?) { true }
-      end
-
-      it 'raises CommandExecutionError exception' do
-        expect { convertable_instance_raw.send(:run_convert_command, :qcow2, convertable_instance_qcow2.file) }.to \
-          raise_error(Cloudkeeper::Errors::CommandExecutionError)
-      end
-    end
-
-    context 'running smoothly' do
-      before do
-        allow(command).to receive(:error?) { false }
-      end
-
-      it 'calls qemu-img binary with specified options' do
-        expect { convertable_instance_raw.send(:run_convert_command, :qcow2, convertable_instance_qcow2.file) }.not_to raise_error
-      end
+    it 'calls qemu-img binary with specified options' do
+      expect { convertable_instance_raw.send(:run_convert_command, :qcow2, convertable_instance_qcow2.file) }.not_to raise_error
     end
   end
 
@@ -107,20 +85,15 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
     end
 
     context 'with different supported output format' do
-      let(:command) { instance_double(Mixlib::ShellOut) }
-
       before do
-        expect(Mixlib::ShellOut).to receive(:new).with(Cloudkeeper::Settings[:'qemu-img-binary'],
-                                                       'convert',
-                                                       '-f',
-                                                       'raw',
-                                                       '-O',
-                                                       'qcow2',
-                                                       convertable_instance_raw.file,
-                                                       convertable_instance_qcow2.file) { command }
-        allow(command).to receive(:run_command)
-        allow(command).to receive(:command) { 'command' }
-        allow(command).to receive(:error?) { false }
+        expect(Cloudkeeper::CommandExecutioner).to receive(:execute).with(Cloudkeeper::Settings[:'qemu-img-binary'],
+                                                                          'convert',
+                                                                          '-f',
+                                                                          'raw',
+                                                                          '-O',
+                                                                          'qcow2',
+                                                                          convertable_instance_raw.file,
+                                                                          convertable_instance_qcow2.file)
       end
 
       it 'converts image to specified format and returns new instance of ImageFile' do
@@ -135,20 +108,15 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
 
   describe '.method_missing' do
     context 'for known formats' do
-      let(:command) { instance_double(Mixlib::ShellOut) }
-
       before do
-        expect(Mixlib::ShellOut).to receive(:new).with(Cloudkeeper::Settings[:'qemu-img-binary'],
-                                                       'convert',
-                                                       '-f',
-                                                       'raw',
-                                                       '-O',
-                                                       'qcow2',
-                                                       convertable_instance_raw.file,
-                                                       convertable_instance_qcow2.file) { command }
-        allow(command).to receive(:run_command)
-        allow(command).to receive(:command) { 'command' }
-        allow(command).to receive(:error?) { false }
+        expect(Cloudkeeper::CommandExecutioner).to receive(:execute).with(Cloudkeeper::Settings[:'qemu-img-binary'],
+                                                                          'convert',
+                                                                          '-f',
+                                                                          'raw',
+                                                                          '-O',
+                                                                          'qcow2',
+                                                                          convertable_instance_raw.file,
+                                                                          convertable_instance_qcow2.file)
       end
 
       it 'calls convert method' do

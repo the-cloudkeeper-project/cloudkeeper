@@ -6,6 +6,7 @@ module Cloudkeeper
   autoload :Settings, 'cloudkeeper/settings'
   autoload :CLI, 'cloudkeeper/cli'
   autoload :Utils, 'cloudkeeper/utils'
+  autoload :CommandExecutioner, 'cloudkeeper/command_executioner'
   autoload :Entities, 'cloudkeeper/entities'
   autoload :Managers, 'cloudkeeper/managers'
   autoload :Errors, 'cloudkeeper/errors'

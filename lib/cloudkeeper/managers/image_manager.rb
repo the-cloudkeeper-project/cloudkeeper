@@ -21,15 +21,7 @@ module Cloudkeeper
         end
 
         def file_description(file)
-          file_command = Mixlib::ShellOut.new('file', '-b', file)
-          file_command.run_command
-
-          if file_command.error?
-            raise Cloudkeeper::Errors::CommandExecutionError, "Command #{file_command.command.inspect} terminated with an error: " \
-                                                              "#{file_command.stderr}"
-          end
-
-          file_command.stdout
+          Cloudkeeper::CommandExecutioner.execute('file', '-b', file)
         end
 
         def check_file!(file)

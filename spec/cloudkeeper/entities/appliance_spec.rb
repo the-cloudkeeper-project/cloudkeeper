@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Cloudkeeper::Entities::Appliance do
-  subject(:appliance) { described_class.new }
+  subject(:appliance) { described_class.new 'identifier123', 'http://some/mpuri', 'vo', '2499-12-31T22:00:00Z', 'identifier456' }
 
   let(:hash) { load_file 'appliance01.json', symbolize: true }
 
@@ -17,6 +17,41 @@ describe Cloudkeeper::Entities::Appliance do
     it 'prepares attributes attribute as an empty hash' do
       expect(appliance.attributes).to be_empty
     end
+
+    context 'with nil identifier' do
+      it 'raises ArgumentError exception' do
+        expect { described_class.new nil, 'http://some/mpuri', 'vo', '2499-12-31T22:00:00Z', 'identifier456' }.to \
+          raise_error(Cloudkeeper::Errors::ArgumentError)
+      end
+    end
+
+    context 'with nil mpuri' do
+      it 'raises ArgumentError exception' do
+        expect { described_class.new 'identifier123', nil, 'vo', '2499-12-31T22:00:00Z', 'identifier456' }.to \
+          raise_error(Cloudkeeper::Errors::ArgumentError)
+      end
+    end
+
+    context 'with nil vo' do
+      it 'raises ArgumentError exception' do
+        expect { described_class.new 'identifier123', 'http://some/mpuri', nil, '2499-12-31T22:00:00Z', 'identifier456' }.to \
+          raise_error(Cloudkeeper::Errors::ArgumentError)
+      end
+    end
+
+    context 'with nil expiration date' do
+      it 'raises ArgumentError exception' do
+        expect { described_class.new 'identifier123', 'http://some/mpuri', 'vo', nil, 'identifier456' }.to \
+          raise_error(Cloudkeeper::Errors::ArgumentError)
+      end
+    end
+
+    context 'with nil image list identifier' do
+      it 'raises ArgumentError exception' do
+        expect { described_class.new 'identifier123', 'http://some/mpuri', 'vo', '2499-12-31T22:00:00Z', nil }.to \
+          raise_error(Cloudkeeper::Errors::ArgumentError)
+      end
+    end
   end
 
   describe '#populate_attributes!' do
@@ -26,29 +61,10 @@ describe Cloudkeeper::Entities::Appliance do
     end
   end
 
-  describe '#check_appliance_hash!' do
-    context 'with mandatory attributes missing' do
-      before do
-        hash[:'dc:identifier'] = nil
-      end
-
-      it 'raises an InvalidApplianceHashError exceptiong' do
-        expect { described_class.check_appliance_hash! hash }.to \
-          raise_error ::Cloudkeeper::Errors::Parsing::InvalidApplianceHashError
-      end
-    end
-
-    context 'with all mandatory attributes are available' do
-      it 'keeps quite when ' do
-        expect { described_class.check_appliance_hash! hash }.not_to raise_error
-      end
-    end
-  end
-
-  describe '#construct_name!' do
+  describe '#construct_os_name!' do
     context 'with all name attributes available' do
       it 'sets appliance operating system to full name' do
-        described_class.construct_name!(appliance, hash)
+        described_class.construct_os_name!(appliance, hash)
         expect(appliance.operating_system).to eq('Linux Other TinyCoreLinux')
       end
     end
@@ -59,7 +75,7 @@ describe Cloudkeeper::Entities::Appliance do
       end
 
       it 'sets appliance operating system to partial name' do
-        described_class.construct_name!(appliance, hash)
+        described_class.construct_os_name!(appliance, hash)
         expect(appliance.operating_system).to eq('Other TinyCoreLinux')
       end
     end
@@ -70,7 +86,7 @@ describe Cloudkeeper::Entities::Appliance do
       end
 
       it 'sets appliance operating system to partial name' do
-        described_class.construct_name!(appliance, hash)
+        described_class.construct_os_name!(appliance, hash)
         expect(appliance.operating_system).to eq('Linux TinyCoreLinux')
       end
     end
@@ -83,7 +99,7 @@ describe Cloudkeeper::Entities::Appliance do
       end
 
       it 'sets appliance operating system to empty string' do
-        described_class.construct_name!(appliance, hash)
+        described_class.construct_os_name!(appliance, hash)
         expect(appliance.operating_system).to be_empty
       end
     end
@@ -138,22 +154,16 @@ describe Cloudkeeper::Entities::Appliance do
     context 'with empty hash' do
       let(:hash) { {} }
 
-      it 'populates and returns Image instance with missing values as nils' do
-        appliance = described_class.populate_appliance hash
+      it 'raises InvalidApplianceHashError exception' do
+        expect { described_class.populate_appliance hash }.to raise_error(::Cloudkeeper::Errors::Parsing::InvalidApplianceHashError)
+      end
+    end
 
-        expect(appliance.identifier).to be_nil
-        expect(appliance.description).to be_nil
-        expect(appliance.mpuri).to be_nil
-        expect(appliance.title).to be_nil
-        expect(appliance.group).to be_nil
-        expect(appliance.ram).to be_nil
-        expect(appliance.core).to be_nil
-        expect(appliance.version).to be_nil
-        expect(appliance.architecture).to be_nil
-        expect(appliance.operating_system).to be_empty
-        expect(appliance.vo).to be_nil
-        expect(appliance.expiration_date).to be_nil
-        expect(appliance.image_list_identifier).to be_nil
+    context 'with nil hash' do
+      let(:hash) { nil }
+
+      it 'raises InvalidApplianceHashError exception' do
+        expect { described_class.populate_appliance hash }.to raise_error(::Cloudkeeper::Errors::Parsing::InvalidApplianceHashError)
       end
     end
 

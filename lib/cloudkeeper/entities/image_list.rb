@@ -2,13 +2,20 @@ require 'date'
 
 module Cloudkeeper
   module Entities
-    class ImageList < Struct.new(:identifier, :creation_date, :description,
-                                 :title, :source, :appliances)
+    class ImageList
+      attr_accessor :identifier, :creation_date, :description, :title, :source, :appliances
 
       DATE_FORMAT = '%Y-%m-%dT%H:%M:%SZ'.freeze
 
-      def initialize
-        self.appliances = []
+      def initialize(identifier, creation_date = nil, source = '', title = '', description = '', appliances = [])
+        raise Cloudkeeper::Errors::ArgumentError, 'identifier cannot be nil nor empty' if identifier.blank?
+
+        @identifier = identifier
+        @creation_date = creation_date
+        @description = description
+        @title = title
+        @source = source
+        @appliances = appliances
       end
 
       def add_appliance(appliance)
@@ -39,16 +46,20 @@ module Cloudkeeper
         end
 
         def populate_image_list(image_list_hash)
-          image_list = ImageList.new
-          return image_list unless image_list_hash
+          raise Cloudkeeper::Errors::Parsing::InvalidImageListHashError, 'invalid image list hash' if image_list_hash.blank?
 
-          image_list.identifier = image_list_hash[:'dc:identifier']
-          image_list.creation_date = DateTime.strptime(image_list_hash[:'dc:date:created'], DATE_FORMAT)
-          image_list.description = image_list_hash[:'dc:description']
-          image_list.source = image_list_hash[:'dc:source']
-          image_list.title = image_list_hash[:'dc:title']
+          ImageList.new image_list_hash[:'dc:identifier'],
+                        creation_date(image_list_hash[:'dc:date:created']),
+                        image_list_hash[:'dc:source'],
+                        image_list_hash[:'dc:title'],
+                        image_list_hash[:'dc:description']
+        rescue Cloudkeeper::Errors::ArgumentError => ex
+          raise Cloudkeeper::Errors::Parsing::InvalidImageListHashError, ex, "image list hash #{image_list_hash.inspect} " \
+                                                                             "doesn't contain all the necessary data"
+        end
 
-          image_list
+        def creation_date(date)
+          date.blank? ? '' : DateTime.strptime(date, DATE_FORMAT)
         end
 
         def populate_appliances!(image_list, image_list_hash)

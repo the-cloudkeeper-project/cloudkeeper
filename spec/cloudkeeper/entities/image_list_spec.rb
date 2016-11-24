@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Cloudkeeper::Entities::ImageList do
-  subject(:image_list) { described_class.new }
+  subject(:image_list) { described_class.new 'identifier123' }
 
   describe '#new' do
     it 'returns an instance of ImageList' do
@@ -14,6 +14,12 @@ describe Cloudkeeper::Entities::ImageList do
 
     it 'prepares appliances attributes as an empty array' do
       expect(image_list.appliances).to be_empty
+    end
+
+    context 'with nil identifier' do
+      it 'raises ArgumentError exception' do
+        expect { described_class.new nil }.to raise_error(Cloudkeeper::Errors::ArgumentError)
+      end
     end
   end
 
@@ -76,14 +82,8 @@ describe Cloudkeeper::Entities::ImageList do
 
   describe '#populate_image_list' do
     context 'with invalid image list hash' do
-      it 'returns empty ImageList instance' do
-        il = described_class.populate_image_list nil
-
-        expect(il.identifier).to be_nil
-        expect(il.creation_date).to be_nil
-        expect(il.description).to be_nil
-        expect(il.source).to be_nil
-        expect(il.title).to be_nil
+      it 'raises InvalidImageListHashError exception' do
+        expect { described_class.populate_image_list nil }.to raise_error(::Cloudkeeper::Errors::Parsing::InvalidImageListHashError)
       end
     end
 
@@ -101,17 +101,26 @@ describe Cloudkeeper::Entities::ImageList do
       end
     end
 
-    context 'without all the values' do
+    context 'without some optional values' do
       let(:image_list_hash) { load_file 'image_list06.json', symbolize: true }
 
       it 'returns populated ImageList instance' do
         il = described_class.populate_image_list image_list_hash
 
-        expect(il.identifier).to be_nil
+        expect(il.identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
         expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
         expect(il.description).to eq('This is a VO-wide image list for some1.vo.net VO.')
         expect(il.source).to be_nil
         expect(il.title).to eq('Dummy image list number 1.')
+      end
+    end
+
+    context 'without mandatory values' do
+      let(:image_list_hash) { load_file 'image_list14.json', symbolize: true }
+
+      it 'raises InvalidImageListHashError exception' do
+        expect { described_class.populate_image_list image_list_hash }.to \
+          raise_error(::Cloudkeeper::Errors::Parsing::InvalidImageListHashError)
       end
     end
   end
@@ -225,6 +234,26 @@ describe Cloudkeeper::Entities::ImageList do
         expect(appliance.expiration_date).to eq(expiration)
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
         expect(appliance.attributes).to eq(attributes2)
+      end
+    end
+  end
+
+  describe '#creation_date' do
+    context 'with nil date' do
+      it 'returns empty string' do
+        expect(described_class.creation_date(nil)).to eq('')
+      end
+    end
+
+    context 'with empty date' do
+      it 'returns empty string' do
+        expect(described_class.creation_date('')).to eq('')
+      end
+    end
+
+    context 'with real date' do
+      it 'returns parsed DateTime instance' do
+        expect(described_class.creation_date('2015-06-18T21:14:00Z')).to eq(DateTime.new(2015, 6, 18, 21, 14))
       end
     end
   end

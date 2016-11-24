@@ -1,19 +1,35 @@
 require 'spec_helper'
 
 describe Cloudkeeper::Entities::Image do
-  subject(:image) { described_class.new }
+  subject(:image) { described_class.new 'http://image.uri', '123456789' }
 
   describe '#new' do
     it 'returns instance of Image' do
       is_expected.to be_instance_of described_class
     end
 
-    it 'prepares image_files attribute as an array instance' do
+    it 'without setting prepares image_files attribute as an array instance' do
       expect(image.image_files).to be_instance_of Array
     end
 
-    it 'prepares image_files attribute as empty array' do
+    it 'without setting prepares image_files attribute as empty array' do
       expect(image.image_files).to be_empty
+    end
+
+    it 'without setting prepares size as 0' do
+      expect(image.size).to eq(0)
+    end
+
+    context 'with nil uri' do
+      it 'raises ArgumentError exception' do
+        expect { described_class.new nil, '123456789' }.to raise_error(Cloudkeeper::Errors::ArgumentError)
+      end
+    end
+
+    context 'with nil checksum' do
+      it 'raises ArgumentError exception' do
+        expect { described_class.new 'http://image.uri', nil }.to raise_error(Cloudkeeper::Errors::ArgumentError)
+      end
     end
   end
 
@@ -73,6 +89,14 @@ describe Cloudkeeper::Entities::Image do
 
     context 'with empty hash' do
       let(:hash) { {} }
+
+      it 'fails with an InvalidImageHashError exception' do
+        expect { described_class.from_hash hash }.to raise_error ::Cloudkeeper::Errors::Parsing::InvalidImageHashError
+      end
+    end
+
+    context 'with nil hash' do
+      let(:hash) { nil }
 
       it 'fails with an InvalidImageHashError exception' do
         expect { described_class.from_hash hash }.to raise_error ::Cloudkeeper::Errors::Parsing::InvalidImageHashError

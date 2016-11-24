@@ -56,7 +56,7 @@ module Cloudkeeper
         end
 
         def image_file(converted_file, output_format)
-          Cloudkeeper::Entities::ImageFile.new converted_file, compute_checksum(converted_file), output_format.to_sym, false
+          Cloudkeeper::Entities::ImageFile.new converted_file, output_format.to_sym, compute_checksum(converted_file), false
         end
 
         def compute_checksum(converted_file)

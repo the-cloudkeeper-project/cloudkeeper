@@ -146,65 +146,28 @@ describe Cloudkeeper::Managers::ImageManager do
 
   describe '#file_description' do
     let(:file) { 'file' }
-    let(:command) { instance_double(Mixlib::ShellOut) }
     let(:output) { 'some dummy output' }
 
     before do
-      expect(Mixlib::ShellOut).to receive(:new).with('file', '-b', file) { command }
-      allow(command).to receive(:run_command)
-      allow(command).to receive(:stdout) { output }
-      allow(command).to receive(:command) { 'file -b file' }
-      allow(command).to receive(:stderr) { 'some dummy error' }
+      expect(Cloudkeeper::CommandExecutioner).to receive(:execute).with('file', '-b', file) { output }
     end
 
-    context 'with sucessfull execution' do
-      before do
-        expect(command).to receive(:error?) { false }
-      end
-
-      it 'returns file description' do
-        expect(described_class.file_description(file)).to eq(output)
-      end
-    end
-
-    context 'with failed execution' do
-      before do
-        expect(command).to receive(:error?) { true }
-      end
-
-      it 'raises CommandExecutionError exception' do
-        expect { described_class.file_description file }.to raise_error(Cloudkeeper::Errors::CommandExecutionError)
-      end
+    it 'returns file description' do
+      expect(described_class.file_description(file)).to eq(output)
     end
   end
 
   describe '#format' do
     let(:file) { File.join(MOCK_DIR, 'image_formats', 'ova') }
-    let(:command) { instance_double(Mixlib::ShellOut) }
     let(:output) { 'QEMU QCOW Image (v3), 20971520 bytes' }
 
     before do
-      allow(Mixlib::ShellOut).to receive(:new).with('file', '-b', file) { command }
-      allow(command).to receive(:run_command)
-      allow(command).to receive(:stdout) { output }
-      allow(command).to receive(:command) { 'file -b file' }
-      allow(command).to receive(:stderr) { 'some dummy error' }
-      allow(command).to receive(:error?) { false }
+      allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with('file', '-b', file) { output }
     end
 
     context 'if everything goes well' do
       it 'returns image format' do
         expect(described_class.format(file)).to eq(:qcow2)
-      end
-    end
-
-    context 'with failed command execution' do
-      before do
-        expect(command).to receive(:error?) { true }
-      end
-
-      it 'raises ImageFormatRecognitionError exception' do
-        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormat::RecognitionError)
       end
     end
 

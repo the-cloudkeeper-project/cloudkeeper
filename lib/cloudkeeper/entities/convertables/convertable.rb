@@ -45,14 +45,14 @@ module Cloudkeeper
         end
 
         def run_convert_command(output_format, converted_file)
-          convert_command = Mixlib::ShellOut.new(Cloudkeeper::Settings[:'qemu-img-binary'], 'convert', '-f', format.to_s, '-O', \
-                                                 output_format.to_s, file, converted_file)
-          convert_command.run_command
-
-          return unless convert_command.error?
-
-          raise Cloudkeeper::Errors::CommandExecutionError, "Command #{convert_command.command.inspect} terminated with an error: " \
-                                                            "#{convert_command.stderr}"
+          Cloudkeeper::CommandExecutioner.execute(Cloudkeeper::Settings[:'qemu-img-binary'],
+                                                  'convert',
+                                                  '-f',
+                                                  format.to_s,
+                                                  '-O',
+                                                  output_format.to_s,
+                                                  file,
+                                                  converted_file)
         end
 
         def image_file(converted_file, output_format)

@@ -13,15 +13,7 @@ module Cloudkeeper
         end
 
         def archive_files(archive)
-          tar_command = Mixlib::ShellOut.new('tar', '-t', '-f', archive)
-          tar_command.run_command
-
-          if tar_command.error?
-            raise Cloudkeeper::Errors::CommandExecutionError, "Command #{tar_command.command.inspect} terminated with an error: " \
-                                                              "#{tar_command.stderr}"
-          end
-
-          tar_command.stdout.lines.map(&:chomp)
+          Cloudkeeper::CommandExecutioner.execute('tar', '-t', '-f', archive).lines.map(&:chomp)
         end
 
         def ova_structure?(files)

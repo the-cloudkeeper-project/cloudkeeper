@@ -12,6 +12,10 @@ module Cloudkeeper
 
         command.stdout
       end
+
+      def list_archive(archive)
+        execute('tar', '-t', '-f', archive).lines.map(&:chomp)
+      end
     end
   end
 end

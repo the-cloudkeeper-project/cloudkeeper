@@ -13,7 +13,7 @@ module Cloudkeeper
         end
 
         def archive_files(archive)
-          Cloudkeeper::CommandExecutioner.execute('tar', '-t', '-f', archive).lines.map(&:chomp)
+          Cloudkeeper::CommandExecutioner.list_archive archive
         end
 
         def ova_structure?(files)

@@ -43,7 +43,7 @@ module Cloudkeeper
         end
 
         def archive_files
-          Cloudkeeper::CommandExecutioner.execute('tar', '-t', '-f', file).lines.map(&:chomp)
+          Cloudkeeper::CommandExecutioner.list_archive file
         end
 
         def disk_file

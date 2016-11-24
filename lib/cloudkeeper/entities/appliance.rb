@@ -1,9 +1,9 @@
 module Cloudkeeper
   module Entities
-    class Appliance < Struct.new(:identifier, :description, :mpuri, :title,
-                                 :group, :ram, :core, :version, :architecture,
-                                 :operating_system, :image, :attributes, :vo,
-                                 :expiration_date, :image_list_identifier)
+    Appliance = Struct.new(:identifier, :description, :mpuri, :title,
+                           :group, :ram, :core, :version, :architecture,
+                           :operating_system, :image, :attributes, :vo,
+                           :expiration_date, :image_list_identifier) do
       def initialize
         self.attributes = {}
       end

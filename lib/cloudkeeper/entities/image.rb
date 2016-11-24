@@ -1,6 +1,6 @@
 module Cloudkeeper
   module Entities
-    class Image < Struct.new(:image_files, :size, :uri, :checksum)
+    Image = Struct.new(:image_files, :size, :uri, :checksum) do
       def initialize
         self.image_files = []
       end

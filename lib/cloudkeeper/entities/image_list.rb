@@ -2,9 +2,7 @@ require 'date'
 
 module Cloudkeeper
   module Entities
-    class ImageList < Struct.new(:identifier, :creation_date, :description,
-                                 :title, :source, :appliances)
-
+    ImageList = Struct.new(:identifier, :creation_date, :description, :title, :source, :appliances) do
       DATE_FORMAT = '%Y-%m-%dT%H:%M:%SZ'.freeze
 
       def initialize

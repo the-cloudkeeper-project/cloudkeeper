@@ -1,6 +1,6 @@
 module Cloudkeeper
   module Entities
-    class ImageFile < Struct.new(:file, :checksum, :format, :original)
+    ImageFile = Struct.new(:file, :checksum, :format, :original) do
       include Cloudkeeper::Entities::Convertables::Convertable
 
       def initialize(*argv)

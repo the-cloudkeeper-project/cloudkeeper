@@ -20,10 +20,6 @@ Metrics/MethodLength:
   Exclude:
     - 'lib/cloudkeeper/entities/appliance.rb'
 
-Style/StructInheritance:
-  Exclude:
-    - 'lib/cloudkeeper/entities/*.rb'
-
 RSpec/MultipleExpectations:
   Enabled: false
 
@@ -39,3 +35,5 @@ Metrics/BlockLength:
     - '**/*.rake'
     - 'spec/**/*.rb'
     - '*.gemspec'
+    - 'lib/cloudkeeper/entities/appliance.rb'
+    - 'lib/cloudkeeper/entities/image_list.rb'

@@ -9,12 +9,11 @@ module Cloudkeeper
     class ImageListManager
       attr_reader :image_lists, :openssl_store
 
-      def initialize(options = {})
+      def initialize
         @image_lists = []
 
-        ca_dir = options[:ca_dir]
         @openssl_store = OpenSSL::X509::Store.new
-        @openssl_store.add_path ca_dir if ca_dir
+        @openssl_store.add_path Cloudkeeper::Settings[:'ca-dir'] if Cloudkeeper::Settings[:'ca-dir']
       end
 
       def download_image_lists(urls)
@@ -29,7 +28,8 @@ module Cloudkeeper
       private
 
       def download_image_list(url, dir)
-        raise InvalidURLError, "#{url.inspect} is not a valid URL" unless url =~ /\A#{URI.regexp(%w(http https))}\z/
+        raise Cloudkeeper::Errors::InvalidURLError, "#{url.inspect} is not a valid URL" \
+          unless url =~ /\A#{URI.regexp(%w(http https))}\z/
 
         uri = URI.parse url
         user = uri.user

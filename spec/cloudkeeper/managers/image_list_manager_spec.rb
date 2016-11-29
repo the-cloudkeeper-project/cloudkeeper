@@ -33,10 +33,11 @@ describe Cloudkeeper::Managers::ImageListManager do
       before do
         expect(OpenSSL::X509::Store).to receive(:new) { openssl_dummy_store }
         expect(openssl_dummy_store).to receive(:add_path).with('/some/ca/directory')
+        Cloudkeeper::Settings[:'ca-dir'] = '/some/ca/directory'
       end
 
       it 'prepares openssl_store attribute as OpenSSL::X509::Store instance with custom CA directory' do
-        described_class.new ca_dir: '/some/ca/directory'
+        described_class.new
       end
     end
 
@@ -46,10 +47,11 @@ describe Cloudkeeper::Managers::ImageListManager do
       before do
         expect(OpenSSL::X509::Store).to receive(:new) { openssl_dummy_store }
         expect(openssl_dummy_store).not_to receive(:add_path)
+        Cloudkeeper::Settings[:'ca-dir'] = nil
       end
 
       it 'prepares openssl_store attribute as OpenSSL::X509::Store instance without custom CA directory' do
-        described_class.new ca_dir: nil
+        described_class.new
       end
     end
   end
@@ -66,7 +68,10 @@ describe Cloudkeeper::Managers::ImageListManager do
 
   describe '.verify_image_list!' do
     let(:pkcs7) { OpenSSL::PKCS7.read_smime(File.read(image_list_file)) }
-    let(:ilm) { described_class.new ca_dir: File.join(MOCK_DIR, 'ca') }
+
+    before do
+      Cloudkeeper::Settings[:'ca-dir'] = File.join(MOCK_DIR, 'ca')
+    end
 
     context 'with valid image list' do
       let(:image_list_file) { File.join(MOCK_DIR, 'imagelist01.signed') }
@@ -87,7 +92,9 @@ describe Cloudkeeper::Managers::ImageListManager do
   end
 
   describe '.load_image_list' do
-    let(:ilm) { described_class.new ca_dir: File.join(MOCK_DIR, 'ca') }
+    before do
+      Cloudkeeper::Settings[:'ca-dir'] = File.join(MOCK_DIR, 'ca')
+    end
 
     context 'with valid image list' do
       let(:image_list_file) { File.join(MOCK_DIR, 'imagelist01.signed') }
@@ -174,11 +181,17 @@ describe Cloudkeeper::Managers::ImageListManager do
     end
   end
 
-  describe '#download_image_lists' do
+  describe '.download_image_list' do
     let(:tmpdir) { Dir.mktmpdir('cloudkeeper-test') }
 
     after do
       FileUtils.remove_entry tmpdir
+    end
+
+    context 'with invalid URL' do
+      it 'raises InvalidURLError exception' do
+        expect { ilm.send(:download_image_list, 'NOT_A_URL', tmpdir) }.to raise_error(Cloudkeeper::Errors::InvalidURLError)
+      end
     end
 
     context 'with basic auth' do
@@ -205,7 +218,6 @@ describe Cloudkeeper::Managers::ImageListManager do
   end
 
   describe '.download_image_lists' do
-    let(:ilm) { described_class.new ca_dir: File.join(MOCK_DIR, 'ca') }
     let(:urls) do
       [
         'http://localhost:9292/imagelist01.signed',
@@ -402,6 +414,10 @@ describe Cloudkeeper::Managers::ImageListManager do
         :'hv:ca' => '/DC=XXX/DC=YYY/CN=SOME TEST CA',
         :'hv:dn' => '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
         :'hv:email' => 'dontwriteme@please.net' }
+    end
+
+    before do
+      Cloudkeeper::Settings[:'ca-dir'] = File.join(MOCK_DIR, 'ca')
     end
 
     it 'downloads, parse and populates image lists from given urls' do

@@ -4,6 +4,13 @@ require 'tempfile'
 describe Cloudkeeper::Managers::ImageManager do
   subject(:im) { described_class.new }
 
+  before do
+    VCR.configure do |config|
+      config.cassette_library_dir = File.join(MOCK_DIR, 'cassettes')
+      config.hook_into :webmock
+    end
+  end
+
   describe '#new' do
     it 'returns an instance of ImageManager' do
       is_expected.to be_instance_of described_class
@@ -201,6 +208,56 @@ describe Cloudkeeper::Managers::ImageManager do
 
       it 'raises ImageFormatRecognitionError exception' do
         expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormat::RecognitionError)
+      end
+    end
+  end
+
+  describe '#generate_filename' do
+    let(:uri) { URI.parse('http://some.nonexistent.server/path1/path2/file.ext') }
+
+    before do
+      Cloudkeeper::Settings[:'image-dir'] = '/image/output/directory/'
+    end
+
+    it 'returns full path of file, image will be download to' do
+      expect(described_class.generate_filename(uri)).to eq('/image/output/directory/file.ext')
+    end
+  end
+
+  describe '#download_image' do
+    let(:url) { 'http://localhost:9292/image.ext' }
+    let(:tmpdir) { Dir.mktmpdir('cloudkeeper-test') }
+
+    after do
+      FileUtils.remove_entry tmpdir
+    end
+
+    before do
+      Cloudkeeper::Settings[:'image-dir'] = tmpdir
+    end
+
+    context 'with invalid url' do
+      let(:url) { 'NOT_AN_URL' }
+
+      it 'raise InvalidURLError exception' do
+        expect { described_class.download_image url }.to raise_error(Cloudkeeper::Errors::InvalidURLError)
+      end
+    end
+
+    context 'with valid url' do
+      before do
+        allow(described_class).to receive(:format) { :qcow2 }
+      end
+
+      it 'returns populated image file instance' do
+        VCR.use_cassette('image-download') do
+          image_file = described_class.download_image(url)
+          expect(image_file.file).to eq(File.join(tmpdir, 'image.ext'))
+          expect(image_file.format).to eq(:qcow2)
+          expect(image_file.checksum).to eq('9a8093f874bdf4c19b6deacd2208e347292452df008a61d815dcd8395a2487e263364a85ca569d71c27dd9e' \
+                                            '349fd31227094644c39e9a734b199b2dbdefa9c35')
+          expect(image_file.original).to be_truthy
+        end
       end
     end
   end

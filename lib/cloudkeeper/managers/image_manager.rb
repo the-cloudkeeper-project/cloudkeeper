@@ -1,3 +1,5 @@
+require 'open-uri'
+
 module Cloudkeeper
   module Managers
     class ImageManager
@@ -41,6 +43,21 @@ module Cloudkeeper
           end
 
           raise Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError, "No image format recognized for file #{file.inspect}"
+        end
+
+        def download_image(url)
+          raise Cloudkeeper::Errors::InvalidURLError, "#{url.inspect} is not a valid URL" \
+            unless url =~ /\A#{URI.regexp(%w(http https))}\z/
+
+          uri = URI.parse url
+          filename = generate_filename(uri)
+          IO.copy_stream(open(uri), filename)
+
+          Cloudkeeper::Entities::ImageFile.new filename, format(filename), Digest::SHA512.file(filename).hexdigest, true
+        end
+
+        def generate_filename(uri)
+          File.join(Cloudkeeper::Settings[:'image-dir'], Zaru.sanitize!(File.basename(uri.path)))
         end
       end
     end

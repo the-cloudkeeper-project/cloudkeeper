@@ -1,6 +1,7 @@
 cloudkeeper:
   image-lists: # List of image lists
   ca-dir: /etc/grid-security/certificates/
+  image-dir: /var/spool/cloudkeeper/images/
   binaries:
     qemu-img: /usr/bin/qemu-img # Path to qemu-img binary (image conversion)
   logging:

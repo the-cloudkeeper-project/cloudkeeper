@@ -33,6 +33,23 @@ describe Cloudkeeper::Entities::Image do
     end
   end
 
+  describe '.add_image_file' do
+    context 'with nil image file' do
+      it 'raises ArgumentError exception' do
+        expect { image.add_image_file nil }.to raise_error(Cloudkeeper::Errors::ArgumentError)
+      end
+    end
+
+    context 'with proper image file' do
+      let(:image_file) { instance_double(Cloudkeeper::Entities::ImageFile) }
+      it 'adds image file into its array' do
+        image.add_image_file image_file
+        expect(image.image_files.count).to eq(1)
+        expect(image.image_files.first).to eq(image_file)
+      end
+    end
+  end
+
   describe '#from_hash' do
     context 'with hash with correct values' do
       let(:hash) do

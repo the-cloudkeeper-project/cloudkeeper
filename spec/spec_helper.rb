@@ -3,15 +3,18 @@ require 'yell'
 require 'rspec/collection_matchers'
 require 'vcr'
 require 'json'
+require 'diffy'
 
 SimpleCov.start do
   add_filter '/vendor'
   add_filter '/spec'
 end
 
+Diffy::Diff.default_format = :color
+
 require 'cloudkeeper'
 
-Dir["#{File.dirname(__FILE__)}/helpers/*.rb"].each { |file| require file }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 MOCK_DIR = File.join(File.dirname(__FILE__), 'mock')
 

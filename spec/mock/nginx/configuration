@@ -1,7 +1,7 @@
 worker_processes  1;
 
-error_log  <%= error_log_file %>;
-pid        <%= pid_file %>;
+error_log  /nginx/error.log;
+pid        /nginx/nginx.pid;
 
 events {
     worker_connections  1024;
@@ -9,7 +9,7 @@ events {
 
 http {
     default_type  application/octet-stream;
-    access_log  <%= access_log_file %>;
+    access_log  /nginx/access.log;
 
     sendfile           on;
     sendfile_max_chunk 1m;
@@ -18,15 +18,15 @@ http {
     keepalive_timeout  65;
 
     auth_basic "Cloudkeeper image";
-    auth_basic_user_file <%= auth_file %>;
+    auth_basic_user_file /nginx/file.auth;
 
     server {
-        listen       <%= port %>;
-        server_name  <%= ip_address %>;
-        root <%= root_dir %>;
+        listen       12345;
+        server_name  127.0.0.1;
+        root /cloudkeeper/images;
 
         location / {
-            try_files /<%= image_file %> /<%= image_file %>;
+            try_files /image.ext /image.ext;
         }
     }
 }

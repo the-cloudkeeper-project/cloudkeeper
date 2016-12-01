@@ -22,8 +22,6 @@ module Cloudkeeper
       def stop
         Cloudkeeper::CommandExecutioner.execute Cloudkeeper::Settings[:'nginx-binary'], '-s', 'stop', '-c', conf_file.path
 
-        auth_file.close
-        conf_file.close
         auth_file.unlink
         conf_file.unlink
       end
@@ -47,6 +45,7 @@ module Cloudkeeper
         passwd = WEBrick::HTTPAuth::Htpasswd.new(auth_file.path)
         passwd.set_passwd(nil, name, password)
         passwd.flush
+        auth_file.close
       end
 
       def prepare_configuration_file(image_file)
@@ -55,7 +54,7 @@ module Cloudkeeper
         @conf_file = Tempfile.new('cloudkeeper-nginx-conf')
 
         conf_file.write conf_content
-        conf_file.flush
+        conf_file.close
 
         logger.debug("Prepared NGINX configuration file #{conf_file.path.inspect}:\n#{conf_content}")
       end

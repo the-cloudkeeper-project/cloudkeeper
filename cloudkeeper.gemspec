@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'pry', '~> 0.10'
   spec.add_development_dependency 'vcr', '~> 3.0'
   spec.add_development_dependency 'webmock', '~> 2.1'
+  spec.add_development_dependency 'diffy', '~> 3.1'
 
   spec.add_runtime_dependency 'thor', '~> 0.19'
   spec.add_runtime_dependency 'yell', '~> 2.0'

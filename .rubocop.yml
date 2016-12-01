@@ -19,6 +19,7 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Exclude:
     - 'lib/cloudkeeper/entities/appliance.rb'
+    - 'lib/cloudkeeper/nginx/http_server.rb'
 
 RSpec/MultipleExpectations:
   Enabled: false

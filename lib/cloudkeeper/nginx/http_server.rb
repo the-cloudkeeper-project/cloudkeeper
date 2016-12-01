@@ -10,12 +10,12 @@ module Cloudkeeper
       attr_reader :auth_file, :conf_file
 
       def start(image_file)
-        auth = prepare_auth_file
+        cred = prepare_credentials
         prepare_configuration_file image_file
 
         Cloudkeeper::CommandExecutioner.execute Cloudkeeper::Settings[:'nginx-binary'], '-c', conf_file.path
 
-        auth
+        cred
       end
 
       def stop
@@ -27,8 +27,7 @@ module Cloudkeeper
 
       private
 
-      def prepare_auth_file
-        @auth_file = Tempfile.new('cloudkeeper-nginx-auth')
+      def prepare_credentials
         name = random_string
         password = random_string
 
@@ -41,6 +40,7 @@ module Cloudkeeper
       end
 
       def write_auth_file(name, password)
+        @auth_file = Tempfile.new('cloudkeeper-nginx-auth')
         passwd = WEBrick::HTTPAuth::Htpasswd.new(auth_file.path)
         passwd.set_passwd(nil, name, password)
         passwd.flush

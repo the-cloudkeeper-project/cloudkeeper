@@ -121,30 +121,25 @@ describe Cloudkeeper::Nginx::HttpServer do
   describe 'write_auth_file' do
     let(:name) { 'albus' }
     let(:password) { 'Rictusempra' }
-    let(:auth_file) { Tempfile.new('cloudkeeper-nginx-spec') }
-
-    before do
-      http_server.instance_variable_set(:@auth_file, auth_file)
-    end
 
     after do
-      auth_file.unlink
+      http_server.auth_file.unlink
     end
 
     it 'writes name and password into .htpasswd file' do
       http_server.send(:write_auth_file, name, password)
-      passwd = WEBrick::HTTPAuth::Htpasswd.new(auth_file.path)
+      passwd = WEBrick::HTTPAuth::Htpasswd.new(http_server.auth_file.path)
       expect(passwd.get_passwd(nil, name, true)).not_to be_nil
     end
   end
 
-  describe 'prepare_auth_file' do
+  describe 'prepare_credentials' do
     after do
       http_server.auth_file.unlink
     end
 
     it 'prepares .htpasswd file and returns used name and password' do
-      auth = http_server.send(:prepare_auth_file)
+      auth = http_server.send(:prepare_credentials)
       passwd = WEBrick::HTTPAuth::Htpasswd.new(http_server.auth_file.path)
       expect(passwd.get_passwd(nil, auth[:name], true)).not_to be_nil
     end

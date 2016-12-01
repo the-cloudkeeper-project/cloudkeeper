@@ -118,6 +118,19 @@ describe Cloudkeeper::Nginx::HttpServer do
     end
   end
 
+  describe 'write_configuration_file' do
+    let(:configuration_file_content) { File.read(File.join(MOCK_DIR, 'nginx', 'configuration')) }
+
+    after do
+      http_server.conf_file.unlink
+    end
+
+    it 'writes NGINX configuration file' do
+      http_server.send(:write_configuration_file, configuration_file_content)
+      expect(configuration_file_content).to eq(File.read(http_server.conf_file.path))
+    end
+  end
+
   describe 'write_auth_file' do
     let(:name) { 'albus' }
     let(:password) { 'Rictusempra' }

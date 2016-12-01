@@ -23,6 +23,8 @@ module Cloudkeeper
 
         auth_file.unlink
         conf_file.unlink
+      rescue IOError => ex
+        raise Cloudkeeper::Errors::NginxError, ex
       end
 
       private
@@ -45,17 +47,25 @@ module Cloudkeeper
         passwd.set_passwd(nil, name, password)
         passwd.flush
         auth_file.close
+      rescue IOError => ex
+        raise Cloudkeeper::Errors::NginxError, ex
       end
 
       def prepare_configuration_file(image_file)
         configuration = prepare_configuration File.dirname(image_file), File.basename(image_file)
         conf_content = prepare_configuration_file_content configuration
-        @conf_file = Tempfile.new('cloudkeeper-nginx-conf')
-
-        conf_file.write conf_content
-        conf_file.close
+        write_configuration_file conf_content
 
         logger.debug("Prepared NGINX configuration file #{conf_file.path.inspect}:\n#{conf_content}")
+      end
+
+      def write_configuration_file(content)
+        @conf_file = Tempfile.new('cloudkeeper-nginx-conf')
+
+        conf_file.write content
+        conf_file.close
+      rescue IOError => ex
+        raise Cloudkeeper::Errors::NginxError, ex
       end
 
       def prepare_configuration_file_content(configuration)

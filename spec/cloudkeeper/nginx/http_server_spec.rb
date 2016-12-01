@@ -3,31 +3,15 @@ require 'spec_helper'
 describe Cloudkeeper::Nginx::HttpServer do
   subject(:http_server) { described_class.new }
 
-  describe '.choose_password' do
-    it 'each time returns randomly generated 50 characters long password' do
-      pass1 = http_server.send(:choose_password)
-      pass2 = http_server.send(:choose_password)
-      pass3 = http_server.send(:choose_password)
+  describe '.random_string' do
+    it 'each time returns randomly generated string' do
+      string1 = http_server.send(:random_string)
+      string2 = http_server.send(:random_string)
+      string3 = http_server.send(:random_string)
 
-      expect(pass1).not_to eq(pass2)
-      expect(pass1).not_to eq(pass3)
-      expect(pass2).not_to eq(pass3)
-
-      expect(pass1.length).to be >= 45
-      expect(pass2.length).to be >= 45
-      expect(pass3.length).to be >= 45
-    end
-  end
-
-  describe '.choose_name' do
-    it 'each time returns different name' do
-      name1 = http_server.send(:choose_name)
-      name2 = http_server.send(:choose_name)
-      name3 = http_server.send(:choose_name)
-
-      expect(name1).not_to eq(name2)
-      expect(name1).not_to eq(name3)
-      expect(name2).not_to eq(name3)
+      expect(string1).not_to eq(string2)
+      expect(string1).not_to eq(string3)
+      expect(string2).not_to eq(string3)
     end
   end
 

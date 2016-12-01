@@ -1,7 +1,6 @@
 require 'webrick'
 require 'tempfile'
-require 'faker'
-require 'simple-password-gen'
+require 'securerandom'
 require 'erb'
 require 'tilt/erb'
 
@@ -30,8 +29,8 @@ module Cloudkeeper
 
       def prepare_auth_file
         @auth_file = Tempfile.new('cloudkeeper-nginx-auth')
-        name = choose_name
-        password = choose_password
+        name = random_string
+        password = random_string
 
         write_auth_file name, password
 
@@ -83,12 +82,8 @@ module Cloudkeeper
         rand(Cloudkeeper::Settings[:'nginx-min-port']..Cloudkeeper::Settings[:'nginx-max-port'])
       end
 
-      def choose_name
-        Faker::Name.first_name.downcase
-      end
-
-      def choose_password
-        Password.random(50)
+      def random_string
+        SecureRandom.uuid
       end
     end
   end

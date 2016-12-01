@@ -12,6 +12,12 @@ module Cloudkeeper
         @image_files = image_files
       end
 
+      def add_image_file(image_file)
+        raise Cloudkeeper::Errors::ArgumentError, 'image file cannot be nil' if image_file.nil?
+
+        image_files << image_file
+      end
+
       def self.from_hash(image_hash)
         raise Cloudkeeper::Errors::Parsing::InvalidImageHashError, 'invalid image hash' if image_hash.blank?
 

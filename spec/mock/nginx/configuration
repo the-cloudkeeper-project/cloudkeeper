@@ -1,0 +1,32 @@
+worker_processes  1;
+
+error_log  /nginx/error.log;
+pid        /nginx/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    default_type  application/octet-stream;
+    access_log  /nginx/access.log;
+
+    sendfile           on;
+    sendfile_max_chunk 1m;
+    tcp_nopush         on;
+    tcp_nodelay        on;
+    keepalive_timeout  65;
+
+    auth_basic "Cloudkeeper image";
+    auth_basic_user_file /nginx/file.auth;
+
+    server {
+        listen       12345;
+        server_name  127.0.0.1;
+        root /cloudkeeper/images;
+
+        location / {
+            try_files /image.ext /image.ext;
+        }
+    }
+}

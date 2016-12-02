@@ -1,0 +1,32 @@
+worker_processes  1;
+
+error_log  <%= error_log_file %>;
+pid        <%= pid_file %>;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    default_type  application/octet-stream;
+    access_log  <%= access_log_file %>;
+
+    sendfile           on;
+    sendfile_max_chunk 1m;
+    tcp_nopush         on;
+    tcp_nodelay        on;
+    keepalive_timeout  65;
+
+    auth_basic "Cloudkeeper image";
+    auth_basic_user_file <%= auth_file %>;
+
+    server {
+        listen       <%= port %>;
+        server_name  <%= ip_address %>;
+        root <%= root_dir %>;
+
+        location / {
+            try_files /<%= image_file %> /<%= image_file %>;
+        }
+    }
+}

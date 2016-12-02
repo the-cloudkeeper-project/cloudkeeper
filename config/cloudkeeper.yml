@@ -4,6 +4,15 @@ cloudkeeper:
   image-dir: /var/spool/cloudkeeper/images/
   binaries:
     qemu-img: /usr/bin/qemu-img # Path to qemu-img binary (image conversion)
+    nginx: /usr/bin/nginx # Path to nginx binary (HTTP server)
+  remote-mode: false # Remote mode starts HTTP server (NGINX) and serves images to backend via HTTP
+  # nginx:
+  #   error-log-file: /var/log/cloudkeeper/nginx-error.log
+  #   access-log-file: /var/log/cloudkeeper/nginx-access.log
+  #   pid-file: /var/run/cloudkeeper/nginx.pid
+  #   ip-address: 127.0.0.1
+  #   min-port: 7300
+  #   max-port: 7400
   logging:
     level: ERROR # Logging level
     file: /var/log/cloudkeeper/cloudkeeper.log # File to write log to. To turn off file logging leave this field empty.

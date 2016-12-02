@@ -7,6 +7,7 @@ module Cloudkeeper
     autoload :NoSuchFileError, 'cloudkeeper/errors/no_such_file_error'
     autoload :PermissionDeniedError, 'cloudkeeper/errors/permission_denied_error'
     autoload :CommandExecutionError, 'cloudkeeper/errors/command_execution_error'
+    autoload :NginxError, 'cloudkeeper/errors/nginx_error'
 
     autoload :Parsing, 'cloudkeeper/errors/parsing'
     autoload :ImageList, 'cloudkeeper/errors/image_list'

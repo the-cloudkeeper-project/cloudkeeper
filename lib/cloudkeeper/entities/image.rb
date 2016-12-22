@@ -12,10 +12,18 @@ module Cloudkeeper
         @image_files = image_files
       end
 
-      def add_image_file(image_file)
-        raise Cloudkeeper::Errors::ArgumentError, 'image file cannot be nil' if image_file.nil?
+      def add_image_file(file)
+        raise Cloudkeeper::Errors::ArgumentError, 'image file cannot be nil' if file.nil?
 
-        image_files << image_file
+        image_files << file
+      end
+
+      def available_formats
+        image_files.map(&:format)
+      end
+
+      def image_file(format)
+        image_files.select { |file| file.format == format }.first
       end
 
       def self.from_hash(image_hash)

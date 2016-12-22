@@ -15,6 +15,7 @@ Metrics/MethodLength:
 Metrics/AbcSize:
   Exclude:
     - 'lib/cloudkeeper/entities/appliance.rb'
+    - 'lib/cloudkeeper/backend_connector.rb'
 
 Metrics/MethodLength:
   Exclude:
@@ -42,3 +43,4 @@ Metrics/BlockLength:
     - '*.gemspec'
     - 'lib/cloudkeeper/entities/appliance.rb'
     - 'lib/cloudkeeper/entities/image_list.rb'
+    - 'lib/cloudkeeper/grpc/*'

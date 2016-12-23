@@ -32,7 +32,9 @@ module Cloudkeeper
     end
 
     def remove_image_list(image_list_identifier)
-      check_status grpc_client.pre_action(Cloudkeeper::Grpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier))
+      check_status grpc_client.remove_image_list(
+        Cloudkeeper::Grpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier)
+      )
     end
 
     def image_lists
@@ -85,16 +87,16 @@ module Cloudkeeper
 
     def convert_appliance_proto(appliance_proto, image)
       Cloudkeeper::Entities::Appliance.new appliance_proto.identifier, appliance_proto.mpuri, appliance_proto.vo,
-                                           appliance_proto.expiration_date, appliance_proto.image_list_identifier,
-                                           appliance_proto.title, appliance_proto.description, appliance_proto.group,
-                                           appliance_proto.ram, appliance_proto.core, appliance_proto.version,
-                                           appliance_proto.architecture, appliance_proto.operating_system, image,
-                                           appliance_proto.attributes.to_h
+                                           Time.at(appliance_proto.expiration_date).to_datetime,
+                                           appliance_proto.image_list_identifier, appliance_proto.title,
+                                           appliance_proto.description, appliance_proto.group, appliance_proto.ram,
+                                           appliance_proto.core, appliance_proto.version, appliance_proto.architecture,
+                                           appliance_proto.operating_system, image, appliance_proto.attributes.to_h
     end
 
     def acceptable_image_file(image)
-      image_format = (image.available_formats & Cloudkeeper::Settings[:'output-formats'].map(&:to_sym)).sort.first
-      raise Cloudkeeper::Errors::NoRequiredFormatAvailableError, 'image is not available in any of the required formats' \
+      image_format = (image.available_formats & Cloudkeeper::Settings[:'output-formats'].map(&:to_sym).sort).first
+      raise Cloudkeeper::Errors::ImageFormat::NoRequiredFormatAvailableError, 'image is not available in any of the required formats' \
         unless image_format
 
       image.image_file image_format

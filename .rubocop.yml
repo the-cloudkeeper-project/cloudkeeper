@@ -31,6 +31,15 @@ RSpec/ExampleLength:
 RSpec/NestedGroups:
   MaxNesting: 3
 
+RSpec/NestedGroups:
+  MaxNesting: 4
+  Include:
+    - 'spec/cloudkeeper/backend_connector_spec.rb'
+
+RSpec/SubjectStub:
+  Exclude:
+    - 'spec/cloudkeeper/backend_connector_spec.rb'
+
 Metrics/ParameterLists:
   Exclude:
     - 'lib/cloudkeeper/entities/*.rb'

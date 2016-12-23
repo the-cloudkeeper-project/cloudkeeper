@@ -19,7 +19,7 @@ module Cloudkeeper
       end
 
       def available_formats
-        image_files.map(&:format)
+        image_files.map(&:format).sort
       end
 
       def image_file(format)

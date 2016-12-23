@@ -141,4 +141,59 @@ describe Cloudkeeper::Entities::Image do
       end
     end
   end
+
+  describe '.available_formats' do
+    let(:image_files) do
+      [
+        Struct.new(:format).new(:qcow),
+        Struct.new(:format).new(:vmdk),
+        Struct.new(:format).new(:raw)
+      ]
+    end
+    let(:formats) { [:qcow, :raw, :vmdk] }
+
+    before do
+      image.image_files = image_files
+    end
+
+    it 'returns list of available image formats sorted alphabetically' do
+      expect(image.available_formats).to eq(formats)
+    end
+
+    context 'with no image files' do
+      before do
+        image.image_files = []
+      end
+
+      it 'returns an empty array' do
+        expect(image.available_formats).to be_empty
+      end
+    end
+  end
+
+  describe '.image_file' do
+    let(:selected_image_file) { Struct.new(:format).new(:vmdk) }
+    let(:image_files) do
+      [
+        Struct.new(:format).new(:qcow),
+        selected_image_file,
+        Struct.new(:format).new(:raw)
+      ]
+    end
+    let(:formats) { [:qcow, :raw, :vmdk] }
+
+    before do
+      image.image_files = image_files
+    end
+
+    it 'returns image file with specified format' do
+      expect(image.image_file(:vmdk)).to eq(selected_image_file)
+    end
+
+    context 'if such a format is not available' do
+      it 'returns nil' do
+        expect(image.image_file(:non_existing_format)).to be_nil
+      end
+    end
+  end
 end

@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+import public "google/protobuf/empty.proto";
+
+package cloudkeeper.grpc;
+
+message Appliance {
+  string identifier = 1;
+  string title = 2;
+  string description = 3;
+  string mpuri = 4;
+  string group = 5;
+  int32 ram = 6;
+  int32 core = 7;
+  string version = 8;
+  string architecture = 9;
+  string operating_system = 10;
+  string vo = 11;
+  int32 expiration_date = 12;
+  string image_list_identifier = 13;
+  Image image = 14;
+  map<string, string> attributes = 15;
+}
+
+message Image {
+  enum Mode {
+    LOCAL = 0;
+    REMOTE = 1;
+  }
+  Mode mode = 1;
+  string location = 2;
+  enum Format {
+    RAW = 0;
+    OVA = 1;
+    QCOW2 = 2;
+    VMDK = 3;
+  }
+  Format format = 3;
+  string uri = 4;
+  string checksum = 5;
+  int32 size = 6;
+  string username = 7;
+  string password = 8;
+}
+
+message ImageListIdentifier {
+  string image_list_identifier = 1;
+}
+
+message Status {
+  enum Code {
+    SUCCESS = 0;
+    ERROR = 1;
+    ERROR_APPLIANCE_NOT_FOUND = 2;
+    ERROR_APPLIANCE_TRANSFER = 3;
+    ERROR_AUTHENTICATION = 4;
+    ERROR_USER_NOT_AUTHORIZED = 5;
+    ERROR_RESOURCE_NOT_FOUND = 6;
+    ERROR_RESOURCE_RETRIEVAL = 7;
+    ERROR_RESOURCE_STATE = 8;
+  }
+  Code code = 1;
+  string message = 2;
+}
+
+service Communicator {
+  rpc PreAction(google.protobuf.Empty) returns (Status) {}
+  rpc PostAction(google.protobuf.Empty) returns (Status) {}
+  rpc Migrate(google.protobuf.Empty) returns (Status) {}
+  rpc AddAppliance(Appliance) returns (Status) {}
+  rpc UpdateAppliance(Appliance) returns (Status) {}
+  rpc RemoveAppliance(Appliance) returns (Status) {}
+  rpc RemoveImageList(ImageListIdentifier) returns (Status) {}
+  rpc ImageLists(google.protobuf.Empty) returns (stream ImageListIdentifier) {}
+  rpc Appliances(ImageListIdentifier) returns (stream Appliance) {}
+}

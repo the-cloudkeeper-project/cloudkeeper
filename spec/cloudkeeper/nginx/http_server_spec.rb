@@ -3,6 +3,20 @@ require 'spec_helper'
 describe Cloudkeeper::Nginx::HttpServer do
   subject(:http_server) { described_class.new }
 
+  describe '#new' do
+    it 'returns an instance of HttpServer' do
+      is_expected.to be_instance_of described_class
+    end
+
+    it 'prepares acces_data attribute as an instance of Hash' do
+      expect(http_server.access_data).to be_instance_of Hash
+    end
+
+    it 'prepares acces_data attribute as an empty Hash' do
+      expect(http_server.access_data).to be_empty
+    end
+  end
+
   describe '.random_string' do
     it 'each time returns randomly generated string' do
       string1 = http_server.send(:random_string)
@@ -94,17 +108,22 @@ describe Cloudkeeper::Nginx::HttpServer do
   end
 
   describe 'prepare_configuration_file' do
-    let(:image_file) { '/cloudkeeper/images/image.ext' }
+    let(:conf) do
+      {
+        error_log_file: '/nginx/error.log',
+        access_log_file: '/nginx/access.log',
+        pid_file: '/nginx/nginx.pid',
+        auth_file: '/nginx/file.auth',
+        root_dir: '/cloudkeeper/images',
+        image_file: 'image.ext',
+        ip_address: '127.0.0.1',
+        port: 12_345
+      }
+    end
     let(:auth_file) { Struct.new(:path).new '/nginx/file.auth' }
     let(:configuration_file) { File.join(MOCK_DIR, 'nginx', 'configuration') }
 
     before do
-      Cloudkeeper::Settings[:'nginx-error-log-file'] = '/nginx/error.log'
-      Cloudkeeper::Settings[:'nginx-access-log-file'] = '/nginx/access.log'
-      Cloudkeeper::Settings[:'nginx-pid-file'] = '/nginx/nginx.pid'
-      Cloudkeeper::Settings[:'nginx-ip-address'] = '127.0.0.1'
-      Cloudkeeper::Settings[:'nginx-min-port'] = 12_345
-      Cloudkeeper::Settings[:'nginx-max-port'] = 12_345
       http_server.instance_variable_set(:@auth_file, auth_file)
     end
 
@@ -113,7 +132,7 @@ describe Cloudkeeper::Nginx::HttpServer do
     end
 
     it 'creates NGINX configuration file' do
-      http_server.send(:prepare_configuration_file, image_file)
+      http_server.send(:prepare_configuration_file, conf)
       expect(configuration_file).to be_same_file_as(http_server.conf_file.path)
     end
   end
@@ -132,17 +151,17 @@ describe Cloudkeeper::Nginx::HttpServer do
   end
 
   describe 'write_auth_file' do
-    let(:name) { 'albus' }
+    let(:username) { 'albus' }
     let(:password) { 'Rictusempra' }
 
     after do
       http_server.auth_file.unlink
     end
 
-    it 'writes name and password into .htpasswd file' do
-      http_server.send(:write_auth_file, name, password)
+    it 'writes username and password into .htpasswd file' do
+      http_server.send(:write_auth_file, username, password)
       passwd = WEBrick::HTTPAuth::Htpasswd.new(http_server.auth_file.path)
-      expect(passwd.get_passwd(nil, name, true)).not_to be_nil
+      expect(passwd.get_passwd(nil, username, true)).not_to be_nil
     end
   end
 
@@ -151,10 +170,10 @@ describe Cloudkeeper::Nginx::HttpServer do
       http_server.auth_file.unlink
     end
 
-    it 'prepares .htpasswd file and returns used name and password' do
+    it 'prepares .htpasswd file and returns used username and password' do
       auth = http_server.send(:prepare_credentials)
       passwd = WEBrick::HTTPAuth::Htpasswd.new(http_server.auth_file.path)
-      expect(passwd.get_passwd(nil, auth[:name], true)).not_to be_nil
+      expect(passwd.get_passwd(nil, auth[:username], true)).not_to be_nil
     end
   end
 
@@ -179,10 +198,11 @@ describe Cloudkeeper::Nginx::HttpServer do
     end
 
     it 'starts the NGINX server and returns access credentials' do
-      auth = http_server.start image_file
+      http_server.start image_file
 
-      expect(auth).to include(:name)
-      expect(auth).to include(:password)
+      expect(http_server.access_data).to include(:username)
+      expect(http_server.access_data).to include(:password)
+      expect(http_server.access_data).to include(:url)
     end
   end
 
@@ -200,8 +220,34 @@ describe Cloudkeeper::Nginx::HttpServer do
       expect(conf_file).to receive(:unlink)
     end
 
-    it 'stops NGINX server and removes temporary files' do
+    it 'stops NGINX server and removes temporary files and access data' do
       http_server.stop
+
+      expect(http_server.access_data).to be_empty
+    end
+  end
+
+  describe 'fill_access_data' do
+    let(:credentials) { { username: 'albus', password: 'Rictusempra' } }
+    let(:conf) do
+      {
+        error_log_file: '/nginx/error.log',
+        access_log_file: '/nginx/access.log',
+        pid_file: '/nginx/nginx.pid',
+        auth_file: '/nginx/file.auth',
+        root_dir: '/cloudkeeper/images',
+        image_file: 'image.ext',
+        ip_address: '127.0.0.1',
+        port: 12_345
+      }
+    end
+
+    it 'fills access_data attribute' do
+      http_server.send(:fill_access_data, credentials, conf)
+
+      expect(http_server.access_data[:username]).to eq('albus')
+      expect(http_server.access_data[:password]).to eq('Rictusempra')
+      expect(http_server.access_data[:url]).to eq('http://127.0.0.1:12345/image.ext')
     end
   end
 end

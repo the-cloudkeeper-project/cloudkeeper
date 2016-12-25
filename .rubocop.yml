@@ -15,6 +15,7 @@ Metrics/MethodLength:
 Metrics/AbcSize:
   Exclude:
     - 'lib/cloudkeeper/entities/appliance.rb'
+    - 'lib/cloudkeeper/backend_connector.rb'
 
 Metrics/MethodLength:
   Exclude:
@@ -30,6 +31,15 @@ RSpec/ExampleLength:
 RSpec/NestedGroups:
   MaxNesting: 3
 
+RSpec/NestedGroups:
+  MaxNesting: 4
+  Include:
+    - 'spec/cloudkeeper/backend_connector_spec.rb'
+
+RSpec/SubjectStub:
+  Exclude:
+    - 'spec/cloudkeeper/backend_connector_spec.rb'
+
 Metrics/ParameterLists:
   Exclude:
     - 'lib/cloudkeeper/entities/*.rb'
@@ -42,3 +52,4 @@ Metrics/BlockLength:
     - '*.gemspec'
     - 'lib/cloudkeeper/entities/appliance.rb'
     - 'lib/cloudkeeper/entities/image_list.rb'
+    - 'lib/cloudkeeper/grpc/*'

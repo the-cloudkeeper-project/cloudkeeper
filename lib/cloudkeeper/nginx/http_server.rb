@@ -7,15 +7,20 @@ require 'tilt/erb'
 module Cloudkeeper
   module Nginx
     class HttpServer
-      attr_reader :auth_file, :conf_file
+      attr_reader :auth_file, :conf_file, :access_data
+
+      def initialize
+        @access_data = {}
+      end
 
       def start(image_file)
-        cred = prepare_credentials
-        prepare_configuration_file image_file
+        @access_data = {}
+        credentials = prepare_credentials
+        configuration = prepare_configuration File.dirname(image_file), File.basename(image_file)
+        prepare_configuration_file configuration
+        fill_access_data credentials, configuration
 
         Cloudkeeper::CommandExecutioner.execute Cloudkeeper::Settings[:'nginx-binary'], '-c', conf_file.path
-
-        cred
       end
 
       def stop
@@ -23,36 +28,41 @@ module Cloudkeeper
 
         auth_file.unlink
         conf_file.unlink
+        @access_data = {}
       rescue IOError => ex
         raise Cloudkeeper::Errors::NginxError, ex
       end
 
       private
 
-      def prepare_credentials
-        name = random_string
-        password = random_string
-
-        write_auth_file name, password
-
-        logger.debug("Prepared NGINX authentication file #{auth_file.path.inspect}: "\
-                     "name: #{name.inspect}, password: #{password.inspect}")
-
-        { name: name, password: password }
+      def fill_access_data(credentials, configuration)
+        access_data.merge! credentials
+        access_data[:url] = "http://#{configuration[:ip_address]}:#{configuration[:port]}/#{configuration[:image_file]}"
       end
 
-      def write_auth_file(name, password)
+      def prepare_credentials
+        username = random_string
+        password = random_string
+
+        write_auth_file username, password
+
+        logger.debug("Prepared NGINX authentication file #{auth_file.path.inspect}: "\
+                     "username: #{username.inspect}, password: #{password.inspect}")
+
+        { username: username, password: password }
+      end
+
+      def write_auth_file(username, password)
         @auth_file = Tempfile.new('cloudkeeper-nginx-auth')
         passwd = WEBrick::HTTPAuth::Htpasswd.new(auth_file.path)
-        passwd.set_passwd(nil, name, password)
+        passwd.set_passwd(nil, username, password)
         passwd.flush
         auth_file.close
       rescue IOError => ex
         raise Cloudkeeper::Errors::NginxError, ex
       end
 
-      def prepare_configuration_file(image_file)
-        configuration = prepare_configuration File.dirname(image_file), File.basename(image_file)
+      def prepare_configuration_file(configuration)
         conf_content = prepare_configuration_file_content configuration
         write_configuration_file conf_content
 

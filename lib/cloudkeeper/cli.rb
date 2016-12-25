@@ -54,6 +54,14 @@ module Cloudkeeper
                   default: Cloudkeeper::Settings['nginx']['max-port'],
                   type: :numeric,
                   desc: 'Maximal port NGINX can listen on'
+    method_option :'backend-endpoint',
+                  default: Cloudkeeper::Settings['backend']['endpoint'],
+                  type: :string,
+                  desc: "Backend's endpoint"
+    method_option :'output-formats',
+                  default: Cloudkeeper::Settings['output-formats'],
+                  type: :array,
+                  desc: 'Acceptable image output formats'
 
     desc 'sync', 'Runs synchronization process'
     def sync

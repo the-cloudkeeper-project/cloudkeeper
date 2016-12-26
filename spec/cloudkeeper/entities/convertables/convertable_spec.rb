@@ -32,12 +32,6 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
       raise_error(Cloudkeeper::Errors::Convertables::ConvertabilityError)
   end
 
-  describe '.compute_checksum' do
-    it 'computes SHA512 checksum for file' do
-      expect(convertable_instance_raw.send(:compute_checksum, convertable_instance_raw.file)).to eq(convertable_instance_raw.checksum)
-    end
-  end
-
   describe '.image_file' do
     it 'returns new instance of ImageFile' do
       image_file = convertable_instance_raw.send(:image_file, convertable_instance_raw.file, :raw)

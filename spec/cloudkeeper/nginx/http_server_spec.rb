@@ -40,10 +40,6 @@ describe Cloudkeeper::Nginx::HttpServer do
       port2 = http_server.send(:choose_port)
       port3 = http_server.send(:choose_port)
 
-      expect(port1).not_to eq(port2)
-      expect(port1).not_to eq(port3)
-      expect(port2).not_to eq(port3)
-
       expect(port1).to be >= 100
       expect(port2).to be >= 100
       expect(port3).to be >= 100

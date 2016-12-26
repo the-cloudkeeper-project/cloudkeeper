@@ -28,8 +28,7 @@ module Cloudkeeper
       private
 
       def download_image_list(url, dir)
-        raise Cloudkeeper::Errors::InvalidURLError, "#{url.inspect} is not a valid URL" \
-          unless url =~ /\A#{URI.regexp(%w(http https))}\z/
+        Cloudkeeper::Utils::Url.check!(url)
 
         uri = URI.parse url
         user = uri.user

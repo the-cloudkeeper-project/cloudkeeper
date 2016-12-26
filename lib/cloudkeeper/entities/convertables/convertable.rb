@@ -56,11 +56,8 @@ module Cloudkeeper
         end
 
         def image_file(converted_file, output_format)
-          Cloudkeeper::Entities::ImageFile.new converted_file, output_format.to_sym, compute_checksum(converted_file), false
-        end
-
-        def compute_checksum(converted_file)
-          Digest::SHA512.file(converted_file).hexdigest
+          Cloudkeeper::Entities::ImageFile.new converted_file, output_format.to_sym,
+                                               Cloudkeeper::Utils::Checksum.compute(converted_file), false
         end
       end
     end

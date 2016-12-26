@@ -46,14 +46,13 @@ module Cloudkeeper
         end
 
         def download_image(url)
-          raise Cloudkeeper::Errors::InvalidURLError, "#{url.inspect} is not a valid URL" \
-            unless url =~ /\A#{URI.regexp(%w(http https))}\z/
+          Cloudkeeper::Utils::Url.check!(url)
 
           uri = URI.parse url
           filename = generate_filename(uri)
           IO.copy_stream(open(uri), filename)
 
-          Cloudkeeper::Entities::ImageFile.new filename, format(filename), Digest::SHA512.file(filename).hexdigest, true
+          Cloudkeeper::Entities::ImageFile.new filename, format(filename), Cloudkeeper::Utils::Checksum.compute(filename), true
         end
 
         def generate_filename(uri)

@@ -126,7 +126,18 @@ describe Cloudkeeper::Entities::Appliance do
       end
     end
 
-    context 'with hash with missing values' do
+    context 'with hash with missing mandatory values' do
+      before do
+        hash[:'dc:identifier'] = nil
+        hash[:'ad:mpuri'] = nil
+      end
+
+      it 'raises InvalidApplianceHashError exception' do
+        expect { described_class.populate_appliance hash }.to raise_error(::Cloudkeeper::Errors::Parsing::InvalidApplianceHashError)
+      end
+    end
+
+    context 'with hash with missing optional values' do
       before do
         hash[:'ad:core_recommended'] = nil
         hash[:'hv:version'] = nil

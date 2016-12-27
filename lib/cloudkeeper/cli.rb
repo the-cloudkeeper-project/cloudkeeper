@@ -17,6 +17,21 @@ module Cloudkeeper
                  type: :boolean,
                  desc: 'Runs cloudkeeper in debug mode'
 
+    method_option :'image-lists',
+                  required: true,
+                  default: Cloudkeeper::Settings['image-lists'],
+                  type: :array,
+                  desc: 'List of image lists to sync against'
+    method_option :'ca-dir',
+                  required: false,
+                  default: Cloudkeeper::Settings['ca-dir'],
+                  type: :string,
+                  desc: 'CA directory'
+    method_option :'image-dir',
+                  required: true,
+                  default: Cloudkeeper::Settings['image-dir'],
+                  type: :string,
+                  desc: 'Directory to store images to'
     method_option :'qemu-img-binary',
                   required: true,
                   default: Cloudkeeper::Settings['binaries']['qemu-img'],
@@ -33,15 +48,15 @@ module Cloudkeeper
     method_option :'nginx-error-log-file',
                   default: Cloudkeeper::Settings['nginx']['error-log-file'],
                   type: :string,
-                  desc: 'Path to NGINX error log file'
+                  desc: 'NGINX error log file'
     method_option :'nginx-access-log-file',
                   default: Cloudkeeper::Settings['nginx']['access-log-file'],
                   type: :string,
-                  desc: 'Path to NGINX access log file'
+                  desc: 'NGINX access log file'
     method_option :'nginx-pid-file',
                   default: Cloudkeeper::Settings['nginx']['pid-file'],
                   type: :string,
-                  desc: 'Path to NGINX pid file'
+                  desc: 'NGINX pid file'
     method_option :'nginx-ip-address',
                   default: Cloudkeeper::Settings['nginx']['ip-address'],
                   type: :string,
@@ -55,17 +70,21 @@ module Cloudkeeper
                   type: :numeric,
                   desc: 'Maximal port NGINX can listen on'
     method_option :'backend-endpoint',
+                  required: true,
                   default: Cloudkeeper::Settings['backend']['endpoint'],
                   type: :string,
-                  desc: "Backend's endpoint"
-    method_option :'output-formats',
-                  default: Cloudkeeper::Settings['output-formats'],
+                  desc: "Backend's gRPC endpoint"
+    method_option :formats,
+                  required: true,
+                  default: Cloudkeeper::Settings['formats'],
                   type: :array,
-                  desc: 'Acceptable image output formats'
+                  desc: 'List of acceptable formats images can be converted to'
 
     desc 'sync', 'Runs synchronization process'
     def sync
-      initialize_action(options, __method__)
+      initialize_sync options
+    rescue Cloudkeeper::Errors::InvalidConfigurationError => ex
+      abort ex.message
     end
 
     desc 'version', 'Prints cloudkeeper version'
@@ -77,15 +96,29 @@ module Cloudkeeper
 
     private
 
-    def initialize_action(options, action)
+    def initialize_sync(options)
       initialize_configuration options
+      validate_configuration!
       initialize_logger
-      logger.debug "Cloudkeeper action #{action.inspect} called with parameters: #{Settings.to_hash.inspect}"
+      logger.debug "Cloudkeeper 'sync' called with parameters: #{Cloudkeeper::Settings.to_hash.inspect}"
     end
 
     def initialize_configuration(options)
       Cloudkeeper::Settings.clear
       Cloudkeeper::Settings.merge! options.to_hash
+    end
+
+    def validate_configuration!
+      return unless Cloudkeeper::Settings[:'remote-mode']
+
+      raise Cloudkeeper::Errors::InvalidConfigurationError, 'NGINX configuration missing' unless all_nginx_options_available
+    end
+
+    def all_nginx_options_available
+      all_nginx_options = [:'nginx-binary', :'nginx-error-log-file', :'nginx-access-log-file', :'nginx-pid-file',
+                           :'nginx-ip-address', :'nginx-min-port', :'nginx-max-port']
+
+      all_nginx_options.reduce(true) { |acc, elem| Cloudkeeper::Settings[elem] && acc }
     end
 
     # Inits logging according to the settings

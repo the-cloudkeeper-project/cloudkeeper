@@ -9,6 +9,7 @@ module Cloudkeeper
     autoload :CommandExecutionError, 'cloudkeeper/errors/command_execution_error'
     autoload :NginxError, 'cloudkeeper/errors/nginx_error'
     autoload :BackendError, 'cloudkeeper/errors/backend_error'
+    autoload :InvalidConfigurationError, 'cloudkeeper/errors/invalid_configuration_error'
 
     autoload :Parsing, 'cloudkeeper/errors/parsing'
     autoload :ImageList, 'cloudkeeper/errors/image_list'

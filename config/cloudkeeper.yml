@@ -1,21 +1,21 @@
 cloudkeeper:
-  image-lists: # List of image lists
-  ca-dir: /etc/grid-security/certificates/
-  image-dir: /var/spool/cloudkeeper/images/
+  image-lists: # List of image lists to sync against
+  ca-dir: /etc/grid-security/certificates/ # CA directory
+  image-dir: /var/spool/cloudkeeper/images/ # Directory to store images to
   binaries:
-    qemu-img: /usr/bin/qemu-img # Path to qemu-img binary (image conversion)
-    nginx: /usr/bin/nginx # Path to nginx binary (HTTP server)
+    qemu-img: /usr/bin/qemu-img # qemu-img binary (image conversion) location
+    nginx: /usr/bin/nginx # nginx binary (HTTP server) location
   remote-mode: false # Remote mode starts HTTP server (NGINX) and serves images to backend via HTTP
-  # nginx:
-  #   error-log-file: /var/log/cloudkeeper/nginx-error.log
-  #   access-log-file: /var/log/cloudkeeper/nginx-access.log
-  #   pid-file: /var/run/cloudkeeper/nginx.pid
-  #   ip-address: 127.0.0.1
-  #   min-port: 7300
-  #   max-port: 7400
+  nginx:
+    error-log-file: /var/log/cloudkeeper/nginx-error.log # File for NGINX error log
+    access-log-file: /var/log/cloudkeeper/nginx-access.log # File for NGINX access log
+    pid-file: /var/run/cloudkeeper/nginx.pid # NGINX pid file
+    ip-address: 127.0.0.1 # IP address NGINX can listen on
+    min-port: 7300 # Minimal port NGINX can listen on
+    max-port: 7400 # Maximal port NGINX can listen on
   backend:
-    endpoint: 127.0.0.1:50051
-  output-formats:
+    endpoint: 127.0.0.1:50051 # Backend's gRPC endpoint
+  formats: # List of acceptable formats images can be converted to
     - qcow2
   logging:
     level: ERROR # Logging level

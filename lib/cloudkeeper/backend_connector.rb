@@ -91,7 +91,7 @@ module Cloudkeeper
     end
 
     def acceptable_image_file(image)
-      image_format = (image.available_formats & Cloudkeeper::Settings[:'output-formats'].map(&:to_sym).sort).first
+      image_format = (image.available_formats & Cloudkeeper::Settings[:formats].map(&:to_sym).sort).first
       raise Cloudkeeper::Errors::ImageFormat::NoRequiredFormatAvailableError, 'image is not available in any of the required formats' \
         unless image_format
 

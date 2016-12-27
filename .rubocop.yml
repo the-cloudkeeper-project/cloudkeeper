@@ -22,6 +22,10 @@ Metrics/MethodLength:
     - 'lib/cloudkeeper/entities/appliance.rb'
     - 'lib/cloudkeeper/nginx/http_server.rb'
 
+Metrics/ClassLength:
+  Exclude:
+    - 'lib/cloudkeeper/cli.rb'
+
 RSpec/MultipleExpectations:
   Enabled: false
 

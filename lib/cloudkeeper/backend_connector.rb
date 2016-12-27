@@ -15,10 +15,6 @@ module Cloudkeeper
       check_status grpc_client.post_action(Google::Protobuf::Empty.new)
     end
 
-    def migrate
-      check_status grpc_client.migrate(Google::Protobuf::Empty.new)
-    end
-
     def add_appliance(appliance)
       manage_appliance appliance, :add_appliance
     end

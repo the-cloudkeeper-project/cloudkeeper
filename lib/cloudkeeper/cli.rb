@@ -68,11 +68,6 @@ module Cloudkeeper
       initialize_action(options, __method__)
     end
 
-    desc 'migrate', 'Discovers and prepares already uploaded appliances'
-    def migrate
-      initialize_action(options, __method__)
-    end
-
     desc 'version', 'Prints cloudkeeper version'
     def version
       $stdout.puts Cloudkeeper::VERSION

@@ -66,7 +66,6 @@ message Status {
 service Communicator {
   rpc PreAction(google.protobuf.Empty) returns (Status) {}
   rpc PostAction(google.protobuf.Empty) returns (Status) {}
-  rpc Migrate(google.protobuf.Empty) returns (Status) {}
   rpc AddAppliance(Appliance) returns (Status) {}
   rpc UpdateAppliance(Appliance) returns (Status) {}
   rpc RemoveAppliance(Appliance) returns (Status) {}

@@ -69,28 +69,6 @@ describe Cloudkeeper::BackendConnector do
     end
   end
 
-  describe '.migrate' do
-    context 'with successfull run' do
-      before do
-        expect(backend_connector.grpc_client).to receive(:migrate) { status_success }
-      end
-
-      it "doesn't raise any errors" do
-        expect { backend_connector.migrate }.not_to raise_error
-      end
-    end
-
-    context 'with an error' do
-      before do
-        expect(backend_connector.grpc_client).to receive(:migrate) { status_error }
-      end
-
-      it 'raises BackendError exception' do
-        expect { backend_connector.migrate }.to raise_error(Cloudkeeper::Errors::BackendError)
-      end
-    end
-  end
-
   describe '.remove_image_list' do
     let(:image_list_identifier) { 'id123456' }
     let(:image_list_identifier_proto) { instance_double(Cloudkeeper::Grpc::ImageListIdentifier) }

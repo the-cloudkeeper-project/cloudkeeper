@@ -16,7 +16,6 @@ module Cloudkeeper
 
         rpc :PreAction, Google::Protobuf::Empty, Status
         rpc :PostAction, Google::Protobuf::Empty, Status
-        rpc :Migrate, Google::Protobuf::Empty, Status
         rpc :AddAppliance, Appliance, Status
         rpc :UpdateAppliance, Appliance, Status
         rpc :RemoveAppliance, Appliance, Status

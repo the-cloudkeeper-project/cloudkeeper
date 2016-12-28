@@ -69,28 +69,6 @@ describe Cloudkeeper::BackendConnector do
     end
   end
 
-  describe '.migrate' do
-    context 'with successfull run' do
-      before do
-        expect(backend_connector.grpc_client).to receive(:migrate) { status_success }
-      end
-
-      it "doesn't raise any errors" do
-        expect { backend_connector.migrate }.not_to raise_error
-      end
-    end
-
-    context 'with an error' do
-      before do
-        expect(backend_connector.grpc_client).to receive(:migrate) { status_error }
-      end
-
-      it 'raises BackendError exception' do
-        expect { backend_connector.migrate }.to raise_error(Cloudkeeper::Errors::BackendError)
-      end
-    end
-  end
-
   describe '.remove_image_list' do
     let(:image_list_identifier) { 'id123456' }
     let(:image_list_identifier_proto) { instance_double(Cloudkeeper::Grpc::ImageListIdentifier) }
@@ -165,7 +143,7 @@ describe Cloudkeeper::BackendConnector do
     let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, image_files }
 
     before do
-      Cloudkeeper::Settings[:'output-formats'] = %w(qcow2 vmdk)
+      Cloudkeeper::Settings[:formats] = %w(qcow2 vmdk)
     end
 
     it 'returns image file that suffice format requirements' do
@@ -174,7 +152,7 @@ describe Cloudkeeper::BackendConnector do
 
     context 'with no acceptable image file available' do
       before do
-        Cloudkeeper::Settings[:'output-formats'] = ['nonexisting_format']
+        Cloudkeeper::Settings[:formats] = ['nonexisting_format']
       end
 
       it 'raises NoRequiredFormatAvailableError execption' do
@@ -209,7 +187,7 @@ describe Cloudkeeper::BackendConnector do
     let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, image_files }
 
     before do
-      Cloudkeeper::Settings[:'output-formats'] = %w(qcow2 vmdk)
+      Cloudkeeper::Settings[:formats] = %w(qcow2 vmdk)
     end
 
     it 'converts image entity into image proto entity' do
@@ -318,7 +296,7 @@ describe Cloudkeeper::BackendConnector do
     let(:call) { :remove_appliance }
 
     before do
-      Cloudkeeper::Settings[:'output-formats'] = %w(qcow2 vmdk)
+      Cloudkeeper::Settings[:formats] = %w(qcow2 vmdk)
     end
 
     context 'in local mode' do

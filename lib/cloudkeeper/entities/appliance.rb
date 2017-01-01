@@ -73,7 +73,8 @@ module Cloudkeeper
         end
 
         def populate_attributes!(appliance, appliance_hash)
-          appliance.attributes = appliance_hash.clone
+          appliance_hash.reject! { |k, v| k == :vo || k == :expiration || k == :image_list_identifier }
+          appliance.attributes = appliance_hash.map { |k, v| [k.to_s, v.to_s] }.to_h
         end
       end
     end

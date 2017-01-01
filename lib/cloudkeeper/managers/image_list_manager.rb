@@ -10,17 +10,19 @@ module Cloudkeeper
       attr_reader :image_lists, :openssl_store
 
       def initialize
-        @image_lists = []
+        @image_lists = {}
 
         @openssl_store = OpenSSL::X509::Store.new
         @openssl_store.add_path Cloudkeeper::Settings[:'ca-dir'] if Cloudkeeper::Settings[:'ca-dir']
       end
 
-      def download_image_lists(urls)
+      def download_image_lists
+        urls = Cloudkeeper::Settings[:'image-lists']
         Dir.mktmpdir('cloudkeeper') do |dir|
           urls.each do |url|
             image_list_hash = load_image_list(download_image_list(url, dir))
-            image_lists << convert_image_list(image_list_hash)
+            image_list = convert_image_list(image_list_hash)
+            image_lists[image_list.identifier] = image_list
           end
         end
       end

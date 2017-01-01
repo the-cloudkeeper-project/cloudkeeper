@@ -7,7 +7,7 @@ module Cloudkeeper
 
       DATE_FORMAT = '%Y-%m-%dT%H:%M:%SZ'.freeze
 
-      def initialize(identifier, creation_date = nil, source = '', title = '', description = '', appliances = [])
+      def initialize(identifier, creation_date = nil, source = '', title = '', description = '', appliances = {})
         raise Cloudkeeper::Errors::ArgumentError, 'identifier cannot be nil nor empty' if identifier.blank?
 
         @identifier = identifier
@@ -21,7 +21,7 @@ module Cloudkeeper
       def add_appliance(appliance)
         raise Cloudkeeper::Errors::ArgumentError, 'appliance cannot be nil' unless appliance
 
-        appliances << appliance
+        appliances[appliance.identifier] = appliance
       end
 
       class << self

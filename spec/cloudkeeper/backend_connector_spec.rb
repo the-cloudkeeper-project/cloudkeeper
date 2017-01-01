@@ -480,7 +480,7 @@ describe Cloudkeeper::BackendConnector do
     it 'returns list of appliances for specified image list identifier' do
       appliances = backend_connector.appliances(image_list_identifier)
 
-      appliance = appliances[0]
+      appliance = appliances['id123']
       expect(appliance.identifier).to eq('id123')
       expect(appliance.description).to eq('description')
       expect(appliance.mpuri).to eq('http://mp.uri.net')
@@ -497,7 +497,7 @@ describe Cloudkeeper::BackendConnector do
       expect(appliance.image_list_identifier).to eq('id12345')
       expect(appliance.image).to eq(nil)
 
-      appliance = appliances[1]
+      appliance = appliances['id456']
       expect(appliance.identifier).to eq('id456')
       expect(appliance.description).to eq('description')
       expect(appliance.mpuri).to eq('http://mp.uri.net')
@@ -514,7 +514,7 @@ describe Cloudkeeper::BackendConnector do
       expect(appliance.image_list_identifier).to eq('id12345')
       expect(appliance.image).to eq(nil)
 
-      appliance = appliances[2]
+      appliance = appliances['id789']
       expect(appliance.identifier).to eq('id789')
       expect(appliance.description).to eq('description')
       expect(appliance.mpuri).to eq('http://mp.uri.net')

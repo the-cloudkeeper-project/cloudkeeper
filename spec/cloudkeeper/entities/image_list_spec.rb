@@ -8,11 +8,11 @@ describe Cloudkeeper::Entities::ImageList do
       is_expected.to be_instance_of described_class
     end
 
-    it 'prepares appliances attributes as an array instance' do
-      expect(image_list.appliances).to be_instance_of Array
+    it 'prepares appliances attribute as an hash instance' do
+      expect(image_list.appliances).to be_instance_of Hash
     end
 
-    it 'prepares appliances attributes as an empty array' do
+    it 'prepares appliances attribute as an empty hash' do
       expect(image_list.appliances).to be_empty
     end
 
@@ -32,6 +32,10 @@ describe Cloudkeeper::Entities::ImageList do
 
     context 'with valid appliance' do
       let(:appliance) { instance_double Cloudkeeper::Entities::Appliance }
+
+      before do
+        allow(appliance).to receive(:identifier) { 'id123' }
+      end
 
       it 'adds appliance to image list' do
         image_list.add_appliance appliance
@@ -128,20 +132,18 @@ describe Cloudkeeper::Entities::ImageList do
   describe '#populate_appliances!' do
     let(:expiration) { DateTime.new(2499, 12, 31, 22) }
     let(:image_list_hash) { load_file 'image_list07.json', symbolize: true }
-    let(:attributes1) { load_file 'image_list08.json', symbolize: true }
-    let(:attributes2) { load_file 'image_list09.json', symbolize: true }
+    let(:attributes1) { load_file 'image_list08.json' }
+    let(:attributes2) { load_file 'image_list09.json' }
 
     before do
       image_list.identifier = '76fdee70-8119-5d33-aaaa-3c57e1c60df1'
-      attributes1[:expiration] = expiration
-      attributes2[:expiration] = expiration
     end
 
     context 'with two appliances in the hash' do
       it 'will contain two populated Appliance instances' do
         described_class.populate_appliances!(image_list, image_list_hash)
 
-        appliance = image_list.appliances.first
+        appliance = image_list.appliances[image_list.appliances.keys.first]
 
         expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-aaaa-a750174a186b')
         expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
@@ -159,7 +161,7 @@ describe Cloudkeeper::Entities::ImageList do
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
         expect(appliance.attributes).to eq(attributes1)
 
-        appliance = image_list.appliances.last
+        appliance = image_list.appliances[image_list.appliances.keys.last]
 
         expect(appliance.identifier).to eq('662b0e71-3e21-bbbb-b6a1-cc2f51319fa7')
         expect(appliance.description).to be_empty
@@ -183,13 +185,8 @@ describe Cloudkeeper::Entities::ImageList do
     context 'with image list in form of hash' do
       let(:expiration) { DateTime.new(2499, 12, 31, 22) }
       let(:image_list_hash) { load_file 'image_list10.json' }
-      let(:attributes1) { load_file 'image_list11.json', symbolize: true }
-      let(:attributes2) { load_file 'image_list12.json', symbolize: true }
-
-      before do
-        attributes1[:expiration] = expiration
-        attributes2[:expiration] = expiration
-      end
+      let(:attributes1) { load_file 'image_list11.json' }
+      let(:attributes2) { load_file 'image_list12.json' }
 
       it 'returns fully populated image list' do
         il = described_class.from_hash image_list_hash
@@ -200,7 +197,7 @@ describe Cloudkeeper::Entities::ImageList do
         expect(il.source).to eq('https://some.unknown.source/')
         expect(il.title).to eq('Dummy image list number 1.')
 
-        appliance = il.appliances.first
+        appliance = il.appliances[il.appliances.keys.first]
 
         expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-aaaa-a750174a186b')
         expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
@@ -218,7 +215,7 @@ describe Cloudkeeper::Entities::ImageList do
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
         expect(appliance.attributes).to eq(attributes1)
 
-        appliance = il.appliances.last
+        appliance = il.appliances[il.appliances.keys.last]
 
         expect(appliance.identifier).to eq('662b0e71-3e21-bbbb-b6a1-cc2f51319fa7')
         expect(appliance.description).to be_empty

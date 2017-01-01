@@ -61,13 +61,7 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
 
   describe '.convert_output_formats' do
     it 'returns an array of supported output fortmats' do
-      expect(convertable_instance_raw.send(:convert_output_formats)).to eq([:raw, :qcow2, :vmdk])
-    end
-  end
-
-  describe '.to_ova' do
-    it 'raises NotImplementedError exception' do
-      expect { convertable_instance_raw.to_ova }.to raise_error(Cloudkeeper::Errors::NotImplementedError)
+      expect(described_class.send(:convert_output_formats)).to eq([:raw, :qcow2, :vmdk])
     end
   end
 

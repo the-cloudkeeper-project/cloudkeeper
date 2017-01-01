@@ -15,11 +15,11 @@ describe Cloudkeeper::Managers::ImageListManager do
       is_expected.to be_instance_of described_class
     end
 
-    it 'prepares image_lists attribute as an array instance' do
-      expect(ilm.image_lists).to be_instance_of Array
+    it 'prepares image_lists attribute as an hash instance' do
+      expect(ilm.image_lists).to be_instance_of Hash
     end
 
-    it 'prepares image_lists attribute as an empty array' do
+    it 'prepares image_lists attribute as an empty hash' do
       expect(ilm.image_lists).to be_empty
     end
 
@@ -219,13 +219,6 @@ describe Cloudkeeper::Managers::ImageListManager do
   end
 
   describe '.download_image_lists' do
-    let(:urls) do
-      [
-        'http://localhost:9292/imagelist01.signed',
-        'http://localhost:9292/imagelist02.signed',
-        'http://localhost:9292/imagelist03.signed'
-      ]
-    end
     let(:expiration) { DateTime.new(2499, 12, 31, 22) }
     let(:attributes1) do
       { :'dc:description' => 'This version of CERNVM has been modified - default OS extended to 40GB of disk '\
@@ -253,13 +246,10 @@ describe Cloudkeeper::Managers::ImageListManager do
         :'ad:user:fullname' => 'Clark Kent',
         :'ad:user:guid' => '9d9dd6cf-b61a-cccc-b1df-b5731adf717c',
         :'ad:user:uri' => 'https://appdb.somewhere.net/store/person/clark.kent',
-        vo: 'some2.vo.net',
-        expiration: expiration,
-        image_list_identifier: '76fdee70-8119-5d33-cccc-3c57e1c60df1',
         :'dc:creator' => 'Applications Database',
         :'hv:ca' => '/DC=XXX/DC=YYY/CN=SOME TEST CA',
         :'hv:dn' => '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-        :'hv:email' => 'dontwriteme@please.net' }
+        :'hv:email' => 'dontwriteme@please.net' }.deep_stringify_keys
     end
     let(:attributes2) do
       { :'dc:description' => '',
@@ -282,13 +272,10 @@ describe Cloudkeeper::Managers::ImageListManager do
         :'ad:user:fullname' => 'Oliver Queen',
         :'ad:user:guid' => 'e85470d8-2af9-dddd-8c26-0014c23dfd8c',
         :'ad:user:uri' => 'https://appdb.somewhere.net/store/person/oliver.queen',
-        vo: 'some2.vo.net',
-        expiration: expiration,
-        image_list_identifier: '76fdee70-8119-5d33-cccc-3c57e1c60df1',
         :'dc:creator' => 'Applications Database',
         :'hv:ca' => '/DC=XXX/DC=YYY/CN=SOME TEST CA',
         :'hv:dn' => '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-        :'hv:email' => 'dontwriteme@please.net' }
+        :'hv:email' => 'dontwriteme@please.net' }.deep_stringify_keys
     end
     let(:attributes3) do
       { :'dc:description' => 'This version of CERNVM has been modified - default OS extended to 40GB of disk '\
@@ -316,13 +303,10 @@ describe Cloudkeeper::Managers::ImageListManager do
         :'ad:user:fullname' => 'Victor Stone',
         :'ad:user:guid' => '9d9dd6cf-b61a-gggg-b1df-b5731adf717c',
         :'ad:user:uri' => 'https://appdb.somewhere.net/store/person/victor.stone',
-        vo: 'some4.vo.net',
-        expiration: expiration,
-        image_list_identifier: '76fdee70-8119-5d33-gggg-3c57e1c60df1',
         :'dc:creator' => 'Applications Database',
         :'hv:ca' => '/DC=XXX/DC=YYY/CN=SOME TEST CA',
         :'hv:dn' => '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-        :'hv:email' => 'dontwriteme@please.net' }
+        :'hv:email' => 'dontwriteme@please.net' }.deep_stringify_keys
     end
     let(:attributes4) do
       { :'dc:description' => '',
@@ -345,13 +329,10 @@ describe Cloudkeeper::Managers::ImageListManager do
         :'ad:user:fullname' => 'Billy Batson',
         :'ad:user:guid' => 'e85470d8-2af9-hhhh-8c26-0014c23dfd8c',
         :'ad:user:uri' => 'https://appdb.somewhere.net/store/person/billy.batson',
-        vo: 'some4.vo.net',
-        expiration: expiration,
-        image_list_identifier: '76fdee70-8119-5d33-gggg-3c57e1c60df1',
         :'dc:creator' => 'Applications Database',
         :'hv:ca' => '/DC=XXX/DC=YYY/CN=SOME TEST CA',
         :'hv:dn' => '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-        :'hv:email' => 'dontwriteme@please.net' }
+        :'hv:email' => 'dontwriteme@please.net' }.deep_stringify_keys
     end
     let(:attributes5) do
       { :'dc:description' => 'This version of CERNVM has been modified - default OS extended to 40GB of disk '\
@@ -379,13 +360,10 @@ describe Cloudkeeper::Managers::ImageListManager do
         :'ad:user:fullname' => 'Arthur Curry',
         :'ad:user:guid' => '9d9dd6cf-b61a-eeee-b1df-b5731adf717c',
         :'ad:user:uri' => 'https://appdb.somewhere.net/store/person/arthur.curry',
-        vo: 'some3.vo.net',
-        expiration: expiration,
-        image_list_identifier: '76fdee70-8119-5d33-eeee-3c57e1c60df1',
         :'dc:creator' => 'Applications Database',
         :'hv:ca' => '/DC=XXX/DC=YYY/CN=SOME TEST CA',
         :'hv:dn' => '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-        :'hv:email' => 'dontwriteme@please.net' }
+        :'hv:email' => 'dontwriteme@please.net' }.deep_stringify_keys
     end
     let(:attributes6) do
       { :'dc:description' => '',
@@ -408,24 +386,26 @@ describe Cloudkeeper::Managers::ImageListManager do
         :'ad:user:fullname' => 'Ray Palmer',
         :'ad:user:guid' => 'e85470d8-2af9-ffff-8c26-0014c23dfd8c',
         :'ad:user:uri' => 'https://appdb.somewhere.net/store/person/ray.palmer',
-        vo: 'some3.vo.net',
-        expiration: expiration,
-        image_list_identifier: '76fdee70-8119-5d33-eeee-3c57e1c60df1',
         :'dc:creator' => 'Applications Database',
         :'hv:ca' => '/DC=XXX/DC=YYY/CN=SOME TEST CA',
         :'hv:dn' => '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-        :'hv:email' => 'dontwriteme@please.net' }
+        :'hv:email' => 'dontwriteme@please.net' }.deep_stringify_keys
     end
 
     before do
       Cloudkeeper::Settings[:'ca-dir'] = File.join(MOCK_DIR, 'ca')
+      Cloudkeeper::Settings[:'image-lists'] = [
+        'http://localhost:9292/imagelist01.signed',
+        'http://localhost:9292/imagelist02.signed',
+        'http://localhost:9292/imagelist03.signed'
+      ]
     end
 
     it 'downloads, parse and populates image lists from given urls' do
       VCR.use_cassette('download-image-lists') do
-        ilm.download_image_lists(urls)
+        ilm.download_image_lists
 
-        il = ilm.image_lists[0]
+        il = ilm.image_lists['76fdee70-8119-5d33-cccc-3c57e1c60df1']
 
         expect(il.identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
         expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
@@ -433,7 +413,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         expect(il.source).to eq('https://some.unknown.source/')
         expect(il.title).to eq('Dummy image list number 2.')
 
-        appliance = il.appliances.first
+        appliance = il.appliances[il.appliances.keys.first]
 
         expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-cccc-a750174a186b')
         expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
@@ -451,7 +431,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
         expect(appliance.attributes).to eq(attributes1)
 
-        appliance = il.appliances.last
+        appliance = il.appliances[il.appliances.keys.last]
 
         expect(appliance.identifier).to eq('662b0e71-3e21-dddd-b6a1-cc2f51319fa7')
         expect(appliance.description).to be_empty
@@ -468,7 +448,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
         expect(appliance.attributes).to eq(attributes2)
 
-        il = ilm.image_lists[1]
+        il = ilm.image_lists['76fdee70-8119-5d33-gggg-3c57e1c60df1']
 
         expect(il.identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
         expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
@@ -476,7 +456,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         expect(il.source).to eq('https://some.unknown.source/')
         expect(il.title).to eq('Dummy image list number 4.')
 
-        appliance = il.appliances.first
+        appliance = il.appliances[il.appliances.keys.first]
 
         expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-gggg-a750174a186b')
         expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
@@ -494,7 +474,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
         expect(appliance.attributes).to eq(attributes3)
 
-        appliance = il.appliances.last
+        appliance = il.appliances[il.appliances.keys.last]
 
         expect(appliance.identifier).to eq('662b0e71-3e21-hhhh-b6a1-cc2f51319fa7')
         expect(appliance.description).to be_empty
@@ -511,7 +491,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
         expect(appliance.attributes).to eq(attributes4)
 
-        il = ilm.image_lists[2]
+        il = ilm.image_lists['76fdee70-8119-5d33-eeee-3c57e1c60df1']
 
         expect(il.identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
         expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
@@ -519,7 +499,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         expect(il.source).to eq('https://some.unknown.source/')
         expect(il.title).to eq('Dummy image list number 3.')
 
-        appliance = il.appliances.first
+        appliance = il.appliances[il.appliances.keys.first]
 
         expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-eeee-a750174a186b')
         expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
@@ -537,7 +517,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
         expect(appliance.attributes).to eq(attributes5)
 
-        appliance = il.appliances.last
+        appliance = il.appliances[il.appliances.keys.last]
 
         expect(appliance.identifier).to eq('662b0e71-3e21-ffff-b6a1-cc2f51319fa7')
         expect(appliance.description).to be_empty

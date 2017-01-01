@@ -5,7 +5,12 @@ module Cloudkeeper
     module Convertables
       module Convertable
         CONVERT_OUTPUT_FORMATS = [:raw, :qcow2, :vmdk].freeze
-        FORMAT_REGEX = /^to_(?<format>.*)$/
+
+        def self.convert_output_formats
+          CONVERT_OUTPUT_FORMATS
+        end
+
+        FORMAT_REGEX = Regexp.new "^to_(?<format>#{convert_output_formats.join('|')})$"
 
         def self.included(base)
           raise Cloudkeeper::Errors::Convertables::ConvertabilityError, "#{base.inspect} cannot become a convertable" \
@@ -16,7 +21,7 @@ module Cloudkeeper
 
         def method_missing(method, *arguments, &block)
           result = method.to_s.match(FORMAT_REGEX)
-          return convert(result[:format]) if result && result[:format] && convert_output_formats.include?(result[:format].to_sym)
+          return convert(result[:format]) if result && result[:format]
 
           super
         end
@@ -25,15 +30,7 @@ module Cloudkeeper
           method =~ FORMAT_REGEX || super
         end
 
-        def to_ova
-          raise Cloudkeeper::Errors::NotImplementedError, 'converison to OVA format is not supported'
-        end
-
         private
-
-        def convert_output_formats
-          CONVERT_OUTPUT_FORMATS
-        end
 
         def convert(output_format)
           return self if output_format.to_sym == format.to_sym

@@ -1,4 +1,4 @@
-require 'open-uri'
+require 'net/http'
 
 module Cloudkeeper
   module Managers
@@ -50,9 +50,17 @@ module Cloudkeeper
 
           uri = URI.parse url
           filename = generate_filename(uri)
-          IO.copy_stream(open(uri), filename)
+          retrieve_image(uri, filename)
 
           Cloudkeeper::Entities::ImageFile.new filename, format(filename), Cloudkeeper::Utils::Checksum.compute(filename), true
+        end
+
+        def retrieve_image(uri, filename)
+          Net::HTTP.start(uri.host, uri.port) do |http|
+            request = Net::HTTP::Get.new(uri)
+
+            http.request(request) { |response| open(filename, 'w') { |file| response.read_body { |chunk| file.write(chunk) } } }
+          end
         end
 
         def generate_filename(uri)

@@ -404,11 +404,13 @@ describe Cloudkeeper::BackendConnector do
     end
 
     before do
-      expect(backend_connector).to receive(:manage_appliance).with(appliance, :add_appliance)
+      allow(backend_connector).to receive(:manage_appliance).with(appliance, :add_appliance)
     end
 
     it 'calls remote method to add appliance' do
       backend_connector.add_appliance(appliance)
+
+      expect(backend_connector).to have_received(:manage_appliance).with(appliance, :add_appliance)
     end
   end
 
@@ -420,11 +422,13 @@ describe Cloudkeeper::BackendConnector do
     end
 
     before do
-      expect(backend_connector).to receive(:manage_appliance).with(appliance, :update_appliance)
+      allow(backend_connector).to receive(:manage_appliance).with(appliance, :update_appliance)
     end
 
     it 'calls remote method to add appliance' do
       backend_connector.update_appliance(appliance)
+
+      expect(backend_connector).to have_received(:manage_appliance).with(appliance, :update_appliance)
     end
   end
 
@@ -436,11 +440,13 @@ describe Cloudkeeper::BackendConnector do
     end
 
     before do
-      expect(backend_connector).to receive(:manage_appliance).with(appliance, :remove_appliance)
+      allow(backend_connector).to receive(:manage_appliance).with(appliance, :remove_appliance)
     end
 
     it 'calls remote method to add appliance' do
       backend_connector.remove_appliance(appliance)
+
+      expect(backend_connector).to have_received(:manage_appliance).with(appliance, :remove_appliance)
     end
   end
 

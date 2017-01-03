@@ -212,14 +212,17 @@ describe Cloudkeeper::Nginx::HttpServer do
       http_server.instance_variable_set(:@conf_file, conf_file)
 
       expect(Cloudkeeper::CommandExecutioner).to receive(:execute).with('/path/to/nginx', '-s', 'stop', '-c', kind_of(String))
-      expect(auth_file).to receive(:unlink)
-      expect(conf_file).to receive(:unlink)
+      allow(auth_file).to receive(:unlink)
+      allow(conf_file).to receive(:unlink)
     end
 
     it 'stops NGINX server and removes temporary files and access data' do
       http_server.stop
 
       expect(http_server.access_data).to be_empty
+
+      expect(auth_file).to have_received(:unlink)
+      expect(conf_file).to have_received(:unlink)
     end
   end
 

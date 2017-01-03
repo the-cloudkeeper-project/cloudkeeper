@@ -2,14 +2,15 @@ require 'spec_helper'
 
 describe Cloudkeeper::CommandExecutioner do
   subject(:command_executioner) { described_class }
-  let(:command) { instance_double(Mixlib::ShellOut) }
+  let(:command) { instance_spy(Mixlib::ShellOut) }
 
   before do
-    expect(command).to receive(:run_command)
     allow(command).to receive(:error?) { false }
     allow(command).to receive(:stdout) { 'output' }
-    allow(command).to receive(:stderr) { 'error' }
-    allow(command).to receive(:command) { 'command' }
+  end
+
+  after do
+    expect(command).to have_received(:run_command)
   end
 
   describe '#execute' do

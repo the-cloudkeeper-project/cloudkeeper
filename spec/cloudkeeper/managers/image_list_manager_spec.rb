@@ -28,16 +28,17 @@ describe Cloudkeeper::Managers::ImageListManager do
     end
 
     context 'with custom CA directory' do
-      let(:openssl_dummy_store) { instance_double OpenSSL::X509::Store }
+      let(:openssl_dummy_store) { instance_spy OpenSSL::X509::Store }
 
       before do
         expect(OpenSSL::X509::Store).to receive(:new) { openssl_dummy_store }
-        expect(openssl_dummy_store).to receive(:add_path).with('/some/ca/directory')
         Cloudkeeper::Settings[:'ca-dir'] = '/some/ca/directory'
       end
 
       it 'prepares openssl_store attribute as OpenSSL::X509::Store instance with custom CA directory' do
         described_class.new
+
+        expect(openssl_dummy_store).to have_received(:add_path).with('/some/ca/directory')
       end
     end
 

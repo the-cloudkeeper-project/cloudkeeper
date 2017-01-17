@@ -3,14 +3,15 @@ require 'date'
 module Cloudkeeper
   module Entities
     class ImageList
-      attr_accessor :identifier, :creation_date, :description, :title, :source, :appliances
+      attr_accessor :identifier, :creation_date, :expiration_date, :description, :title, :source, :appliances
 
       DATE_FORMAT = '%Y-%m-%dT%H:%M:%SZ'.freeze
 
-      def initialize(identifier, creation_date = nil, source = '', title = '', description = '', appliances = {})
-        raise Cloudkeeper::Errors::ArgumentError, 'identifier cannot be nil nor empty' if identifier.blank?
+      def initialize(identifier, expiration_date, creation_date = nil, source = '', title = '', description = '', appliances = {})
+        raise Cloudkeeper::Errors::ArgumentError, 'identifier cannot be nil nor empty' if identifier.blank? || expiration_date.blank?
 
         @identifier = identifier
+        @expiration_date = expiration_date
         @creation_date = creation_date
         @description = description
         @title = title
@@ -22,6 +23,10 @@ module Cloudkeeper
         raise Cloudkeeper::Errors::ArgumentError, 'appliance cannot be nil' unless appliance
 
         appliances[appliance.identifier] = appliance
+      end
+
+      def expired?
+        expiration_date < DateTime.now
       end
 
       class << self
@@ -49,7 +54,8 @@ module Cloudkeeper
           raise Cloudkeeper::Errors::Parsing::InvalidImageListHashError, 'invalid image list hash' if image_list_hash.blank?
 
           ImageList.new image_list_hash[:'dc:identifier'],
-                        creation_date(image_list_hash[:'dc:date:created']),
+                        parse_date(image_list_hash[:'dc:date:expires']),
+                        parse_date(image_list_hash[:'dc:date:created']),
                         image_list_hash[:'dc:source'],
                         image_list_hash[:'dc:title'],
                         image_list_hash[:'dc:description']
@@ -58,12 +64,12 @@ module Cloudkeeper
                                                                              "doesn't contain all the necessary data"
         end
 
-        def creation_date(date)
+        def parse_date(date)
           date.blank? ? '' : DateTime.strptime(date, DATE_FORMAT)
         end
 
         def populate_appliances!(image_list, image_list_hash)
-          expiration = DateTime.strptime(image_list_hash[:'dc:date:expires'], DATE_FORMAT)
+          expiration = parse_date(image_list_hash[:'dc:date:expires'])
           vo = image_list_hash[:'ad:vo']
           endorser = image_list_hash[:'hv:endorser']
 

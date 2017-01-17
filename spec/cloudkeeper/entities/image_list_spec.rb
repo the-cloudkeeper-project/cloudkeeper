@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Cloudkeeper::Entities::ImageList do
-  subject(:image_list) { described_class.new 'identifier123' }
+  subject(:image_list) { described_class.new 'identifier123', '2499-12-31T22:00:00Z' }
 
   describe '#new' do
     it 'returns an instance of ImageList' do
@@ -18,7 +18,13 @@ describe Cloudkeeper::Entities::ImageList do
 
     context 'with nil identifier' do
       it 'raises ArgumentError exception' do
-        expect { described_class.new nil }.to raise_error(Cloudkeeper::Errors::ArgumentError)
+        expect { described_class.new nil, '2499-12-31T22:00:00Z' }.to raise_error(Cloudkeeper::Errors::ArgumentError)
+      end
+    end
+
+    context 'with nil expiration date' do
+      it 'raises ArgumentError exception' do
+        expect { described_class.new 'identifier123', nil }.to raise_error(Cloudkeeper::Errors::ArgumentError)
       end
     end
   end
@@ -98,6 +104,7 @@ describe Cloudkeeper::Entities::ImageList do
         il = described_class.populate_image_list image_list_hash
 
         expect(il.identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
+        expect(il.expiration_date).to eq(DateTime.new(2499, 12, 31, 22))
         expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
         expect(il.description).to eq('This is a VO-wide image list for some1.vo.net VO.')
         expect(il.source).to eq('https://some.unknown.source/')
@@ -112,6 +119,7 @@ describe Cloudkeeper::Entities::ImageList do
         il = described_class.populate_image_list image_list_hash
 
         expect(il.identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
+        expect(il.expiration_date).to eq(DateTime.new(2499, 12, 31, 22))
         expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
         expect(il.description).to eq('This is a VO-wide image list for some1.vo.net VO.')
         expect(il.source).to be_nil
@@ -235,22 +243,40 @@ describe Cloudkeeper::Entities::ImageList do
     end
   end
 
-  describe '#creation_date' do
+  describe '#parse_date' do
     context 'with nil date' do
       it 'returns empty string' do
-        expect(described_class.creation_date(nil)).to eq('')
+        expect(described_class.parse_date(nil)).to eq('')
       end
     end
 
     context 'with empty date' do
       it 'returns empty string' do
-        expect(described_class.creation_date('')).to eq('')
+        expect(described_class.parse_date('')).to eq('')
       end
     end
 
     context 'with real date' do
       it 'returns parsed DateTime instance' do
-        expect(described_class.creation_date('2015-06-18T21:14:00Z')).to eq(DateTime.new(2015, 6, 18, 21, 14))
+        expect(described_class.parse_date('2015-06-18T21:14:00Z')).to eq(DateTime.new(2015, 6, 18, 21, 14))
+      end
+    end
+  end
+
+  describe '.expired?' do
+    context 'with expired image list' do
+      before do
+        image_list.expiration_date = DateTime.new(1991, 10, 10)
+      end
+
+      it 'returns true' do
+        expect(image_list.expired?).to be_truthy
+      end
+    end
+
+    context 'with non-expired image list' do
+      it 'returns false' do
+        expect(image_list.expired?).to be_falsy
       end
     end
   end

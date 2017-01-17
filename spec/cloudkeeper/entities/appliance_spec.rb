@@ -57,7 +57,7 @@ describe Cloudkeeper::Entities::Appliance do
   describe '#populate_attributes!' do
     it 'copies all values from hash to attributes attribute' do
       described_class.populate_attributes!(appliance, hash)
-      expect(appliance.attributes).to eq(hash.map{ |k, v| [k.to_s, v.to_s] }.to_h)
+      expect(appliance.attributes).to eq(hash.map { |k, v| [k.to_s, v.to_s] }.to_h)
     end
   end
 

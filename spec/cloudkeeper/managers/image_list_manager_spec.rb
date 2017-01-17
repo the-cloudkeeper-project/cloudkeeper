@@ -195,6 +195,15 @@ describe Cloudkeeper::Managers::ImageListManager do
       end
     end
 
+    context 'with nonexisting url' do
+      it 'raises RetrievalError exception' do
+        VCR.use_cassette('imagelist-nonexisting') do
+          expect { ilm.send(:download_image_list, 'http://localhost:9292/imagelist.plain', tmpdir) }.to \
+            raise_error(Cloudkeeper::Errors::ImageList::RetrievalError)
+        end
+      end
+    end
+
     context 'with basic auth' do
       it 'downloads and stores image list returning stored filename' do
         VCR.use_cassette('imagelist-basic-auth') do
@@ -213,6 +222,43 @@ describe Cloudkeeper::Managers::ImageListManager do
 
           expect(File.exist?(filename)).to be_truthy
           expect(filename).to eq(File.join(tmpdir.to_s, 'localhostimagelist.plain'))
+        end
+      end
+    end
+  end
+
+  describe '.retrieve_image_lists' do
+    let(:urls) do
+      [
+        'http://localhost:9292/imagelist01.signed',
+        'http://localhost:9292/imagelist02.signed',
+        'http://localhost:9292/imagelist03.signed'
+      ]
+    end
+    let(:tmpdir) { Dir.mktmpdir('cloudkeeper-test') }
+
+    before do
+      Cloudkeeper::Settings[:'ca-dir'] = File.join(MOCK_DIR, 'ca')
+    end
+
+    after do
+      FileUtils.remove_entry tmpdir
+    end
+
+    context 'with all image lists available' do
+      it 'retrieves all image lists' do
+        VCR.use_cassette('retrieve-image-lists-all') do
+          ilm.send :retrieve_image_lists, urls, tmpdir
+          expect(ilm.image_lists.count).to eq(3)
+        end
+      end
+    end
+
+    context 'with one image lists unavailable' do
+      it 'retrieves available image lists' do
+        VCR.use_cassette('retrieve-image-lists-some') do
+          ilm.send :retrieve_image_lists, urls, tmpdir
+          expect(ilm.image_lists.count).to eq(1)
         end
       end
     end

@@ -40,9 +40,10 @@ module Cloudkeeper
 
     def appliances(image_list_identifier)
       response = grpc_client.appliances(Cloudkeeper::Grpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier))
-      response.map do |appliance_proto|
-        image = convert_image_proto(appliance_proto.image)
-        convert_appliance_proto appliance_proto, image
+      response.inject({}) do |acc, elem|
+        image = convert_image_proto(elem.image)
+        appliance = convert_appliance_proto elem, image
+        acc.merge appliance.identifier => appliance
       end
     end
 
@@ -56,7 +57,7 @@ module Cloudkeeper
       image_file = acceptable_image_file image
 
       Cloudkeeper::Grpc::Image.new mode: :LOCAL, location: image_file.file, format: image_file.format.upcase,
-                                   checksum: image_file.checksum, size: image.size, uri: image.uri
+                                   checksum: image_file.checksum, size: image.size.to_i, uri: image.uri
     end
 
     def set_remote_data(image_proto, access_data)
@@ -67,12 +68,12 @@ module Cloudkeeper
     end
 
     def convert_appliance(appliance, image_proto)
-      Cloudkeeper::Grpc::Appliance.new identifier: appliance.identifier, description: appliance.description,
-                                       mpuri: appliance.mpuri, title: appliance.title, group: appliance.group,
-                                       ram: appliance.ram, core: appliance.core, version: appliance.version,
-                                       architecture: appliance.architecture, operating_system: appliance.operating_system,
-                                       vo: appliance.vo, image: image_proto, expiration_date: appliance.expiration_date.to_i,
-                                       image_list_identifier: appliance.image_list_identifier, attributes: appliance.attributes
+      Cloudkeeper::Grpc::Appliance.new identifier: appliance.identifier.to_s, description: appliance.description.to_s,
+                                       mpuri: appliance.mpuri.to_s, title: appliance.title.to_s, group: appliance.group.to_s,
+                                       ram: appliance.ram.to_i, core: appliance.core.to_i, version: appliance.version.to_s,
+                                       architecture: appliance.architecture.to_s, operating_system: appliance.operating_system.to_s,
+                                       vo: appliance.vo.to_s, image: image_proto, expiration_date: appliance.expiration_date.to_i,
+                                       image_list_identifier: appliance.image_list_identifier.to_s, attributes: appliance.attributes
     end
 
     def convert_image_proto(image_proto)

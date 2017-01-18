@@ -1,24 +1,30 @@
 require 'spec_helper'
 
 describe Cloudkeeper::Entities::ImageList do
-  subject(:image_list) { described_class.new 'identifier123' }
+  subject(:image_list) { described_class.new 'identifier123', '2499-12-31T22:00:00Z' }
 
   describe '#new' do
     it 'returns an instance of ImageList' do
       is_expected.to be_instance_of described_class
     end
 
-    it 'prepares appliances attributes as an array instance' do
-      expect(image_list.appliances).to be_instance_of Array
+    it 'prepares appliances attribute as an hash instance' do
+      expect(image_list.appliances).to be_instance_of Hash
     end
 
-    it 'prepares appliances attributes as an empty array' do
+    it 'prepares appliances attribute as an empty hash' do
       expect(image_list.appliances).to be_empty
     end
 
     context 'with nil identifier' do
       it 'raises ArgumentError exception' do
-        expect { described_class.new nil }.to raise_error(Cloudkeeper::Errors::ArgumentError)
+        expect { described_class.new nil, '2499-12-31T22:00:00Z' }.to raise_error(Cloudkeeper::Errors::ArgumentError)
+      end
+    end
+
+    context 'with nil expiration date' do
+      it 'raises ArgumentError exception' do
+        expect { described_class.new 'identifier123', nil }.to raise_error(Cloudkeeper::Errors::ArgumentError)
       end
     end
   end
@@ -32,6 +38,10 @@ describe Cloudkeeper::Entities::ImageList do
 
     context 'with valid appliance' do
       let(:appliance) { instance_double Cloudkeeper::Entities::Appliance }
+
+      before do
+        allow(appliance).to receive(:identifier) { 'id123' }
+      end
 
       it 'adds appliance to image list' do
         image_list.add_appliance appliance
@@ -94,6 +104,7 @@ describe Cloudkeeper::Entities::ImageList do
         il = described_class.populate_image_list image_list_hash
 
         expect(il.identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
+        expect(il.expiration_date).to eq(DateTime.new(2499, 12, 31, 22))
         expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
         expect(il.description).to eq('This is a VO-wide image list for some1.vo.net VO.')
         expect(il.source).to eq('https://some.unknown.source/')
@@ -108,6 +119,7 @@ describe Cloudkeeper::Entities::ImageList do
         il = described_class.populate_image_list image_list_hash
 
         expect(il.identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
+        expect(il.expiration_date).to eq(DateTime.new(2499, 12, 31, 22))
         expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
         expect(il.description).to eq('This is a VO-wide image list for some1.vo.net VO.')
         expect(il.source).to be_nil
@@ -128,20 +140,18 @@ describe Cloudkeeper::Entities::ImageList do
   describe '#populate_appliances!' do
     let(:expiration) { DateTime.new(2499, 12, 31, 22) }
     let(:image_list_hash) { load_file 'image_list07.json', symbolize: true }
-    let(:attributes1) { load_file 'image_list08.json', symbolize: true }
-    let(:attributes2) { load_file 'image_list09.json', symbolize: true }
+    let(:attributes1) { load_file 'image_list08.json' }
+    let(:attributes2) { load_file 'image_list09.json' }
 
     before do
       image_list.identifier = '76fdee70-8119-5d33-aaaa-3c57e1c60df1'
-      attributes1[:expiration] = expiration
-      attributes2[:expiration] = expiration
     end
 
     context 'with two appliances in the hash' do
       it 'will contain two populated Appliance instances' do
         described_class.populate_appliances!(image_list, image_list_hash)
 
-        appliance = image_list.appliances.first
+        appliance = image_list.appliances[image_list.appliances.keys.first]
 
         expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-aaaa-a750174a186b')
         expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
@@ -159,7 +169,7 @@ describe Cloudkeeper::Entities::ImageList do
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
         expect(appliance.attributes).to eq(attributes1)
 
-        appliance = image_list.appliances.last
+        appliance = image_list.appliances[image_list.appliances.keys.last]
 
         expect(appliance.identifier).to eq('662b0e71-3e21-bbbb-b6a1-cc2f51319fa7')
         expect(appliance.description).to be_empty
@@ -183,13 +193,8 @@ describe Cloudkeeper::Entities::ImageList do
     context 'with image list in form of hash' do
       let(:expiration) { DateTime.new(2499, 12, 31, 22) }
       let(:image_list_hash) { load_file 'image_list10.json' }
-      let(:attributes1) { load_file 'image_list11.json', symbolize: true }
-      let(:attributes2) { load_file 'image_list12.json', symbolize: true }
-
-      before do
-        attributes1[:expiration] = expiration
-        attributes2[:expiration] = expiration
-      end
+      let(:attributes1) { load_file 'image_list11.json' }
+      let(:attributes2) { load_file 'image_list12.json' }
 
       it 'returns fully populated image list' do
         il = described_class.from_hash image_list_hash
@@ -200,7 +205,7 @@ describe Cloudkeeper::Entities::ImageList do
         expect(il.source).to eq('https://some.unknown.source/')
         expect(il.title).to eq('Dummy image list number 1.')
 
-        appliance = il.appliances.first
+        appliance = il.appliances[il.appliances.keys.first]
 
         expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-aaaa-a750174a186b')
         expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
@@ -218,7 +223,7 @@ describe Cloudkeeper::Entities::ImageList do
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
         expect(appliance.attributes).to eq(attributes1)
 
-        appliance = il.appliances.last
+        appliance = il.appliances[il.appliances.keys.last]
 
         expect(appliance.identifier).to eq('662b0e71-3e21-bbbb-b6a1-cc2f51319fa7')
         expect(appliance.description).to be_empty
@@ -238,22 +243,40 @@ describe Cloudkeeper::Entities::ImageList do
     end
   end
 
-  describe '#creation_date' do
+  describe '#parse_date' do
     context 'with nil date' do
       it 'returns empty string' do
-        expect(described_class.creation_date(nil)).to eq('')
+        expect(described_class.parse_date(nil)).to eq('')
       end
     end
 
     context 'with empty date' do
       it 'returns empty string' do
-        expect(described_class.creation_date('')).to eq('')
+        expect(described_class.parse_date('')).to eq('')
       end
     end
 
     context 'with real date' do
       it 'returns parsed DateTime instance' do
-        expect(described_class.creation_date('2015-06-18T21:14:00Z')).to eq(DateTime.new(2015, 6, 18, 21, 14))
+        expect(described_class.parse_date('2015-06-18T21:14:00Z')).to eq(DateTime.new(2015, 6, 18, 21, 14))
+      end
+    end
+  end
+
+  describe '.expired?' do
+    context 'with expired image list' do
+      before do
+        image_list.expiration_date = DateTime.new(1991, 10, 10)
+      end
+
+      it 'returns true' do
+        expect(image_list.expired?).to be_truthy
+      end
+    end
+
+    context 'with non-expired image list' do
+      it 'returns false' do
+        expect(image_list.expired?).to be_falsy
       end
     end
   end

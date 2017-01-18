@@ -4,6 +4,10 @@ module Cloudkeeper
       module Ova
         CONVERT_OUTPUT_FORMATS = [:raw, :qcow2].freeze
 
+        def self.convert_output_formats
+          CONVERT_OUTPUT_FORMATS
+        end
+
         def self.extended(base)
           raise Cloudkeeper::Errors::Convertables::ConvertabilityError, "#{base.inspect} cannot become OVA convertable" \
             unless base.class.included_modules.include?(Cloudkeeper::Entities::Convertables::Convertable)
@@ -20,10 +24,6 @@ module Cloudkeeper
         end
 
         private
-
-        def convert_output_formats
-          CONVERT_OUTPUT_FORMATS
-        end
 
         def convert(output_format)
           vmdk_image = to_vmdk

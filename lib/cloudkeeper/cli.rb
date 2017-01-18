@@ -83,6 +83,7 @@ module Cloudkeeper
     desc 'sync', 'Runs synchronization process'
     def sync
       initialize_sync options
+      Cloudkeeper::Managers::ApplianceManager.new.synchronize_appliances
     rescue Cloudkeeper::Errors::InvalidConfigurationError => ex
       abort ex.message
     end

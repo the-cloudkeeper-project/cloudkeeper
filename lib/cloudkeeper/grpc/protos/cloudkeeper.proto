@@ -10,13 +10,13 @@ message Appliance {
   string description = 3;
   string mpuri = 4;
   string group = 5;
-  int32 ram = 6;
+  int64 ram = 6;
   int32 core = 7;
   string version = 8;
   string architecture = 9;
   string operating_system = 10;
   string vo = 11;
-  int32 expiration_date = 12;
+  int64 expiration_date = 12;
   string image_list_identifier = 13;
   Image image = 14;
   map<string, string> attributes = 15;
@@ -38,7 +38,7 @@ message Image {
   Format format = 3;
   string uri = 4;
   string checksum = 5;
-  int32 size = 6;
+  int64 size = 6;
   string username = 7;
   string password = 8;
 }

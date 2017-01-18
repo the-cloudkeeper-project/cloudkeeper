@@ -33,10 +33,10 @@ RSpec/ExampleLength:
   Enabled: false
 
 RSpec/NestedGroups:
-  MaxNesting: 3
+  Max: 3
 
 RSpec/NestedGroups:
-  MaxNesting: 4
+  Max: 4
   Include:
     - 'spec/cloudkeeper/backend_connector_spec.rb'
 

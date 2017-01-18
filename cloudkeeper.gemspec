@@ -39,6 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'zaru', '~> 0.1'
   spec.add_runtime_dependency 'activesupport', '~> 4.0'
   spec.add_runtime_dependency 'tilt', '~> 2.0'
+  spec.add_runtime_dependency 'faraday', '~> 0.11'
 
   spec.required_ruby_version = '>= 2.2.0'
 end

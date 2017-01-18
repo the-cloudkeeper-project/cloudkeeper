@@ -1,0 +1,255 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://localhost:9292/imagelist01.signed
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.11.0
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: 'OK '
+    headers:
+      Content-Type:
+      - application/octet-stream
+      Last-Modified:
+      - Fri, 14 Oct 2016 11:09:37 GMT
+      Content-Length:
+      - '7407'
+      X-Content-Type-Options:
+      - nosniff
+      Server:
+      - WEBrick/1.3.1 (Ruby/2.3.3/2016-11-21)
+      Date:
+      - Mon, 16 Jan 2017 15:34:44 GMT
+      Connection:
+      - Keep-Alive
+    body:
+      encoding: UTF-8
+      string: "MIME-Version: 1.0\nContent-Type: multipart/signed; protocol=\"application/x-pkcs7-signature\";
+        micalg=\"sha-256\"; boundary=\"----B79CA96475D587A834C5FCC2F10A0BF1\"\n\nThis
+        is an S/MIME signed message\n\n------B79CA96475D587A834C5FCC2F10A0BF1\n{\r\n
+        \  \"hv:imagelist\": {\r\n      \"dc:date:created\": \"2015-06-18T21:14:00Z\",\r\n
+        \     \"dc:date:expires\": \"2499-12-31T22:00:00Z\",\r\n      \"dc:description\":
+        \"This is a VO-wide image list for some2.vo.net VO.\",\r\n      \"dc:identifier\":
+        \"76fdee70-8119-5d33-cccc-3c57e1c60df1\",\r\n      \"dc:source\": \"https://some.unknown.source/\",\r\n
+        \     \"dc:title\": \"Dummy image list number 2.\",\r\n      \"ad:vo\": \"some2.vo.net\",\r\n
+        \     \"hv:endorser\": {\r\n         \"hv:x509\": {\r\n            \"dc:creator\":
+        \"Applications Database\",\r\n            \"hv:ca\": \"/DC=XXX/DC=YYY/CN=SOME
+        TEST CA\",\r\n            \"hv:dn\": \"/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source\",\r\n
+        \           \"hv:email\": \"dontwriteme@please.net\"\r\n         }\r\n      },\r\n
+        \     \"hv:images\": [\r\n         {\r\n            \"hv:image\": {\r\n               \"dc:description\":
+        \"This version of CERNVM has been modified - default OS extended to 40GB of
+        disk - updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled
+        all Cloud-Init data sources\",\r\n               \"dc:identifier\": \"c0482bc2-bf41-5d49-cccc-a750174a186b\",\r\n
+        \              \"ad:mpuri\": \"https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-cccc-a750174a186b:484/\",\r\n
+        \              \"dc:title\": \"Image for CernVM [Scientific Linux/6.0/KVM]\",\r\n
+        \              \"ad:group\": \"General group\",\r\n               \"hv:hypervisor\":
+        \"KVM\",\r\n               \"hv:format\": \"OVA\",\r\n               \"hv:ram_minimum\":
+        \"512\",\r\n               \"ad:ram_recommended\": \"1024\",\r\n               \"hv:core_minimum\":
+        \"1\",\r\n               \"ad:core_recommended\": \"4\",\r\n               \"hv:size\":
+        \"121243136\",\r\n               \"hv:uri\": \"https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova\",\r\n
+        \              \"hv:version\": \"3.3.0-1\",\r\n               \"sl:arch\":
+        \"x86_64\",\r\n               \"sl:checksum:sha512\": \"5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4b5dc3d68a3b22581b3318db35dd3364e83dab0\",\r\n
+        \              \"sl:comments\": \"\",\r\n               \"sl:os\": \"Linux\",\r\n
+        \              \"sl:osname\": \"Scientific Linux\",\r\n               \"sl:osversion\":
+        \"6.0\",\r\n               \"ad:user:fullname\": \"Clark Kent\",\r\n               \"ad:user:guid\":
+        \"9d9dd6cf-b61a-cccc-b1df-b5731adf717c\",\r\n               \"ad:user:uri\":
+        \"https://appdb.somewhere.net/store/person/clark.kent\"\r\n            }\r\n
+        \        },\r\n         {\r\n            \"hv:image\": {\r\n               \"dc:description\":
+        \"\",\r\n               \"dc:identifier\": \"662b0e71-3e21-dddd-b6a1-cc2f51319fa7\",\r\n
+        \              \"ad:mpuri\": \"https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-dddd-b6a1-cc2f51319fa7:485/\",\r\n
+        \              \"dc:title\": \"Image for CentOS 6 minimal [CentOS/6.x/KVM]\",\r\n
+        \              \"ad:group\": \"General group\",\r\n               \"hv:hypervisor\":
+        \"KVM\",\r\n               \"hv:format\": \"OVA\",\r\n               \"hv:size\":
+        \"581816320\",\r\n               \"hv:uri\": \"https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova\",\r\n
+        \              \"hv:version\": \"20141029\",\r\n               \"sl:arch\":
+        \"x86_64\",\r\n               \"sl:checksum:sha512\": \"02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a854654ff645097c47da236e46ad54806c6fc72a29ce\",\r\n
+        \              \"sl:comments\": \"\",\r\n               \"sl:os\": \"Linux\",\r\n
+        \              \"sl:osname\": \"CentOS\",\r\n               \"sl:osversion\":
+        \"6.6\",\r\n               \"ad:user:fullname\": \"Oliver Queen\",\r\n               \"ad:user:guid\":
+        \"e85470d8-2af9-dddd-8c26-0014c23dfd8c\",\r\n               \"ad:user:uri\":
+        \"https://appdb.somewhere.net/store/person/oliver.queen\"\r\n            }\r\n
+        \        }\r\n      ],\r\n      \"hv:uri\": \"https://appdb.somewhere.net/store/vo/some2.vo.net/image.list\",\r\n
+        \     \"hv:version\": \"20150618211400\"\r\n   }\r\n}\r\n\r\n\n------B79CA96475D587A834C5FCC2F10A0BF1\nContent-Type:
+        application/x-pkcs7-signature; name=\"smime.p7s\"\nContent-Transfer-Encoding:
+        base64\nContent-Disposition: attachment; filename=\"smime.p7s\"\n\nMIIJQAYJKoZIhvcNAQcCoIIJMTCCCS0CAQExDzANBglghkgBZQMEAgEFADALBgkq\nhkiG9w0BBwGgggWLMIIFhzCCA2+gAwIBAgIJAK23jjoxtkh4MA0GCSqGSIb3DQEB\nCwUAMFoxCzAJBgNVBAYTAk5BMQ8wDQYDVQQIDAZOYXJuaWExDTALBgNVBAcMBEF2\nZXIxDTALBgNVBAoMBFRFU1QxDTALBgNVBAsMBFRFU1QxDTALBgNVBAMMBFRFU1Qw\nHhcNMTYxMDEyMTIzMzI0WhcNMjExMDExMTIzMzI0WjBaMQswCQYDVQQGEwJOQTEP\nMA0GA1UECAwGTmFybmlhMQ0wCwYDVQQHDARBdmVyMQ0wCwYDVQQKDARURVNUMQ0w\nCwYDVQQLDARURVNUMQ0wCwYDVQQDDARURVNUMIICIjANBgkqhkiG9w0BAQEFAAOC\nAg8AMIICCgKCAgEAwjcoOoGTeqBAyiQF4dxuaow9ViOWmcJofsku6wH+/cVMRGAX\nqxLTHA1F5BLc7aDJ01h3m2eu3/ZRg1Mi6G4mPCb6KZlyXr9jTkQEhwA0rILbeUAg\n4ULWA+ngwAg0tobVVNs8cSBevgRCjQABY9cr+HhVXSPCz1mPc8UdNxHS/YeXUvI0\nzFcUzXyFHY8weMS3T1HiCaOTWa96LjXdRmBHWszC72WTCulZxzb/e0YsFUo/16dM\nnpc3HP0IVG5EF7MYqhgVBlpObRru1+28O4NhtXUL8YN7DEHuKdJmyKiRyS9BkacI\nr9tZ9NpfQRacZh3x/tW+U2A3cg1SK3ye7W8/h2kIXbUP665uuPw8GR+wCbvx38GX\nI4rEqmOqxsO712GwTT//MKrfaHPktj+rPgy8mAUEVEPsPmkhUqxXiFNKurgF2mx/\n9wxWW09pGe200kFhcC3PH4QWFcUaDdMsmRF+cTvxoVHqt2VBXKrO3lOrb7PvFNTb\nxvL1LnM9BoEMSf/9fO0n3ZDclU3+e0b+dpRPhLyXYcy9BEaBoWZiJSa0n4LzDVNo\n0WlWYjo1mv/eK3XRr7/iDLCctUvmQOwkC20I/nKkP717uC27iuEHdwaQIMP9KoYD\nKELkqytYdUaCm0jCtxzzPiuxdNkEioa+OvkE/jQkjcq4lGLlZRvNnimyJcUCAwEA\nAaNQME4wHQYDVR0OBBYEFCAToop9lucWYJvUadZbZUeK4mXhMB8GA1UdIwQYMBaA\nFCAToop9lucWYJvUadZbZUeK4mXhMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEL\nBQADggIBABsvThBZ50SeBwr4KBGDmd3IXR86RdK5av/UfJIKfWzgaLZY3g/87sNg\n00p6NwvPwkisY7bp490dRB1KW2egzcw4Cr/y/Mj9BTpTOJLL8REEMXLm7e4JW7Kx\nh6CzPABdOubl7z6o9rPd5Z0eG0LMbaj4jK9mnFcMGIRfGI6gIq3UtCYzP78eZu4+\nlKoCOkyp/jhVkrQkD829fvN2t3yVNp/0LJA9IVvdFn6CA0SBaZHOMoWzx3f892x2\nH9E8n7fFq3sdnhj0hOfrpUGJZOvKHLHIbhkf0LFhlp18hf4qkjQljkBU7WefDmTg\njmG1HyJb3Gaia2LHJ4x4sIOt9pCLK/KgJd1V4PKSvs00nZBF3xd4r646zWysA43I\n5dxzuHVMJnBOrjaCL6b9n4dCHJeMUQYVgQRwXlidZ+sxXdIqZRjwcEb8au4MzFJN\nI1pCbzD1E5J31q+TXkeCEEtDmSe22QvpEGyvaHvQ77+zZyvs6hCw7fvNv2KYV757\ndbdno9mrjPD8kybejp9EOdlpTMEh3isESdsNQHX1yJdkd7h3KDGun9YBwzgNLBEB\npwu4Z5vHBasvmsxdMot5tch6aNetBSTgWqHtZQMncucMxeFaHeMS0/Ft0L34of5j\nlPdZRQBVNOBeJoMZGM7ZlQUtmn1I4K+IS5QnSFzdH/19jn8sYXpfMYIDeTCCA3UC\nAQEwZzBaMQswCQYDVQQGEwJOQTEPMA0GA1UECAwGTmFybmlhMQ0wCwYDVQQHDARB\ndmVyMQ0wCwYDVQQKDARURVNUMQ0wCwYDVQQLDARURVNUMQ0wCwYDVQQDDARURVNU\nAgkArbeOOjG2SHgwDQYJYIZIAWUDBAIBBQCggeQwGAYJKoZIhvcNAQkDMQsGCSqG\nSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTYxMDEyMTQwNTMyWjAvBgkqhkiG9w0B\nCQQxIgQgRkFPWp4PY2h900prCPQEB60Lk67LrMWHV8upO3N5f+cweQYJKoZIhvcN\nAQkPMWwwajALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAK\nBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAwBwYFKw4D\nAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggIAbutlZtlVQvPqU8Zp\nd3t9M9nFcIaN1rcA0bMAa+mY7QGZPMdPzm62x5Io66dAMYAzEqo6RSyakTTHPu2q\nZKDOH7i/I+mqdQVpw0AMWC/aXnz9O/RBQ5m3wtwVWyJmDP7t7lP0BfkBsYbJqBFU\nEi3ByXReIJBqK07IstRTyyUiTHBKSNIMJVT//gRNtAWBFvQfr7qgx6Y5qU9nkSt0\ny+bkaHd7UnDcxWS2n972nzrSdtHqsPXvu6h0UDY4EIlunAn+w8QuwgG5qQidJ/CA\nmaRqciAzpKB1fbtKK5rwU2LI4Xefwk1H6GJYia/rHGnjDaRTyAHYJUeR7uz1/Fts\nT5lErMSFWo9k8+ItL1beNspqe7uHyIfruTVO4mAwEN+F0szUewVoYlrgOE48x/qy\nvJPrmuFSLuDEt5BPUFzX95Ua750JjIFT+MxD8rLOVCOr0biCOFezFi5t+8Sv355Q\n/VGwYVVJK+PzSSHzKrZsSzMh2WlyaHcdE7JJuyU5gO3KvBrKek2GT2ouyoryiGv9\n94lOsKJ8DD4y8ct22jSfSGLxULuHE4Kc0Gr/wVr4gbpo1JqaCIMkYlvXiEP7D75J\nf9prxLzq4I+0vm5E40dQJCbtDOKG099w4uGr35F+uReq2/zvEroXpe3A58JO+deL\nE1KXbKBZAzrWWGnJw03eEV+R4Yw=\n\n------B79CA96475D587A834C5FCC2F10A0BF1--\n\n"
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 15:34:44 GMT
+- request:
+    method: get
+    uri: http://localhost:9292/imagelist02.signed
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.11.0
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: 'OK '
+    headers:
+      Content-Type:
+      - application/octet-stream
+      Last-Modified:
+      - Fri, 14 Oct 2016 11:11:59 GMT
+      Content-Length:
+      - '7411'
+      X-Content-Type-Options:
+      - nosniff
+      Server:
+      - WEBrick/1.3.1 (Ruby/2.3.3/2016-11-21)
+      Date:
+      - Mon, 16 Jan 2017 15:34:44 GMT
+      Connection:
+      - Keep-Alive
+    body:
+      encoding: UTF-8
+      string: "MIME-Version: 1.0\nContent-Type: multipart/signed; protocol=\"application/x-pkcs7-signature\";
+        micalg=\"sha-256\"; boundary=\"----E142FAB8043C53C7E22FD51905AE3E61\"\n\nThis
+        is an S/MIME signed message\n\n------E142FAB8043C53C7E22FD51905AE3E61\n{\r\n
+        \  \"hv:imagelist\": {\r\n      \"dc:date:created\": \"2015-06-18T21:14:00Z\",\r\n
+        \     \"dc:date:expires\": \"2499-12-31T22:00:00Z\",\r\n      \"dc:description\":
+        \"This is a VO-wide image list for some4.vo.net VO.\",\r\n      \"dc:identifier\":
+        \"76fdee70-8119-5d33-gggg-3c57e1c60df1\",\r\n      \"dc:source\": \"https://some.unknown.source/\",\r\n
+        \     \"dc:title\": \"Dummy image list number 4.\",\r\n      \"ad:vo\": \"some4.vo.net\",\r\n
+        \     \"hv:endorser\": {\r\n         \"hv:x509\": {\r\n            \"dc:creator\":
+        \"Applications Database\",\r\n            \"hv:ca\": \"/DC=XXX/DC=YYY/CN=SOME
+        TEST CA\",\r\n            \"hv:dn\": \"/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source\",\r\n
+        \           \"hv:email\": \"dontwriteme@please.net\"\r\n         }\r\n      },\r\n
+        \     \"hv:images\": [\r\n         {\r\n            \"hv:image\": {\r\n               \"dc:description\":
+        \"This version of CERNVM has been modified - default OS extended to 40GB of
+        disk - updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled
+        all Cloud-Init data sources\",\r\n               \"dc:identifier\": \"c0482bc2-bf41-5d49-gggg-a750174a186b\",\r\n
+        \              \"ad:mpuri\": \"https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-gggg-a750174a186b:484/\",\r\n
+        \              \"dc:title\": \"Image for CernVM [Scientific Linux/6.0/KVM]\",\r\n
+        \              \"ad:group\": \"General group\",\r\n               \"hv:hypervisor\":
+        \"KVM\",\r\n               \"hv:format\": \"OVA\",\r\n               \"hv:ram_minimum\":
+        \"512\",\r\n               \"ad:ram_recommended\": \"1024\",\r\n               \"hv:core_minimum\":
+        \"1\",\r\n               \"ad:core_recommended\": \"4\",\r\n               \"hv:size\":
+        \"121243136\",\r\n               \"hv:uri\": \"https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova\",\r\n
+        \              \"hv:version\": \"3.3.0-1\",\r\n               \"sl:arch\":
+        \"x86_64\",\r\n               \"sl:checksum:sha512\": \"5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4b5dc3d68a3b22581b3318db35dd3364e83dab0\",\r\n
+        \              \"sl:comments\": \"\",\r\n               \"sl:os\": \"Linux\",\r\n
+        \              \"sl:osname\": \"Scientific Linux\",\r\n               \"sl:osversion\":
+        \"6.0\",\r\n               \"ad:user:fullname\": \"Victor Stone\",\r\n               \"ad:user:guid\":
+        \"9d9dd6cf-b61a-gggg-b1df-b5731adf717c\",\r\n               \"ad:user:uri\":
+        \"https://appdb.somewhere.net/store/person/victor.stone\"\r\n            }\r\n
+        \        },\r\n         {\r\n            \"hv:image\": {\r\n               \"dc:description\":
+        \"\",\r\n               \"dc:identifier\": \"662b0e71-3e21-hhhh-b6a1-cc2f51319fa7\",\r\n
+        \              \"ad:mpuri\": \"https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-hhhh-b6a1-cc2f51319fa7:485/\",\r\n
+        \              \"dc:title\": \"Image for CentOS 6 minimal [CentOS/6.x/KVM]\",\r\n
+        \              \"ad:group\": \"General group\",\r\n               \"hv:hypervisor\":
+        \"KVM\",\r\n               \"hv:format\": \"OVA\",\r\n               \"hv:size\":
+        \"581816320\",\r\n               \"hv:uri\": \"https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova\",\r\n
+        \              \"hv:version\": \"20141029\",\r\n               \"sl:arch\":
+        \"x86_64\",\r\n               \"sl:checksum:sha512\": \"02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a854654ff645097c47da236e46ad54806c6fc72a29ce\",\r\n
+        \              \"sl:comments\": \"\",\r\n               \"sl:os\": \"Linux\",\r\n
+        \              \"sl:osname\": \"CentOS\",\r\n               \"sl:osversion\":
+        \"6.6\",\r\n               \"ad:user:fullname\": \"Billy Batson\",\r\n               \"ad:user:guid\":
+        \"e85470d8-2af9-hhhh-8c26-0014c23dfd8c\",\r\n               \"ad:user:uri\":
+        \"https://appdb.somewhere.net/store/person/billy.batson\"\r\n            }\r\n
+        \        }\r\n      ],\r\n      \"hv:uri\": \"https://appdb.somewhere.net/store/vo/some4.vo.net/image.list\",\r\n
+        \     \"hv:version\": \"20150618211400\"\r\n   }\r\n}\r\n\r\n\n------E142FAB8043C53C7E22FD51905AE3E61\nContent-Type:
+        application/x-pkcs7-signature; name=\"smime.p7s\"\nContent-Transfer-Encoding:
+        base64\nContent-Disposition: attachment; filename=\"smime.p7s\"\n\nMIIJQAYJKoZIhvcNAQcCoIIJMTCCCS0CAQExDzANBglghkgBZQMEAgEFADALBgkq\nhkiG9w0BBwGgggWLMIIFhzCCA2+gAwIBAgIJAK23jjoxtkh4MA0GCSqGSIb3DQEB\nCwUAMFoxCzAJBgNVBAYTAk5BMQ8wDQYDVQQIDAZOYXJuaWExDTALBgNVBAcMBEF2\nZXIxDTALBgNVBAoMBFRFU1QxDTALBgNVBAsMBFRFU1QxDTALBgNVBAMMBFRFU1Qw\nHhcNMTYxMDEyMTIzMzI0WhcNMjExMDExMTIzMzI0WjBaMQswCQYDVQQGEwJOQTEP\nMA0GA1UECAwGTmFybmlhMQ0wCwYDVQQHDARBdmVyMQ0wCwYDVQQKDARURVNUMQ0w\nCwYDVQQLDARURVNUMQ0wCwYDVQQDDARURVNUMIICIjANBgkqhkiG9w0BAQEFAAOC\nAg8AMIICCgKCAgEAwjcoOoGTeqBAyiQF4dxuaow9ViOWmcJofsku6wH+/cVMRGAX\nqxLTHA1F5BLc7aDJ01h3m2eu3/ZRg1Mi6G4mPCb6KZlyXr9jTkQEhwA0rILbeUAg\n4ULWA+ngwAg0tobVVNs8cSBevgRCjQABY9cr+HhVXSPCz1mPc8UdNxHS/YeXUvI0\nzFcUzXyFHY8weMS3T1HiCaOTWa96LjXdRmBHWszC72WTCulZxzb/e0YsFUo/16dM\nnpc3HP0IVG5EF7MYqhgVBlpObRru1+28O4NhtXUL8YN7DEHuKdJmyKiRyS9BkacI\nr9tZ9NpfQRacZh3x/tW+U2A3cg1SK3ye7W8/h2kIXbUP665uuPw8GR+wCbvx38GX\nI4rEqmOqxsO712GwTT//MKrfaHPktj+rPgy8mAUEVEPsPmkhUqxXiFNKurgF2mx/\n9wxWW09pGe200kFhcC3PH4QWFcUaDdMsmRF+cTvxoVHqt2VBXKrO3lOrb7PvFNTb\nxvL1LnM9BoEMSf/9fO0n3ZDclU3+e0b+dpRPhLyXYcy9BEaBoWZiJSa0n4LzDVNo\n0WlWYjo1mv/eK3XRr7/iDLCctUvmQOwkC20I/nKkP717uC27iuEHdwaQIMP9KoYD\nKELkqytYdUaCm0jCtxzzPiuxdNkEioa+OvkE/jQkjcq4lGLlZRvNnimyJcUCAwEA\nAaNQME4wHQYDVR0OBBYEFCAToop9lucWYJvUadZbZUeK4mXhMB8GA1UdIwQYMBaA\nFCAToop9lucWYJvUadZbZUeK4mXhMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEL\nBQADggIBABsvThBZ50SeBwr4KBGDmd3IXR86RdK5av/UfJIKfWzgaLZY3g/87sNg\n00p6NwvPwkisY7bp490dRB1KW2egzcw4Cr/y/Mj9BTpTOJLL8REEMXLm7e4JW7Kx\nh6CzPABdOubl7z6o9rPd5Z0eG0LMbaj4jK9mnFcMGIRfGI6gIq3UtCYzP78eZu4+\nlKoCOkyp/jhVkrQkD829fvN2t3yVNp/0LJA9IVvdFn6CA0SBaZHOMoWzx3f892x2\nH9E8n7fFq3sdnhj0hOfrpUGJZOvKHLHIbhkf0LFhlp18hf4qkjQljkBU7WefDmTg\njmG1HyJb3Gaia2LHJ4x4sIOt9pCLK/KgJd1V4PKSvs00nZBF3xd4r646zWysA43I\n5dxzuHVMJnBOrjaCL6b9n4dCHJeMUQYVgQRwXlidZ+sxXdIqZRjwcEb8au4MzFJN\nI1pCbzD1E5J31q+TXkeCEEtDmSe22QvpEGyvaHvQ77+zZyvs6hCw7fvNv2KYV757\ndbdno9mrjPD8kybejp9EOdlpTMEh3isESdsNQHX1yJdkd7h3KDGun9YBwzgNLBEB\npwu4Z5vHBasvmsxdMot5tch6aNetBSTgWqHtZQMncucMxeFaHeMS0/Ft0L34of5j\nlPdZRQBVNOBeJoMZGM7ZlQUtmn1I4K+IS5QnSFzdH/19jn8sYXpfMYIDeTCCA3UC\nAQEwZzBaMQswCQYDVQQGEwJOQTEPMA0GA1UECAwGTmFybmlhMQ0wCwYDVQQHDARB\ndmVyMQ0wCwYDVQQKDARURVNUMQ0wCwYDVQQLDARURVNUMQ0wCwYDVQQDDARURVNU\nAgkArbeOOjG2SHgwDQYJYIZIAWUDBAIBBQCggeQwGAYJKoZIhvcNAQkDMQsGCSqG\nSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTYxMDEyMTQwNTM2WjAvBgkqhkiG9w0B\nCQQxIgQgmOfPtR/8oqKDtnhscY6gLKG0xr5yoJpdm0FJwxXdy2IweQYJKoZIhvcN\nAQkPMWwwajALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAK\nBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAwBwYFKw4D\nAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggIAWxWUzZq/8m1UcV2s\nXHK5VJo34pA56NHql+Dxiwglg06voJQjUhE6MuqNqDMF/BOYcuwFyIc9Te3CvyOw\nCvHNF9i1TvNplushoRdhWrHs1x4jMxhExiaoJCnEGrAvMaFmeLtx+OdT79F1H6E8\nwCtGY4oMBk+09fWpvPPyC5/tuIFXnFV1M6OhdqPY7UeviIp/mz9H/qQcBom6SKcV\nyFgwbqqs0l1Lw1GmVvzRVF+lgSG2dy+VXZJT3Wlf2edO7I/aAfzLeYDbd9xTNwEU\n65oz6Okx3Y1pgcPcBHmqGyEpavvQGU0LPSDpyP/sHpzd1wmQx3puTxHcvGnkcRNT\nN9k6p3+j8ACNBzdryJ/o39CnhcadC8CGnaVyX4DATUTM+GpRgyQ1OFxftZM0J/c1\ngX5jU4ZsCCRcFcy9Ilt7PGfmcMi5xSaNJG2jWP7y4j5xEbEuTa7Mfya1yZbrrAbn\nJbKOk9MyCxCPpb+88p4pcVmB1Hb/VmMnddGwfV22B1fpaGJI4T2LVkWqKipFZUBL\nCOF41oD2380oYtFbZzgbKPKYbAYjl55kN1m66ynNl50wvIeRoCDeUtRb6ufcT9yR\n87HOyUBGCZk+VpYVh98/ukqjQptJZVlCct0H6kGwyyywtvNAfUjMbwGYXkTbb5pC\nSi/e2cmiHrVjJ4e7/pO4oaCnhUA=\n\n------E142FAB8043C53C7E22FD51905AE3E61--\n\n"
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 15:34:44 GMT
+- request:
+    method: get
+    uri: http://localhost:9292/imagelist03.signed
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.11.0
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: 'OK '
+    headers:
+      Content-Type:
+      - application/octet-stream
+      Last-Modified:
+      - Fri, 14 Oct 2016 11:11:26 GMT
+      Content-Length:
+      - '7407'
+      X-Content-Type-Options:
+      - nosniff
+      Server:
+      - WEBrick/1.3.1 (Ruby/2.3.3/2016-11-21)
+      Date:
+      - Mon, 16 Jan 2017 15:34:44 GMT
+      Connection:
+      - Keep-Alive
+    body:
+      encoding: UTF-8
+      string: "MIME-Version: 1.0\nContent-Type: multipart/signed; protocol=\"application/x-pkcs7-signature\";
+        micalg=\"sha-256\"; boundary=\"----4608B3A0369B77D5D7C6872B462E953F\"\n\nThis
+        is an S/MIME signed message\n\n------4608B3A0369B77D5D7C6872B462E953F\n{\r\n
+        \  \"hv:imagelist\": {\r\n      \"dc:date:created\": \"2015-06-18T21:14:00Z\",\r\n
+        \     \"dc:date:expires\": \"2499-12-31T22:00:00Z\",\r\n      \"dc:description\":
+        \"This is a VO-wide image list for some3.vo.net VO.\",\r\n      \"dc:identifier\":
+        \"76fdee70-8119-5d33-eeee-3c57e1c60df1\",\r\n      \"dc:source\": \"https://some.unknown.source/\",\r\n
+        \     \"dc:title\": \"Dummy image list number 3.\",\r\n      \"ad:vo\": \"some3.vo.net\",\r\n
+        \     \"hv:endorser\": {\r\n         \"hv:x509\": {\r\n            \"dc:creator\":
+        \"Applications Database\",\r\n            \"hv:ca\": \"/DC=XXX/DC=YYY/CN=SOME
+        TEST CA\",\r\n            \"hv:dn\": \"/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source\",\r\n
+        \           \"hv:email\": \"dontwriteme@please.net\"\r\n         }\r\n      },\r\n
+        \     \"hv:images\": [\r\n         {\r\n            \"hv:image\": {\r\n               \"dc:description\":
+        \"This version of CERNVM has been modified - default OS extended to 40GB of
+        disk - updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled
+        all Cloud-Init data sources\",\r\n               \"dc:identifier\": \"c0482bc2-bf41-5d49-eeee-a750174a186b\",\r\n
+        \              \"ad:mpuri\": \"https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-eeee-a750174a186b:484/\",\r\n
+        \              \"dc:title\": \"Image for CernVM [Scientific Linux/6.0/KVM]\",\r\n
+        \              \"ad:group\": \"General group\",\r\n               \"hv:hypervisor\":
+        \"KVM\",\r\n               \"hv:format\": \"OVA\",\r\n               \"hv:ram_minimum\":
+        \"512\",\r\n               \"ad:ram_recommended\": \"1024\",\r\n               \"hv:core_minimum\":
+        \"1\",\r\n               \"ad:core_recommended\": \"4\",\r\n               \"hv:size\":
+        \"121243136\",\r\n               \"hv:uri\": \"https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova\",\r\n
+        \              \"hv:version\": \"3.3.0-1\",\r\n               \"sl:arch\":
+        \"x86_64\",\r\n               \"sl:checksum:sha512\": \"5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4b5dc3d68a3b22581b3318db35dd3364e83dab0\",\r\n
+        \              \"sl:comments\": \"\",\r\n               \"sl:os\": \"Linux\",\r\n
+        \              \"sl:osname\": \"Scientific Linux\",\r\n               \"sl:osversion\":
+        \"6.0\",\r\n               \"ad:user:fullname\": \"Arthur Curry\",\r\n               \"ad:user:guid\":
+        \"9d9dd6cf-b61a-eeee-b1df-b5731adf717c\",\r\n               \"ad:user:uri\":
+        \"https://appdb.somewhere.net/store/person/arthur.curry\"\r\n            }\r\n
+        \        },\r\n         {\r\n            \"hv:image\": {\r\n               \"dc:description\":
+        \"\",\r\n               \"dc:identifier\": \"662b0e71-3e21-ffff-b6a1-cc2f51319fa7\",\r\n
+        \              \"ad:mpuri\": \"https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-ffff-b6a1-cc2f51319fa7:485/\",\r\n
+        \              \"dc:title\": \"Image for CentOS 6 minimal [CentOS/6.x/KVM]\",\r\n
+        \              \"ad:group\": \"General group\",\r\n               \"hv:hypervisor\":
+        \"KVM\",\r\n               \"hv:format\": \"OVA\",\r\n               \"hv:size\":
+        \"581816320\",\r\n               \"hv:uri\": \"https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova\",\r\n
+        \              \"hv:version\": \"20141029\",\r\n               \"sl:arch\":
+        \"x86_64\",\r\n               \"sl:checksum:sha512\": \"02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a854654ff645097c47da236e46ad54806c6fc72a29ce\",\r\n
+        \              \"sl:comments\": \"\",\r\n               \"sl:os\": \"Linux\",\r\n
+        \              \"sl:osname\": \"CentOS\",\r\n               \"sl:osversion\":
+        \"6.6\",\r\n               \"ad:user:fullname\": \"Ray Palmer\",\r\n               \"ad:user:guid\":
+        \"e85470d8-2af9-ffff-8c26-0014c23dfd8c\",\r\n               \"ad:user:uri\":
+        \"https://appdb.somewhere.net/store/person/ray.palmer\"\r\n            }\r\n
+        \        }\r\n      ],\r\n      \"hv:uri\": \"https://appdb.somewhere.net/store/vo/some3.vo.net/image.list\",\r\n
+        \     \"hv:version\": \"20150618211400\"\r\n   }\r\n}\r\n\r\n\n------4608B3A0369B77D5D7C6872B462E953F\nContent-Type:
+        application/x-pkcs7-signature; name=\"smime.p7s\"\nContent-Transfer-Encoding:
+        base64\nContent-Disposition: attachment; filename=\"smime.p7s\"\n\nMIIJQAYJKoZIhvcNAQcCoIIJMTCCCS0CAQExDzANBglghkgBZQMEAgEFADALBgkq\nhkiG9w0BBwGgggWLMIIFhzCCA2+gAwIBAgIJAK23jjoxtkh4MA0GCSqGSIb3DQEB\nCwUAMFoxCzAJBgNVBAYTAk5BMQ8wDQYDVQQIDAZOYXJuaWExDTALBgNVBAcMBEF2\nZXIxDTALBgNVBAoMBFRFU1QxDTALBgNVBAsMBFRFU1QxDTALBgNVBAMMBFRFU1Qw\nHhcNMTYxMDEyMTIzMzI0WhcNMjExMDExMTIzMzI0WjBaMQswCQYDVQQGEwJOQTEP\nMA0GA1UECAwGTmFybmlhMQ0wCwYDVQQHDARBdmVyMQ0wCwYDVQQKDARURVNUMQ0w\nCwYDVQQLDARURVNUMQ0wCwYDVQQDDARURVNUMIICIjANBgkqhkiG9w0BAQEFAAOC\nAg8AMIICCgKCAgEAwjcoOoGTeqBAyiQF4dxuaow9ViOWmcJofsku6wH+/cVMRGAX\nqxLTHA1F5BLc7aDJ01h3m2eu3/ZRg1Mi6G4mPCb6KZlyXr9jTkQEhwA0rILbeUAg\n4ULWA+ngwAg0tobVVNs8cSBevgRCjQABY9cr+HhVXSPCz1mPc8UdNxHS/YeXUvI0\nzFcUzXyFHY8weMS3T1HiCaOTWa96LjXdRmBHWszC72WTCulZxzb/e0YsFUo/16dM\nnpc3HP0IVG5EF7MYqhgVBlpObRru1+28O4NhtXUL8YN7DEHuKdJmyKiRyS9BkacI\nr9tZ9NpfQRacZh3x/tW+U2A3cg1SK3ye7W8/h2kIXbUP665uuPw8GR+wCbvx38GX\nI4rEqmOqxsO712GwTT//MKrfaHPktj+rPgy8mAUEVEPsPmkhUqxXiFNKurgF2mx/\n9wxWW09pGe200kFhcC3PH4QWFcUaDdMsmRF+cTvxoVHqt2VBXKrO3lOrb7PvFNTb\nxvL1LnM9BoEMSf/9fO0n3ZDclU3+e0b+dpRPhLyXYcy9BEaBoWZiJSa0n4LzDVNo\n0WlWYjo1mv/eK3XRr7/iDLCctUvmQOwkC20I/nKkP717uC27iuEHdwaQIMP9KoYD\nKELkqytYdUaCm0jCtxzzPiuxdNkEioa+OvkE/jQkjcq4lGLlZRvNnimyJcUCAwEA\nAaNQME4wHQYDVR0OBBYEFCAToop9lucWYJvUadZbZUeK4mXhMB8GA1UdIwQYMBaA\nFCAToop9lucWYJvUadZbZUeK4mXhMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEL\nBQADggIBABsvThBZ50SeBwr4KBGDmd3IXR86RdK5av/UfJIKfWzgaLZY3g/87sNg\n00p6NwvPwkisY7bp490dRB1KW2egzcw4Cr/y/Mj9BTpTOJLL8REEMXLm7e4JW7Kx\nh6CzPABdOubl7z6o9rPd5Z0eG0LMbaj4jK9mnFcMGIRfGI6gIq3UtCYzP78eZu4+\nlKoCOkyp/jhVkrQkD829fvN2t3yVNp/0LJA9IVvdFn6CA0SBaZHOMoWzx3f892x2\nH9E8n7fFq3sdnhj0hOfrpUGJZOvKHLHIbhkf0LFhlp18hf4qkjQljkBU7WefDmTg\njmG1HyJb3Gaia2LHJ4x4sIOt9pCLK/KgJd1V4PKSvs00nZBF3xd4r646zWysA43I\n5dxzuHVMJnBOrjaCL6b9n4dCHJeMUQYVgQRwXlidZ+sxXdIqZRjwcEb8au4MzFJN\nI1pCbzD1E5J31q+TXkeCEEtDmSe22QvpEGyvaHvQ77+zZyvs6hCw7fvNv2KYV757\ndbdno9mrjPD8kybejp9EOdlpTMEh3isESdsNQHX1yJdkd7h3KDGun9YBwzgNLBEB\npwu4Z5vHBasvmsxdMot5tch6aNetBSTgWqHtZQMncucMxeFaHeMS0/Ft0L34of5j\nlPdZRQBVNOBeJoMZGM7ZlQUtmn1I4K+IS5QnSFzdH/19jn8sYXpfMYIDeTCCA3UC\nAQEwZzBaMQswCQYDVQQGEwJOQTEPMA0GA1UECAwGTmFybmlhMQ0wCwYDVQQHDARB\ndmVyMQ0wCwYDVQQKDARURVNUMQ0wCwYDVQQLDARURVNUMQ0wCwYDVQQDDARURVNU\nAgkArbeOOjG2SHgwDQYJYIZIAWUDBAIBBQCggeQwGAYJKoZIhvcNAQkDMQsGCSqG\nSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTYxMDEyMTQwNTM0WjAvBgkqhkiG9w0B\nCQQxIgQgLYJ2ZsezVGz8ZKvVg2NrTneCwF63vQ6HmxzTFiZOiqEweQYJKoZIhvcN\nAQkPMWwwajALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAK\nBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAwBwYFKw4D\nAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggIAaamgvdb22XsUiJjH\nl/5wD/iBShr12R6boU/x+JcKqVvUcfpT/gdnm5Yq2d18fVsCys0celRYjyglW4pm\nEv2D3c9V7zR5pNKt4Ac1KDkxgbTxBPkyee9N6GoBoC4yESUv9WEflHjO6c2KJP/D\n0IT4yZyDUhcgvoiWQnxD0VnfjVwg3TrWqmaW9TwNYAfrh/4BwSVAABfBlYSS0AQn\n3gAnIqFWeV+oBJlqtXAaz2+5yvc0QqDIlAguBjUPqsM/8izyqcCgg6l5HE/eHVZ9\nt2V4q7FVNFMHZFjpYtRhRk/dOhWcCld0F9fPCnmMj9SnL8eWeCLJolshCgQetM/b\nn8XHbgHLXf7ZPWfN6xym5L28P2k1bzzn/MOR6H9ke+0lIj21uVOKz8daGWb9/6FE\nzsjbPz9JiTiNS6jNOvnQkdeG2sPYGOw3hxFyNGNV15CfvjA7eRLTW8udaSTdN6aN\niWJfvUERII/hscuBPpO4eIsRWMozwBKJW8iVG84r+EIlOIMBf61mCgY3slljr0SG\n5u/FjhqK3KLTOjr3av+wIQ+gvU65JGwOkM3UcyVbmo87jQJdqPc0Q/FaCHHWjwwl\nAvqcrZshedCmqJ0nJA+G+0zQ5f10o4uZwINDF7EXlOn+Cpwp/GEVBD+8t9T7Iyhv\nvQMHIml2YNsAYqlEaYiH6jcHQ7k=\n\n------4608B3A0369B77D5D7C6872B462E953F--\n\n"
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 15:34:44 GMT
+recorded_with: VCR 3.0.3

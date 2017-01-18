@@ -1,5 +1,5 @@
 require 'tmpdir'
-require 'open-uri'
+require 'faraday'
 require 'zaru'
 require 'openssl'
 require 'json'
@@ -10,35 +10,52 @@ module Cloudkeeper
       attr_reader :image_lists, :openssl_store
 
       def initialize
-        @image_lists = []
+        @image_lists = {}
 
         @openssl_store = OpenSSL::X509::Store.new
         @openssl_store.add_path Cloudkeeper::Settings[:'ca-dir'] if Cloudkeeper::Settings[:'ca-dir']
       end
 
-      def download_image_lists(urls)
+      def download_image_lists
         Dir.mktmpdir('cloudkeeper') do |dir|
-          urls.each do |url|
-            image_list_hash = load_image_list(download_image_list(url, dir))
-            image_lists << convert_image_list(image_list_hash)
-          end
+          urls = Cloudkeeper::Settings[:'image-lists']
+          retrieve_image_lists urls, dir
         end
       end
 
       private
 
+      def retrieve_image_lists(urls, dir)
+        urls.each do |url|
+          begin
+            image_list = convert_image_list(load_image_list(download_image_list(url, dir)))
+            image_lists[image_list.identifier] = image_list
+          rescue Cloudkeeper::Errors::ImageList::RetrievalError, Faraday::ConnectionFailed => ex
+            logger.warn "Image list #{url} couldn't be donwloaded\n#{ex.message}"
+            next
+          end
+        end
+      end
+
       def download_image_list(url, dir)
         Cloudkeeper::Utils::Url.check!(url)
-
         uri = URI.parse url
-        user = uri.user
-        password = uri.password
-        uri.user = nil
-        uri.password = nil
-        filename = generate_filename(uri, dir)
-        IO.copy_stream(open(uri, http_basic_authentication: [user, password]), filename)
 
-        filename
+        filename = generate_filename(uri, dir)
+        response = make_request uri
+
+        if response.success?
+          File.write filename, response.body
+          return filename
+        end
+
+        raise Cloudkeeper::Errors::ImageList::RetrievalError,
+              "couldn't download image list from url #{url.inspect}\n#{response.to_hash.inspect}"
+      end
+
+      def make_request(uri)
+        conn = Faraday.new url: uri
+        conn.get
       end
 
       def generate_filename(uri, dir)

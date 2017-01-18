@@ -4,6 +4,8 @@ module Cloudkeeper
       attr_accessor :identifier, :description, :mpuri, :title, :group, :ram, :core, :version, :architecture
       attr_accessor :operating_system, :image, :attributes, :vo, :expiration_date, :image_list_identifier
 
+      REJECTED_ATTRIBUTES = [:vo, :expiration, :image_list_identifier].freeze
+
       def initialize(identifier, mpuri, vo, expiration_date, image_list_identifier, title = '', description = '', group = '',
                      ram = 1024, core = 1, version = '', architecture = '', operating_system = '', image = nil, attributes = {})
         if identifier.blank? || \
@@ -73,7 +75,7 @@ module Cloudkeeper
         end
 
         def populate_attributes!(appliance, appliance_hash)
-          appliance_hash.reject! { |k, _v| k == :vo || k == :expiration || k == :image_list_identifier }
+          appliance_hash.reject! { |k, _v| REJECTED_ATTRIBUTES.include? k }
           appliance.attributes = appliance_hash.map { |k, v| [k.to_s, v.to_s] }.to_h
         end
       end

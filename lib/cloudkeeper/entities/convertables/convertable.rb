@@ -10,7 +10,7 @@ module Cloudkeeper
           CONVERT_OUTPUT_FORMATS
         end
 
-        FORMAT_REGEX = Regexp.new "^to_(?<format>#{convert_output_formats.join('|')})$"
+        FORMAT_REGEX = /^to_(?<format>#{convert_output_formats.join('|')})$/
 
         def self.included(base)
           raise Cloudkeeper::Errors::Convertables::ConvertabilityError, "#{base.inspect} cannot become a convertable" \

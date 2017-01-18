@@ -81,7 +81,11 @@ describe Cloudkeeper::Entities::Convertables::Ova do
     let(:output) { "image.ovf\n#{File.basename(convertable_instance_vmdk.file)}\nimage.mf\n" }
 
     before do
-      expect(Cloudkeeper::CommandExecutioner).to receive(:execute).with('tar', '-t', '-f', convertable_instance_ova.file) { output }
+      allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with('tar', '-t', '-f', convertable_instance_ova.file) { output }
+    end
+
+    after do
+      expect(Cloudkeeper::CommandExecutioner).to have_received(:execute).with('tar', '-t', '-f', convertable_instance_ova.file)
     end
 
     it 'returns archive files in an array' do

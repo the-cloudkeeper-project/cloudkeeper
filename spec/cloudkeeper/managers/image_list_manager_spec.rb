@@ -31,8 +31,12 @@ describe Cloudkeeper::Managers::ImageListManager do
       let(:openssl_dummy_store) { instance_spy OpenSSL::X509::Store }
 
       before do
-        expect(OpenSSL::X509::Store).to receive(:new) { openssl_dummy_store }
+        allow(OpenSSL::X509::Store).to receive(:new) { openssl_dummy_store }
         Cloudkeeper::Settings[:'ca-dir'] = '/some/ca/directory'
+      end
+
+      after do
+        expect(OpenSSL::X509::Store).to have_received(:new) { openssl_dummy_store }
       end
 
       it 'prepares openssl_store attribute as OpenSSL::X509::Store instance with custom CA directory' do
@@ -46,9 +50,14 @@ describe Cloudkeeper::Managers::ImageListManager do
       let(:openssl_dummy_store) { instance_double OpenSSL::X509::Store }
 
       before do
-        expect(OpenSSL::X509::Store).to receive(:new) { openssl_dummy_store }
-        expect(openssl_dummy_store).not_to receive(:add_path)
+        allow(OpenSSL::X509::Store).to receive(:new) { openssl_dummy_store }
+        allow(openssl_dummy_store).to receive(:add_path)
         Cloudkeeper::Settings[:'ca-dir'] = nil
+      end
+
+      after do
+        expect(OpenSSL::X509::Store).to have_received(:new) { openssl_dummy_store }
+        expect(openssl_dummy_store).not_to have_received(:add_path)
       end
 
       it 'prepares openssl_store attribute as OpenSSL::X509::Store instance without custom CA directory' do

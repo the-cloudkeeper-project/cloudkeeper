@@ -156,7 +156,11 @@ describe Cloudkeeper::Managers::ImageManager do
     let(:output) { 'some dummy output' }
 
     before do
-      expect(Cloudkeeper::CommandExecutioner).to receive(:execute).with('file', '-b', file) { output }
+      allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with('file', '-b', file) { output }
+    end
+
+    after do
+      expect(Cloudkeeper::CommandExecutioner).to have_received(:execute).with('file', '-b', file) { output }
     end
 
     it 'returns file description' do

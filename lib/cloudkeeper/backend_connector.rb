@@ -8,7 +8,7 @@ module Cloudkeeper
     end
 
     def pre_action
-      check_status grpc_client.pre_action(Google::Protobuf::Empty.new)
+      check_status grpc_client.pre_action(Google::Protobuf::Empty.new), true
     end
 
     def post_action
@@ -49,8 +49,12 @@ module Cloudkeeper
 
     private
 
-    def check_status(status)
-      raise Cloudkeeper::Errors::BackendError, "error: #{status.code}\n#{status.message}" unless status.code == :SUCCESS
+    def check_status(status, raise_exception = false)
+      return if status.code == :SUCCESS
+
+      message = "#{status.code}: #{status.message}"
+      logger.error "Backend error: #{message}"
+      raise Cloudkeeper::Errors::BackendError, message if raise_exception
     end
 
     def convert_image(image)
@@ -93,28 +97,34 @@ module Cloudkeeper
 
     def acceptable_image_file(image)
       image_format = (image.available_formats & Cloudkeeper::Settings[:formats].map(&:to_sym).sort).first
-      raise Cloudkeeper::Errors::ImageFormat::NoRequiredFormatAvailableError, 'image is not available in any of the required formats' \
-        unless image_format
+      unless image_format
+        raise Cloudkeeper::Errors::Image::Format::NoRequiredFormatAvailableError, 'image is not available in any of the ' \
+                                                                                  'required formats'
+      end
 
       image.image_file image_format
     end
 
+    def prepare_image_proto(image)
+      image ? convert_image(image) : nil
+    end
+
     def manage_appliance(appliance, call)
       image = appliance.image
-
-      image_proto = image ? convert_image(image) : nil
-      appliance_proto = convert_appliance(appliance, image_proto)
+      image_proto = prepare_image_proto image
 
       if Cloudkeeper::Settings[:'remote-mode'] && image
         nginx.start image_proto.location
         set_remote_data image_proto, nginx.access_data
       end
 
-      status = grpc_client.send(call, appliance_proto)
+      status = grpc_client.send(call, convert_appliance(appliance, image_proto))
 
       nginx.stop if Cloudkeeper::Settings[:'remote-mode'] && image
 
       check_status status
+    rescue Cloudkeeper::Errors::NginxError, Cloudkeeper::Errors::Image::Format::NoRequiredFormatAvailableError => ex
+      raise Cloudkeeper::Errors::Appliance::PropagationError, ex
     end
   end
 end

@@ -74,14 +74,16 @@ describe Cloudkeeper::BackendConnector do
     context 'with an error' do
       before do
         allow(backend_connector.grpc_client).to receive(:post_action) { status_error }
+        allow(backend_connector.logger).to receive(:error)
       end
 
       after do
         expect(backend_connector.grpc_client).to have_received(:post_action) { status_error }
+        expect(backend_connector.logger).to have_received(:error)
       end
 
-      it 'raises BackendError exception' do
-        expect { backend_connector.post_action }.to raise_error(Cloudkeeper::Errors::BackendError)
+      it 'logs an error' do
+        backend_connector.post_action
       end
     end
   end
@@ -117,14 +119,16 @@ describe Cloudkeeper::BackendConnector do
     context 'with an error' do
       before do
         allow(backend_connector.grpc_client).to receive(:remove_image_list).with(image_list_identifier_proto) { status_error }
+        allow(backend_connector.logger).to receive(:error)
       end
 
       after do
         expect(backend_connector.grpc_client).to have_received(:remove_image_list).with(image_list_identifier_proto) { status_error }
+        expect(backend_connector.logger).to have_received(:error)
       end
 
-      it 'raises BackendError exception' do
-        expect { backend_connector.remove_image_list(image_list_identifier) }.to raise_error(Cloudkeeper::Errors::BackendError)
+      it 'logs an error' do
+        backend_connector.remove_image_list(image_list_identifier)
       end
     end
   end
@@ -160,8 +164,23 @@ describe Cloudkeeper::BackendConnector do
     end
 
     context 'with other status then success' do
-      it 'raises BackendError exception' do
-        expect { backend_connector.send(:check_status, status_error) }.to raise_error(Cloudkeeper::Errors::BackendError)
+      context 'with exception raising flag' do
+        it 'raises BackendError exception' do
+          expect { backend_connector.send(:check_status, status_error, true) }.to raise_error(Cloudkeeper::Errors::BackendError)
+        end
+      end
+      context 'without exception raising flag' do
+        before do
+          allow(backend_connector.logger).to receive(:error)
+        end
+
+        after do
+          expect(backend_connector.logger).to have_received(:error)
+        end
+
+        it 'logs an error' do
+          backend_connector.send(:check_status, status_error)
+        end
       end
     end
   end
@@ -191,7 +210,7 @@ describe Cloudkeeper::BackendConnector do
 
       it 'raises NoRequiredFormatAvailableError execption' do
         expect { backend_connector.send(:acceptable_image_file, image) }.to \
-          raise_error(Cloudkeeper::Errors::ImageFormat::NoRequiredFormatAvailableError)
+          raise_error(Cloudkeeper::Errors::Image::Format::NoRequiredFormatAvailableError)
       end
     end
   end
@@ -359,17 +378,19 @@ describe Cloudkeeper::BackendConnector do
         end
       end
 
-      context 'with an error' do
+      context 'with an error in backend communication' do
         before do
           allow(backend_connector.grpc_client).to receive(call) { status_error }
+          allow(backend_connector.logger).to receive(:error)
         end
 
         after do
           expect(backend_connector.grpc_client).to have_received(call) { status_error }
+          expect(backend_connector.logger).to have_received(:error)
         end
 
-        it 'raises BackendError exception' do
-          expect { backend_connector.send(:manage_appliance, appliance, call) }.to raise_error(Cloudkeeper::Errors::BackendError)
+        it 'logs an error' do
+          backend_connector.send(:manage_appliance, appliance, call)
         end
       end
     end
@@ -392,13 +413,6 @@ describe Cloudkeeper::BackendConnector do
         allow(backend_connector.nginx).to receive(:access_data) { { url: '', username: '', password: '' } }
       end
 
-      after do
-        appliance.image = image
-        expect(backend_connector.nginx).to have_received(:start)
-        expect(backend_connector.nginx).to have_received(:stop)
-        expect(backend_connector.nginx).to have_received(:access_data) { { url: '', username: '', password: '' } }
-      end
-
       context 'with successfull run' do
         before do
           allow(backend_connector.grpc_client).to receive(call) { status_success }
@@ -406,6 +420,9 @@ describe Cloudkeeper::BackendConnector do
 
         after do
           expect(backend_connector.grpc_client).to have_received(call) { status_success }
+          expect(backend_connector.nginx).to have_received(:stop)
+          expect(backend_connector.nginx).to have_received(:start)
+          expect(backend_connector.nginx).to have_received(:access_data) { { url: '', username: '', password: '' } }
         end
 
         it 'converts appliance, starts HTTP server calls specified gRPC method and stops HTTP server' do
@@ -413,17 +430,44 @@ describe Cloudkeeper::BackendConnector do
         end
       end
 
-      context 'with an error' do
+      context 'with an error in backend communication' do
         before do
           allow(backend_connector.grpc_client).to receive(call) { status_error }
+          allow(backend_connector.logger).to receive(:error)
         end
 
         after do
           expect(backend_connector.grpc_client).to have_received(call) { status_error }
+          expect(backend_connector.logger).to have_received(:error)
+          expect(backend_connector.nginx).to have_received(:stop)
+          expect(backend_connector.nginx).to have_received(:start)
+          expect(backend_connector.nginx).to have_received(:access_data) { { url: '', username: '', password: '' } }
         end
 
-        it 'raises BackendError exception' do
-          expect { backend_connector.send(:manage_appliance, appliance, call) }.to raise_error(Cloudkeeper::Errors::BackendError)
+        it 'logs an error' do
+          backend_connector.send(:manage_appliance, appliance, call)
+        end
+      end
+
+      context 'without acceptable image format' do
+        before do
+          Cloudkeeper::Settings[:formats] = %w(ova)
+        end
+
+        it 'raises NoRequiredFormatAvailableError exception' do
+          expect { backend_connector.send(:manage_appliance, appliance, call) }.to \
+            raise_error(Cloudkeeper::Errors::Appliance::PropagationError)
+        end
+      end
+
+      context 'with an error from NGINX server' do
+        before do
+          allow(backend_connector.nginx).to receive(:start).and_raise(Cloudkeeper::Errors::NginxError)
+        end
+
+        it 'raises PropagationError exception' do
+          expect { backend_connector.send(:manage_appliance, appliance, call) }.to \
+            raise_error(Cloudkeeper::Errors::Appliance::PropagationError)
         end
       end
     end
@@ -458,14 +502,16 @@ describe Cloudkeeper::BackendConnector do
       context 'with an error' do
         before do
           allow(backend_connector.grpc_client).to receive(call) { status_error }
+          allow(backend_connector.logger).to receive(:error)
         end
 
         after do
           expect(backend_connector.grpc_client).to have_received(call) { status_error }
+          expect(backend_connector.logger).to have_received(:error)
         end
 
         it 'raises BackendError exception' do
-          expect { backend_connector.send(:manage_appliance, appliance, call) }.to raise_error(Cloudkeeper::Errors::BackendError)
+          backend_connector.send(:manage_appliance, appliance, call)
         end
       end
     end

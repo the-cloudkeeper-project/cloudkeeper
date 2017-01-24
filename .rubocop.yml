@@ -4,25 +4,24 @@ AllCops:
   TargetRubyVersion: 2.0
 
 Metrics/LineLength:
-    Max: 135
+  Max: 135
 
 Style/Documentation:
   Enabled: false
 
 Metrics/MethodLength:
   Max: 15
+  Exclude:
+    - 'lib/cloudkeeper/entities/appliance.rb'
+    - 'lib/cloudkeeper/nginx/http_server.rb'
 
 Metrics/AbcSize:
   Exclude:
     - 'lib/cloudkeeper/entities/appliance.rb'
     - 'lib/cloudkeeper/backend_connector.rb'
 
-Metrics/MethodLength:
-  Exclude:
-    - 'lib/cloudkeeper/entities/appliance.rb'
-    - 'lib/cloudkeeper/nginx/http_server.rb'
-
 Metrics/ClassLength:
+  Max: 120
   Exclude:
     - 'lib/cloudkeeper/cli.rb'
 

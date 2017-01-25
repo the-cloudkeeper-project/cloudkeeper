@@ -39,7 +39,7 @@ module Cloudkeeper
       end
 
       def download_image_list(url, dir)
-        Cloudkeeper::Utils::Url.check!(url)
+        Cloudkeeper::Utils::URL.check!(url)
         uri = URI.parse url
 
         filename = generate_filename(uri, dir)

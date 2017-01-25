@@ -1,6 +1,6 @@
 module Cloudkeeper
   module Utils
-    class Url
+    class URL
       URL_REGEXP = /\A#{URI.regexp(%w(http https))}\z/
 
       def self.check!(url)

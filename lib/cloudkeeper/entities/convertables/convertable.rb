@@ -33,6 +33,7 @@ module Cloudkeeper
         private
 
         def convert(output_format)
+          logger.debug "Converting file #{file.inspect} from #{format.inspect} to #{output_format.inspect}"
           return self if output_format.to_sym == format.to_sym
 
           converted_file = File.join(File.dirname(file), "#{File.basename(file, '.*')}.#{output_format}")

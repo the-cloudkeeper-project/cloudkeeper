@@ -3,7 +3,7 @@ module Cloudkeeper
     class << self
       def execute(*args)
         command = Mixlib::ShellOut.new(*args)
-        logger.debug("Executing command: #{command.command.inspect}")
+        logger.debug "Executing command: #{command.command.inspect}"
         command.run_command
 
         if command.error?

@@ -17,6 +17,7 @@ module Cloudkeeper
       end
 
       def download_image_lists
+        logger.debug 'Downloading fresh image lists...'
         Dir.mktmpdir('cloudkeeper') do |dir|
           urls = Cloudkeeper::Settings[:'image-lists']
           retrieve_image_lists urls, dir
@@ -39,6 +40,7 @@ module Cloudkeeper
       end
 
       def download_image_list(url, dir)
+        logger.debug "Downloading image list from #{url.inspect}"
         Cloudkeeper::Utils::URL.check!(url)
         uri = URI.parse url
 

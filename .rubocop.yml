@@ -16,8 +16,8 @@ Metrics/MethodLength:
     - 'lib/cloudkeeper/nginx/http_server.rb'
 
 Metrics/AbcSize:
+  Max: 20
   Exclude:
-    - 'lib/cloudkeeper/entities/appliance.rb'
     - 'lib/cloudkeeper/backend_connector.rb'
 
 Metrics/ClassLength:

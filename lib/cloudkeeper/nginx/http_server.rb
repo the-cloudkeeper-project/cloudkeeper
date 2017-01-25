@@ -14,6 +14,7 @@ module Cloudkeeper
       end
 
       def start(image_file)
+        logger.debug 'Starting NGINX server'
         @access_data = {}
         credentials = prepare_credentials
         configuration = prepare_configuration File.dirname(image_file), File.basename(image_file)
@@ -27,6 +28,7 @@ module Cloudkeeper
       end
 
       def stop
+        logger.debug 'Stopping NGINX server'
         if conf_file
           Cloudkeeper::CommandExecutioner.execute Cloudkeeper::Settings[:'nginx-binary'], '-s', 'stop', '-c', conf_file.path
           conf_file.unlink

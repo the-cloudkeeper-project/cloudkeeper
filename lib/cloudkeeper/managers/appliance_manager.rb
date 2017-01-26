@@ -20,6 +20,8 @@ module Cloudkeeper
         sync_old_image_lists(backend_image_lists)
 
         backend_connector.post_action
+      rescue Cloudkeeper::Errors::BackendError => ex
+        abort ex.message
       end
 
       private
@@ -80,10 +82,16 @@ module Cloudkeeper
       end
 
       def clean_image_files(appliance)
-        return unless appliance.image
+        return unless appliance && appliance.image
 
         logger.debug "Cleaning downloaded image files for appliance #{appliance.identifier.inspect}"
-        appliance.image.image_files.each { |image_file| File.delete(image_file.file) if File.exist?(image_file.file) }
+        appliance.image.image_files.each { |image_file| clean_image_file image_file.file }
+      rescue ::IOError => ex
+        logger.warn "Appliance cleanup error: #{ex.message}"
+      end
+
+      def clean_image_file(filename)
+        File.delete(filename) if File.exist?(filename)
       end
 
       def update_image?(image_list_appliance, backend_appliance)
@@ -110,6 +118,11 @@ module Cloudkeeper
       def modify_appliance(method, appliance)
         prepare_image!(appliance) if appliance.image
         backend_connector.send method, appliance
+      rescue Cloudkeeper::Errors::Image::DownloadError, Cloudkeeper::Errors::Image::ConversionError => ex
+        logger.error "Image preparation error: #{ex.message}"
+      rescue Cloudkeeper::Errors::Appliance::PropagationError => ex
+        logger.error "Appliance propagation error: #{ex.message}"
+      ensure
         clean_image_files appliance
       end
 
@@ -123,9 +136,15 @@ module Cloudkeeper
 
       def convert_image!(appliance, image_file)
         format = acceptable_formats.find { |acceptable_format| image_file.respond_to? "to_#{acceptable_format}".to_sym }
-        raise NoRequiredFormatAvailableError, "image #{image.inspect} cannot be converted to any acceptable format" unless format
+        unless format
+          raise Cloudkeeper::Errors::Image::Format::NoRequiredFormatAvailableError,
+                "image #{image.inspect} cannot be converted to any acceptable format"
+        end
 
         appliance.image.add_image_file image_file.send("to_#{format}".to_sym)
+      rescue Cloudkeeper::Errors::Image::Format::NoRequiredFormatAvailableError, Cloudkeeper::Errors::CommandExecutionError,
+             Cloudkeeper::Errors::ArgumentError, ::IOError => ex
+        raise Cloudkeeper::Errors::Image::ConversionError, ex
       end
     end
   end

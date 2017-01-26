@@ -70,11 +70,11 @@ describe Cloudkeeper::Managers::ImageManager do
       let(:outputs) { load_outputs 'ova' }
       let(:file) { File.join(MOCK_DIR, 'image_formats', 'fake-image01.ova') }
 
-      it 'raise NoImageFormatRecognizedError exception' do
+      it 'raise NoImage::FormatRecognizedError exception' do
         outputs.each do |output|
           allow(described_class).to receive(:file_description).with(file) { output }
           expect { described_class.recognize_format(file) }.to \
-            raise_error(Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError)
+            raise_error(Cloudkeeper::Errors::Image::Format::NoFormatRecognizedError)
         end
       end
     end
@@ -87,7 +87,7 @@ describe Cloudkeeper::Managers::ImageManager do
         outputs.each do |output|
           allow(described_class).to receive(:file_description).with(file) { output }
           expect { described_class.recognize_format(file) }.to \
-            raise_error(Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError)
+            raise_error(Cloudkeeper::Errors::Image::Format::NoFormatRecognizedError)
         end
       end
     end
@@ -100,7 +100,7 @@ describe Cloudkeeper::Managers::ImageManager do
         outputs.each do |output|
           allow(described_class).to receive(:file_description).with(file) { output }
           expect { described_class.recognize_format(file) }.to \
-            raise_error(Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError)
+            raise_error(Cloudkeeper::Errors::Image::Format::NoFormatRecognizedError)
         end
       end
     end
@@ -141,11 +141,11 @@ describe Cloudkeeper::Managers::ImageManager do
     context 'with unknown image' do
       let(:outputs) { load_outputs 'unknown' }
 
-      it 'raise NoImageFormatRecognizedError exception' do
+      it 'raise NoImage::FormatRecognizedError exception' do
         outputs.each do |output|
           allow(described_class).to receive(:file_description).with(file) { output }
           expect { described_class.recognize_format(file) }.to \
-            raise_error(Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError)
+            raise_error(Cloudkeeper::Errors::Image::Format::NoFormatRecognizedError)
         end
       end
     end
@@ -185,8 +185,8 @@ describe Cloudkeeper::Managers::ImageManager do
     context 'with nonexisting file' do
       let(:file) { File.join('nonexisting', 'file') }
 
-      it 'raises ImageFormatRecognitionError exception' do
-        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormat::RecognitionError)
+      it 'raises Image::FormatRecognitionError exception' do
+        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::Image::Format::RecognitionError)
       end
     end
 
@@ -198,8 +198,8 @@ describe Cloudkeeper::Managers::ImageManager do
         file
       end
 
-      it 'raises ImageFormatRecognitionError exception' do
-        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormat::RecognitionError)
+      it 'raises Image::FormatRecognitionError exception' do
+        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::Image::Format::RecognitionError)
       end
 
       after do
@@ -210,8 +210,8 @@ describe Cloudkeeper::Managers::ImageManager do
     context 'with nonexisting file' do
       let(:output) { 'unknown output' }
 
-      it 'raises ImageFormatRecognitionError exception' do
-        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::ImageFormat::RecognitionError)
+      it 'raises Image::FormatRecognitionError exception' do
+        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::Image::Format::RecognitionError)
       end
     end
   end
@@ -244,7 +244,7 @@ describe Cloudkeeper::Managers::ImageManager do
       let(:url) { 'NOT_AN_URL' }
 
       it 'raise InvalidURLError exception' do
-        expect { described_class.download_image url }.to raise_error(Cloudkeeper::Errors::InvalidURLError)
+        expect { described_class.download_image url }.to raise_error(Cloudkeeper::Errors::Image::DownloadError)
       end
     end
 

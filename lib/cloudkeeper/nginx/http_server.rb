@@ -21,15 +21,20 @@ module Cloudkeeper
         fill_access_data credentials, configuration
 
         Cloudkeeper::CommandExecutioner.execute Cloudkeeper::Settings[:'nginx-binary'], '-c', conf_file.path
+      rescue Cloudkeeper::Errors::CommandExecutionError, ::IOError => ex
+        stop
+        raise Cloudkeeper::Errors::NginxError, ex
       end
 
       def stop
-        Cloudkeeper::CommandExecutioner.execute Cloudkeeper::Settings[:'nginx-binary'], '-s', 'stop', '-c', conf_file.path
+        if conf_file
+          Cloudkeeper::CommandExecutioner.execute Cloudkeeper::Settings[:'nginx-binary'], '-s', 'stop', '-c', conf_file.path
+          conf_file.unlink
+        end
 
-        auth_file.unlink
-        conf_file.unlink
+        auth_file.unlink if auth_file
         @access_data = {}
-      rescue IOError => ex
+      rescue Cloudkeeper::Errors::CommandExecutionError, ::IOError => ex
         raise Cloudkeeper::Errors::NginxError, ex
       end
 
@@ -58,8 +63,6 @@ module Cloudkeeper
         passwd.set_passwd(nil, username, password)
         passwd.flush
         auth_file.close
-      rescue IOError => ex
-        raise Cloudkeeper::Errors::NginxError, ex
       end
 
       def prepare_configuration_file(configuration)
@@ -74,8 +77,6 @@ module Cloudkeeper
 
         conf_file.write content
         conf_file.close
-      rescue IOError => ex
-        raise Cloudkeeper::Errors::NginxError, ex
       end
 
       def prepare_configuration_file_content(configuration)

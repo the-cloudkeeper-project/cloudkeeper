@@ -13,7 +13,8 @@ module Cloudkeeper
 
     autoload :Parsing, 'cloudkeeper/errors/parsing'
     autoload :ImageList, 'cloudkeeper/errors/image_list'
-    autoload :ImageFormat, 'cloudkeeper/errors/image_format'
+    autoload :Image, 'cloudkeeper/errors/image'
     autoload :Convertables, 'cloudkeeper/errors/convertables'
+    autoload :Appliance, 'cloudkeeper/errors/appliance'
   end
 end

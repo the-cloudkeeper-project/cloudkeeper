@@ -50,7 +50,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
       end
 
       it 'raises a CommandExecutionError exception' do
-        expect { ova_class.ova?(file) }.to raise_error(Cloudkeeper::Errors::ImageFormat::Ova::OvaFormatError)
+        expect { ova_class.ova?(file) }.to raise_error(Cloudkeeper::Errors::Image::Format::Ova::OvaFormatError)
       end
     end
 
@@ -59,7 +59,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
       let(:output) { File.read(File.join(MOCK_DIR, 'image_formats', 'fake-image05-output')) }
 
       it 'raises a CommandExecutionError exception' do
-        expect { ova_class.ova?(file) }.to raise_error(Cloudkeeper::Errors::ImageFormat::Ova::OvaFormatError)
+        expect { ova_class.ova?(file) }.to raise_error(Cloudkeeper::Errors::Image::Format::Ova::OvaFormatError)
       end
     end
   end

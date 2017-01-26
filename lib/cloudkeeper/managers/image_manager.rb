@@ -17,9 +17,9 @@ module Cloudkeeper
           check_file!(file)
           recognize_format(file)
         rescue Cloudkeeper::Errors::CommandExecutionError, Cloudkeeper::Errors::NoSuchFileError,
-               Cloudkeeper::Errors::PermissionDeniedError, Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError,
-               Cloudkeeper::Errors::ImageFormat::Ova::OvaFormatError => ex
-          raise Cloudkeeper::Errors::ImageFormat::RecognitionError, ex, "Cannot recognize image format for file #{file.inspect}"
+               Cloudkeeper::Errors::PermissionDeniedError, Cloudkeeper::Errors::Image::Format::NoFormatRecognizedError,
+               Cloudkeeper::Errors::Image::Format::Ova::OvaFormatError => ex
+          raise Cloudkeeper::Errors::Image::Format::RecognitionError, ex, "Cannot recognize image format for file #{file.inspect}"
         end
 
         def file_description(file)
@@ -42,7 +42,7 @@ module Cloudkeeper
             return format if additional_test_result
           end
 
-          raise Cloudkeeper::Errors::ImageFormat::NoFormatRecognizedError, "No image format recognized for file #{file.inspect}"
+          raise Cloudkeeper::Errors::Image::Format::NoFormatRecognizedError, "No image format recognized for file #{file.inspect}"
         end
 
         def download_image(url)
@@ -53,6 +53,9 @@ module Cloudkeeper
           retrieve_image(uri, filename)
 
           Cloudkeeper::Entities::ImageFile.new filename, format(filename), Cloudkeeper::Utils::Checksum.compute(filename), true
+        rescue Cloudkeeper::Errors::InvalidURLError, Cloudkeeper::Errors::Image::Format::RecognitionError,
+               Cloudkeeper::Errors::ArgumentError, Cloudkeeper::Errors::NetworkConnectionError, ::IOError => ex
+          raise Cloudkeeper::Errors::Image::DownloadError, ex
         end
 
         def retrieve_image(uri, filename)
@@ -61,6 +64,9 @@ module Cloudkeeper
 
             http.request(request) { |response| open(filename, 'w') { |file| response.read_body { |chunk| file.write(chunk) } } }
           end
+        rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError,
+               Net::ProtocolError => ex
+          raise Cloudkeeper::Errors::NetworkConnectionError, ex
         end
 
         def generate_filename(uri)

@@ -30,7 +30,8 @@ module Cloudkeeper
           begin
             image_list = convert_image_list(load_image_list(download_image_list(url, dir)))
             image_lists[image_list.identifier] = image_list
-          rescue Cloudkeeper::Errors::ImageList::RetrievalError, Faraday::ConnectionFailed => ex
+          rescue Cloudkeeper::Errors::ImageList::DownloadError, Cloudkeeper::Errors::ImageList::VerificationError,
+                 Cloudkeeper::Errors::Parsing::ParsingError => ex
             logger.warn "Image list #{url} couldn't be donwloaded\n#{ex.message}"
             next
           end
@@ -51,6 +52,9 @@ module Cloudkeeper
 
         raise Cloudkeeper::Errors::ImageList::RetrievalError,
               "couldn't download image list from url #{url.inspect}\n#{response.to_hash.inspect}"
+      rescue Cloudkeeper::Errors::ImageList::RetrievalError, Cloudkeeper::Errors::InvalidURLError, ::IOError,
+             ::Faraday::ConnectionFailed => ex
+        raise Cloudkeeper::Errors::ImageList::DownloadError, ex
       end
 
       def make_request(uri)

@@ -200,7 +200,7 @@ describe Cloudkeeper::Managers::ImageListManager do
 
     context 'with invalid URL' do
       it 'raises InvalidURLError exception' do
-        expect { ilm.send(:download_image_list, 'NOT_A_URL', tmpdir) }.to raise_error(Cloudkeeper::Errors::InvalidURLError)
+        expect { ilm.send(:download_image_list, 'NOT_A_URL', tmpdir) }.to raise_error(Cloudkeeper::Errors::ImageList::DownloadError)
       end
     end
 
@@ -208,7 +208,7 @@ describe Cloudkeeper::Managers::ImageListManager do
       it 'raises RetrievalError exception' do
         VCR.use_cassette('imagelist-nonexisting') do
           expect { ilm.send(:download_image_list, 'http://localhost:9292/imagelist.plain', tmpdir) }.to \
-            raise_error(Cloudkeeper::Errors::ImageList::RetrievalError)
+            raise_error(Cloudkeeper::Errors::ImageList::DownloadError)
         end
       end
     end

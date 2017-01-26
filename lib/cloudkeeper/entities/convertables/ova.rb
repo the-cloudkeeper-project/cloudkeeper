@@ -26,6 +26,7 @@ module Cloudkeeper
         private
 
         def convert(output_format)
+          logger.debug "Converting file #{file.inspect} from #{format.inspect} to #{output_format.inspect}"
           vmdk_image = to_vmdk
           final_image = vmdk_image.send("to_#{output_format}".to_sym)
           File.delete vmdk_image.file

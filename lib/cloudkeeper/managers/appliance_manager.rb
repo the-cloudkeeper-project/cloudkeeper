@@ -10,10 +10,11 @@ module Cloudkeeper
       end
 
       def synchronize_appliances
+        logger.debug 'Running appliance synchronization...'
+        backend_connector.pre_action
+
         backend_image_lists = backend_connector.image_lists
         image_list_manager.download_image_lists
-
-        backend_connector.pre_action
 
         sync_expired_image_lists
         sync_new_image_lists(backend_image_lists)

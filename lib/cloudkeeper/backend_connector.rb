@@ -8,37 +8,45 @@ module Cloudkeeper
     end
 
     def pre_action
+      logger.debug "'pre_action' gRPC method call"
       check_status grpc_client.pre_action(Google::Protobuf::Empty.new), true
     end
 
     def post_action
+      logger.debug "'post_action' gRPC method call"
       check_status grpc_client.post_action(Google::Protobuf::Empty.new)
     end
 
     def add_appliance(appliance)
+      logger.debug "'add_appliance' gRPC method call"
       manage_appliance appliance, :add_appliance
     end
 
     def update_appliance(appliance)
+      logger.debug "'update_appliance' gRPC method call"
       manage_appliance appliance, :update_appliance
     end
 
     def remove_appliance(appliance)
+      logger.debug "'remove_appliance' gRPC method call"
       manage_appliance appliance, :remove_appliance
     end
 
     def remove_image_list(image_list_identifier)
+      logger.debug "'remove_image_list' gRPC method call"
       check_status grpc_client.remove_image_list(
         Cloudkeeper::Grpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier)
       )
     end
 
     def image_lists
+      logger.debug "'image_lists' gRPC method call"
       response = grpc_client.image_lists(Google::Protobuf::Empty.new)
       response.map(&:image_list_identifier)
     end
 
     def appliances(image_list_identifier)
+      logger.debug "'appliances' gRPC method call"
       response = grpc_client.appliances(Cloudkeeper::Grpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier))
       response.inject({}) do |acc, elem|
         image = convert_image_proto(elem.image)

@@ -46,7 +46,8 @@ module Cloudkeeper
         end
 
         def download_image(url)
-          Cloudkeeper::Utils::Url.check!(url)
+          logger.debug "Downloading image from #{url.inspect}"
+          Cloudkeeper::Utils::URL.check!(url)
 
           uri = URI.parse url
           filename = generate_filename(uri)

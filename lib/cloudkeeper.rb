@@ -10,7 +10,6 @@ module Cloudkeeper
   autoload :CommandExecutioner, 'cloudkeeper/command_executioner'
   autoload :Entities, 'cloudkeeper/entities'
   autoload :Managers, 'cloudkeeper/managers'
-  autoload :Grpc, 'cloudkeeper/grpc'
   autoload :BackendConnector, 'cloudkeeper/backend_connector'
   autoload :Errors, 'cloudkeeper/errors'
 end

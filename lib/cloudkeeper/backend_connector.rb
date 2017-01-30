@@ -3,7 +3,7 @@ module Cloudkeeper
     attr_reader :grpc_client, :nginx
 
     def initialize
-      @grpc_client = Cloudkeeper::Grpc::Communicator::Stub.new(Cloudkeeper::Settings[:'backend-endpoint'], :this_channel_is_insecure)
+      @grpc_client = CloudkeeperGrpc::Communicator::Stub.new(Cloudkeeper::Settings[:'backend-endpoint'], :this_channel_is_insecure)
       @nginx = Cloudkeeper::Nginx::HttpServer.new
     end
 
@@ -35,7 +35,7 @@ module Cloudkeeper
     def remove_image_list(image_list_identifier)
       logger.debug "'remove_image_list' gRPC method call"
       check_status grpc_client.remove_image_list(
-        Cloudkeeper::Grpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier)
+        CloudkeeperGrpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier)
       )
     end
 
@@ -47,7 +47,7 @@ module Cloudkeeper
 
     def appliances(image_list_identifier)
       logger.debug "'appliances' gRPC method call"
-      response = grpc_client.appliances(Cloudkeeper::Grpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier))
+      response = grpc_client.appliances(CloudkeeperGrpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier))
       response.inject({}) do |acc, elem|
         image = convert_image_proto(elem.image)
         appliance = convert_appliance_proto elem, image
@@ -68,8 +68,8 @@ module Cloudkeeper
     def convert_image(image)
       image_file = acceptable_image_file image
 
-      Cloudkeeper::Grpc::Image.new mode: :LOCAL, location: image_file.file, format: image_file.format.upcase,
-                                   checksum: image_file.checksum, size: image.size.to_i, uri: image.uri
+      CloudkeeperGrpc::Image.new mode: :LOCAL, location: image_file.file, format: image_file.format.upcase,
+                                 checksum: image_file.checksum, size: image.size.to_i, uri: image.uri
     end
 
     def set_remote_data(image_proto, access_data)
@@ -80,12 +80,12 @@ module Cloudkeeper
     end
 
     def convert_appliance(appliance, image_proto)
-      Cloudkeeper::Grpc::Appliance.new identifier: appliance.identifier.to_s, description: appliance.description.to_s,
-                                       mpuri: appliance.mpuri.to_s, title: appliance.title.to_s, group: appliance.group.to_s,
-                                       ram: appliance.ram.to_i, core: appliance.core.to_i, version: appliance.version.to_s,
-                                       architecture: appliance.architecture.to_s, operating_system: appliance.operating_system.to_s,
-                                       vo: appliance.vo.to_s, image: image_proto, expiration_date: appliance.expiration_date.to_i,
-                                       image_list_identifier: appliance.image_list_identifier.to_s, attributes: appliance.attributes
+      CloudkeeperGrpc::Appliance.new identifier: appliance.identifier.to_s, description: appliance.description.to_s,
+                                     mpuri: appliance.mpuri.to_s, title: appliance.title.to_s, group: appliance.group.to_s,
+                                     ram: appliance.ram.to_i, core: appliance.core.to_i, version: appliance.version.to_s,
+                                     architecture: appliance.architecture.to_s, operating_system: appliance.operating_system.to_s,
+                                     vo: appliance.vo.to_s, image: image_proto, expiration_date: appliance.expiration_date.to_i,
+                                     image_list_identifier: appliance.image_list_identifier.to_s, attributes: appliance.attributes
     end
 
     def convert_image_proto(image_proto)

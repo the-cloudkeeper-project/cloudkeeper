@@ -12,6 +12,7 @@ end
 
 Diffy::Diff.default_format = :color
 
+require 'cloudkeeper_grpc'
 require 'cloudkeeper'
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }

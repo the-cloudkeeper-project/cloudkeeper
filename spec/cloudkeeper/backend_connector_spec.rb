@@ -15,14 +15,14 @@ describe Cloudkeeper::BackendConnector do
     end
 
     it 'initializes grpc client and nginx manager' do
-      expect(backend_connector.grpc_client).to be_instance_of Cloudkeeper::Grpc::Communicator::Stub
+      expect(backend_connector.grpc_client).to be_instance_of CloudkeeperGrpc::Communicator::Stub
       expect(backend_connector.nginx).to be_instance_of Cloudkeeper::Nginx::HttpServer
     end
 
     it 'initializes grpc client with correct backend address' do
-      allow(Cloudkeeper::Grpc::Communicator::Stub).to receive(:new).with('127.0.0.1:50051', any_args)
+      allow(CloudkeeperGrpc::Communicator::Stub).to receive(:new).with('127.0.0.1:50051', any_args)
       described_class.new
-      expect(Cloudkeeper::Grpc::Communicator::Stub).to have_received(:new).with('127.0.0.1:50051', any_args)
+      expect(CloudkeeperGrpc::Communicator::Stub).to have_received(:new).with('127.0.0.1:50051', any_args)
     end
   end
 
@@ -90,15 +90,15 @@ describe Cloudkeeper::BackendConnector do
 
   describe '.remove_image_list' do
     let(:image_list_identifier) { 'id123456' }
-    let(:image_list_identifier_proto) { instance_double(Cloudkeeper::Grpc::ImageListIdentifier) }
+    let(:image_list_identifier_proto) { instance_double(CloudkeeperGrpc::ImageListIdentifier) }
 
     before do
-      allow(Cloudkeeper::Grpc::ImageListIdentifier).to receive(:new).with(image_list_identifier: image_list_identifier) \
+      allow(CloudkeeperGrpc::ImageListIdentifier).to receive(:new).with(image_list_identifier: image_list_identifier) \
         { image_list_identifier_proto }
     end
 
     after do
-      expect(Cloudkeeper::Grpc::ImageListIdentifier).to have_received(:new).with(image_list_identifier: image_list_identifier) \
+      expect(CloudkeeperGrpc::ImageListIdentifier).to have_received(:new).with(image_list_identifier: image_list_identifier) \
         { image_list_identifier_proto }
     end
 
@@ -256,7 +256,7 @@ describe Cloudkeeper::BackendConnector do
 
   describe '.convert_appliance' do
     let(:date) { DateTime.now }
-    let(:image_proto) { Cloudkeeper::Grpc::Image.new }
+    let(:image_proto) { CloudkeeperGrpc::Image.new }
     let(:appliance) do
       Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title',
                                            'description', 'group', 2048, 6, 'v01', 'x86_64', 'Linux', nil, 'key' => 'value'

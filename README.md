@@ -1,10 +1,10 @@
 # cloudkeeper
 cloudkeeper is a AppDB <-> cloud synchronization utility
 
-[![Build Status](https://secure.travis-ci.org/Misenko/cloudkeeper.png)](http://travis-ci.org/Misenko/cloudkeeper)
-[![Dependency Status](https://gemnasium.com/Misenko/cloudkeeper.png)](https://gemnasium.com/Misenko/cloudkeeper)
+[![Build Status](https://secure.travis-ci.org/the-cloudkeeper-project/cloudkeeper.png)](http://travis-ci.org/the-cloudkeeper-project/cloudkeeper)
+[![Dependency Status](https://gemnasium.com/the-cloudkeeper-project/cloudkeeper.png)](https://gemnasium.com/the-cloudkeeper-project/cloudkeeper)
 [![Gem Version](https://fury-badge.herokuapp.com/rb/cloudkeeper.png)](https://badge.fury.io/rb/cloudkeeper)
-[![Code Climate](https://codeclimate.com/github/Misenko/cloudkeeper.png)](https://codeclimate.com/github/Misenko/cloudkeeper)
+[![Code Climate](https://codeclimate.com/github/the-cloudkeeper-project/cloudkeeper.png)](https://codeclimate.com/github/the-cloudkeeper-project/cloudkeeper)
 
 ##Requirements
 * Ruby >= 2.0.0
@@ -27,7 +27,7 @@ familiar with RVM, Bundler, Rake and other dev tools for Ruby!**
 To build and install the bleeding edge version from master
 
 ```bash
-git clone git://github.com/Misenko/cloudkeeper.git
+git clone git://github.com/the-cloudkeeper-project/cloudkeeper.git
 cd cloudkeeper
 gem install bundler
 bundle install
@@ -51,7 +51,7 @@ The default configuration file can be found at the last location
 TODO
 
 ## Contributing
-1. Fork it ( https://github.com/Misenko/cloudkeeper/fork )
+1. Fork it ( https://github.com/the-cloudkeeper-project/cloudkeeper/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

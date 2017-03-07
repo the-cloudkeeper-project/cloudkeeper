@@ -63,10 +63,13 @@ module Cloudkeeper
           Net::HTTP.start(uri.host, uri.port) do |http|
             request = Net::HTTP::Get.new(uri)
 
-            http.request(request) { |response| open(filename, 'w') { |file| response.read_body { |chunk| file.write(chunk) } } }
+            http.request(request) do |response|
+              response.value
+              open(filename, 'w') { |file| response.read_body { |chunk| file.write(chunk) } }
+            end
           end
-        rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError,
-               Net::ProtocolError => ex
+        rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, Errno::ECONNREFUSED, EOFError, Net::HTTPBadResponse,
+               Net::HTTPServerException, Net::HTTPHeaderSyntaxError, Net::ProtocolError => ex
           raise Cloudkeeper::Errors::NetworkConnectionError, ex
         end
 

@@ -101,7 +101,7 @@ module Cloudkeeper
         image_list_attributes = image_list_appliance.attributes
         backend_attributes = backend_appliance.attributes
 
-        IMAGE_UPDATE_ATTRIBUTES.reduce(false) { |red, elem| red || image_list_attributes[elem] != backend_attributes[elem] }
+        IMAGE_UPDATE_ATTRIBUTES.reduce(false) { |red, elem| red || (image_list_attributes[elem] != backend_attributes[elem]) }
       end
 
       def update_metadata?(image_list_appliance, backend_appliance)

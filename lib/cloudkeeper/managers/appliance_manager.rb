@@ -3,6 +3,8 @@ module Cloudkeeper
     class ApplianceManager
       attr_reader :backend_connector, :image_list_manager, :acceptable_formats
 
+      IMAGE_UPDATE_ATTRIBUTES = ['hv:uri', 'sl:checksum:sha512', 'hv:size'].freeze
+
       def initialize
         @backend_connector = Cloudkeeper::BackendConnector.new
         @image_list_manager = Cloudkeeper::Managers::ImageListManager.new
@@ -96,12 +98,10 @@ module Cloudkeeper
       end
 
       def update_image?(image_list_appliance, backend_appliance)
-        image_list_image = image_list_appliance.image
-        backend_image = backend_appliance.image
+        image_list_attributes = image_list_appliance.attributes
+        backend_attributes = backend_appliance.attributes
 
-        image_list_image.uri != backend_image.uri ||
-          image_list_image.checksum != backend_image.checksum ||
-          image_list_image.size != backend_image.size
+        IMAGE_UPDATE_ATTRIBUTES.reduce(false) { |red, elem| red || image_list_attributes[elem] != backend_attributes[elem] }
       end
 
       def update_metadata?(image_list_appliance, backend_appliance)

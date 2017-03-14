@@ -2,7 +2,6 @@ require 'active_support/all'
 require 'mixlib/shellout'
 
 module Cloudkeeper
-  autoload :Version, 'cloudkeeper/version'
   autoload :Settings, 'cloudkeeper/settings'
   autoload :CLI, 'cloudkeeper/cli'
   autoload :Utils, 'cloudkeeper/utils'
@@ -13,3 +12,5 @@ module Cloudkeeper
   autoload :BackendConnector, 'cloudkeeper/backend_connector'
   autoload :Errors, 'cloudkeeper/errors'
 end
+
+require 'cloudkeeper/version'

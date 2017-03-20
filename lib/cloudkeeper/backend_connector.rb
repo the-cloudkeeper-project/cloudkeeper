@@ -9,12 +9,12 @@ module Cloudkeeper
 
     def pre_action
       logger.debug "'pre_action' gRPC method call"
-      check_status grpc_client.pre_action(Google::Protobuf::Empty.new), true
+      handle_errors grpc_client.pre_action(Google::Protobuf::Empty.new, return_op: true), raise_exception: true
     end
 
     def post_action
       logger.debug "'post_action' gRPC method call"
-      check_status grpc_client.post_action(Google::Protobuf::Empty.new)
+      handle_errors grpc_client.post_action(Google::Protobuf::Empty.new, return_op: true)
     end
 
     def add_appliance(appliance)
@@ -34,33 +34,49 @@ module Cloudkeeper
 
     def remove_image_list(image_list_identifier)
       logger.debug "'remove_image_list' gRPC method call"
-      check_status grpc_client.remove_image_list(
-        CloudkeeperGrpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier)
+      handle_errors grpc_client.remove_image_list(
+        CloudkeeperGrpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier),
+        return_op: true
       )
     end
 
     def image_lists
       logger.debug "'image_lists' gRPC method call"
-      response = grpc_client.image_lists(Google::Protobuf::Empty.new)
-      response.map(&:image_list_identifier)
+      handle_errors(grpc_client.image_lists(Google::Protobuf::Empty.new, return_op: true)) do |response|
+        response.map(&:image_list_identifier)
+      end
     end
 
     def appliances(image_list_identifier)
       logger.debug "'appliances' gRPC method call"
-      response = grpc_client.appliances(CloudkeeperGrpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier))
-      response.inject({}) do |acc, elem|
-        image = convert_image_proto(elem.image)
-        appliance = convert_appliance_proto elem, image
-        acc.merge appliance.identifier => appliance
+      handle_errors(
+        grpc_client.appliances(
+          CloudkeeperGrpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier),
+          return_op: true
+        )
+      ) do |response|
+        response.inject({}) do |acc, elem|
+          image = convert_image_proto(elem.image)
+          appliance = convert_appliance_proto elem, image
+          acc.merge appliance.identifier => appliance
+        end
       end
     end
 
     private
 
-    def check_status(status, raise_exception = false)
-      return if status.code == :SUCCESS
+    def handle_errors(operation, raise_exception: false)
+      return_value = operation.execute
+      return_value = yield(return_value) if block_given?
+      check_status operation.trailing_metadata, raise_exception: raise_exception
 
-      message = "#{status.code}: #{status.message}"
+      return_value
+    end
+
+    def check_status(metadata, raise_exception: false)
+      return if metadata[CloudkeeperGrpc::Constants::KEY_STATUS] == CloudkeeperGrpc::Constants::STATUS_SUCCESS
+
+      message = "#{metadata[CloudkeeperGrpc::Constants::KEY_STATUS]}: #{metadata[CloudkeeperGrpc::Constants::KEY_MESSAGE]}"
       logger.error "Backend error: #{message}"
       raise Cloudkeeper::Errors::BackendError, message if raise_exception
     end
@@ -126,11 +142,9 @@ module Cloudkeeper
         set_remote_data image_proto, nginx.access_data
       end
 
-      status = grpc_client.send(call, convert_appliance(appliance, image_proto))
+      handle_errors grpc_client.send(call, convert_appliance(appliance, image_proto), return_op: true)
 
       nginx.stop if Cloudkeeper::Settings[:'remote-mode'] && image
-
-      check_status status
     rescue Cloudkeeper::Errors::NginxError, Cloudkeeper::Errors::Image::Format::NoRequiredFormatAvailableError => ex
       raise Cloudkeeper::Errors::Appliance::PropagationError, ex
     end

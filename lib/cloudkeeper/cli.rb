@@ -27,6 +27,20 @@ module Cloudkeeper
                   default: Cloudkeeper::Settings['ca-dir'],
                   type: :string,
                   desc: 'CA directory'
+    method_option :authentication,
+                  default: Cloudkeeper::Settings['authentication'],
+                  type: :boolean,
+                  desc: 'Client <-> server authentication'
+    method_option :certificate,
+                  required: false,
+                  default: Cloudkeeper::Settings['certificate'],
+                  type: :string,
+                  desc: "Core's host certificate"
+    method_option :key,
+                  required: false,
+                  default: Cloudkeeper::Settings['key'],
+                  type: :string,
+                  desc: "Core's key certificate"
     method_option :'image-dir',
                   required: true,
                   default: Cloudkeeper::Settings['image-dir'],
@@ -74,6 +88,11 @@ module Cloudkeeper
                   default: Cloudkeeper::Settings['backend']['endpoint'],
                   type: :string,
                   desc: "Backend's gRPC endpoint"
+    method_option :'backend-certificate',
+                  required: false,
+                  default: Cloudkeeper::Settings['backend']['certificate'],
+                  type: :string,
+                  desc: "Backend's certificate"
     method_option :formats,
                   required: true,
                   default: Cloudkeeper::Settings['formats'],
@@ -110,16 +129,23 @@ module Cloudkeeper
     end
 
     def validate_configuration!
-      return unless Cloudkeeper::Settings[:'remote-mode']
-
-      raise Cloudkeeper::Errors::InvalidConfigurationError, 'NGINX configuration missing' unless all_nginx_options_available
+      validate_configuration_group! :authentication,
+                                    [:certificate, :key, :'backend-certificate'],
+                                    'Authentication configuration missing'
+      validate_configuration_group! :'remote-mode',
+                                    [:'nginx-binary', :'nginx-error-log-file', :'nginx-access-log-file', :'nginx-pid-file',
+                                     :'nginx-ip-address', :'nginx-min-port', :'nginx-max-port'],
+                                    'NGINX configuration missing'
     end
 
-    def all_nginx_options_available
-      all_nginx_options = [:'nginx-binary', :'nginx-error-log-file', :'nginx-access-log-file', :'nginx-pid-file',
-                           :'nginx-ip-address', :'nginx-min-port', :'nginx-max-port']
+    def validate_configuration_group!(flag, required_options, error_message)
+      return unless Cloudkeeper::Settings[flag]
 
-      all_nginx_options.reduce(true) { |acc, elem| Cloudkeeper::Settings[elem] && acc }
+      raise Cloudkeeper::Errors::InvalidConfigurationError, error_message unless all_options_available(required_options)
+    end
+
+    def all_options_available(required_options)
+      required_options.reduce(true) { |acc, elem| Cloudkeeper::Settings[elem] && acc }
     end
 
     # Inits logging according to the settings

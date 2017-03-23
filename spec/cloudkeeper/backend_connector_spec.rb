@@ -16,6 +16,7 @@ describe Cloudkeeper::BackendConnector do
 
   before do
     Cloudkeeper::Settings[:'backend-endpoint'] = '127.0.0.1:50051'
+    Cloudkeeper::Settings[:authentication] = false
   end
 
   describe '#new' do
@@ -659,6 +660,31 @@ describe Cloudkeeper::BackendConnector do
       expect(appliance.expiration_date.to_date).to eq(date.to_date)
       expect(appliance.image_list_identifier).to eq('id12345')
       expect(appliance.image).to eq(nil)
+    end
+  end
+
+  describe '.credentials' do
+    context 'with enabled authentication' do
+      before do
+        Cloudkeeper::Settings[:authentication] = true
+        Cloudkeeper::Settings[:certificate] = File.join(MOCK_DIR, 'auth', 'cert.pem')
+        Cloudkeeper::Settings[:key] = File.join(MOCK_DIR, 'auth', 'key.pem')
+        Cloudkeeper::Settings[:'backend-certificate'] = File.join(MOCK_DIR, 'auth', 'backendcert.pem')
+      end
+
+      it 'returns credentials' do
+        expect(backend_connector.send(:credentials)).to be_instance_of GRPC::Core::ChannelCredentials
+      end
+    end
+
+    context 'with disabled authentication' do
+      before do
+        Cloudkeeper::Settings[:authentication] = false
+      end
+
+      it 'returns insecure channel flag' do
+        expect(backend_connector.send(:credentials)).to eq(:this_channel_is_insecure)
+      end
     end
   end
 end

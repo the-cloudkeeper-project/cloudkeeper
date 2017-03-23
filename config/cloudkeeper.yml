@@ -1,6 +1,9 @@
 cloudkeeper:
   image-lists: # List of image lists to sync against
   ca-dir: /etc/grid-security/certificates/ # CA directory
+  authentication: false # core (client) <-> backend (server) authentication (certificate, key and backend-certificate options)
+  certificate: /etc/grid-security/hostcert.pem # Core's host certificate
+  key: /etc/grid-security/hostkey.pem # Core's host key
   image-dir: /var/spool/cloudkeeper/images/ # Directory to store images to
   binaries:
     qemu-img: /usr/bin/qemu-img # qemu-img binary (image conversion) location
@@ -15,6 +18,7 @@ cloudkeeper:
     max-port: 7400 # Maximal port NGINX can listen on
   backend:
     endpoint: 127.0.0.1:50051 # Backend's gRPC endpoint
+    certificate: /etc/grid-security/backendcert.pem # Backend's certificate
   formats: # List of acceptable formats images can be converted to
     - qcow2
   logging:

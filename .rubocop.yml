@@ -21,7 +21,7 @@ Metrics/MethodLength:
 Metrics/AbcSize:
   Max: 20
   Exclude:
-    - 'lib/cloudkeeper/backend_connector.rb'
+    - 'lib/cloudkeeper/entities/conversions.rb'
 
 Metrics/ClassLength:
   Max: 120

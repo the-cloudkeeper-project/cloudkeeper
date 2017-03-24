@@ -1,24 +1,42 @@
 # cloudkeeper
-cloudkeeper is a AppDB <-> cloud synchronization utility
+cloudkeeper is an AppDB <-> cloud synchronization utility
 
 [![Build Status](https://secure.travis-ci.org/the-cloudkeeper-project/cloudkeeper.png)](http://travis-ci.org/the-cloudkeeper-project/cloudkeeper)
 [![Dependency Status](https://gemnasium.com/the-cloudkeeper-project/cloudkeeper.png)](https://gemnasium.com/the-cloudkeeper-project/cloudkeeper)
 [![Gem Version](https://fury-badge.herokuapp.com/rb/cloudkeeper.png)](https://badge.fury.io/rb/cloudkeeper)
 [![Code Climate](https://codeclimate.com/github/the-cloudkeeper-project/cloudkeeper.png)](https://codeclimate.com/github/the-cloudkeeper-project/cloudkeeper)
 
-##Requirements
-* Ruby >= 2.0.0
+## What does cloudkeeper do?
+cloudkeeper is able to read image lists provided by EGI AppDB, parse their content and decide what cloud appliances should be added, updated or removed from managed cloud. During the addition and update cloudkeeper is able to download an appliance's image and convert it to the format supported by the managed cloud.
+
+Currently supported image formats are:
+* QCOW2
+* RAW
+* VMDK
+* OVA
+
+## How does cloudkeeper work?
+cloudkeeper communicates with cloud specific components via [gRPC](http://www.grpc.io/) communication framework to manage individual clouds. 
+
+Currently supported clouds:
+* [OpenNebula](https://opennebula.org/) - component [cloudkeeper-one](https://github.com/the-cloudkeeper-project/cloudkeeper-one)
+* [OpenStack](https://www.openstack.org/) - component [cloudkeeper-os](https://github.com/the-cloudkeeper-project/cloudkeeper-os) (under development)
+
+## Requirements
+* Ruby >= 2.2.0
 * Rubygems
+* qemu-img (image conversion utility)
+* NGINX (optional)
 
 ## Installation
 
-###From RubyGems.org
+### From RubyGems.org
 To install the most recent stable version
 ```bash
 gem install cloudkeeper
 ```
 
-###From source (dev)
+### From source (dev)
 **Installation from source should never be your first choice! Especially, if you are not
 familiar with RVM, Bundler, Rake and other dev tools for Ruby!**
 
@@ -34,8 +52,8 @@ bundle install
 bundle exec rake spec
 ```
 
-##Configuration
-###Create a configuration file for cloudkeeper
+## Configuration
+### Create a configuration file for cloudkeeper
 Configuration file can be read by cloudkeeper from these
 three locations:
 
@@ -47,8 +65,54 @@ The default configuration file can be found at the last location
 `PATH_TO_GEM_DIR/config/cloudkeeper.yml`.
 
 ## Usage
+cloudkeeper is run with executable `cloudkeeper`. For further assistance run `cloudkeeper help sync`:
+```bash
+$ cloudkeeper help sync
 
-TODO
+Usage:
+  cloudkeeper sync --backend-endpoint=BACKEND-ENDPOINT --formats=one two three --image-dir=IMAGE-DIR --image-lists=one two three --qemu-img-binary=QEMU-IMG-BINARY
+
+Options:
+  --image-lists=one two three                      # List of image lists to sync against
+  [--ca-dir=CA-DIR]                                # CA directory
+                                                   # Default: /etc/grid-security/certificates/
+  [--authentication], [--no-authentication]        # Client <-> server authentication
+  [--certificate=CERTIFICATE]                      # Core's host certificate
+                                                   # Default: /etc/grid-security/hostcert.pem
+  [--key=KEY]                                      # Core's host key
+                                                   # Default: /etc/grid-security/hostkey.pem
+  --image-dir=IMAGE-DIR                            # Directory to store images to
+                                                   # Default: /var/spool/cloudkeeper/images/
+  --qemu-img-binary=QEMU-IMG-BINARY                # Path to qemu-img binary (image conversion)
+                                                   # Default: /usr/bin/qemu-img
+  [--nginx-binary=NGINX-BINARY]                    # Path to nginx binary (HTTP server)
+                                                   # Default: /usr/bin/nginx
+  [--remote-mode], [--no-remote-mode]              # Remote mode starts HTTP server (NGINX) and serves images to backend via HTTP
+  [--nginx-error-log-file=NGINX-ERROR-LOG-FILE]    # NGINX error log file
+                                                   # Default: /var/log/cloudkeeper/nginx-error.log
+  [--nginx-access-log-file=NGINX-ACCESS-LOG-FILE]  # NGINX access log file
+                                                   # Default: /var/log/cloudkeeper/nginx-access.log
+  [--nginx-pid-file=NGINX-PID-FILE]                # NGINX pid file
+                                                   # Default: /var/run/cloudkeeper/nginx.pid
+  [--nginx-ip-address=NGINX-IP-ADDRESS]            # IP address NGINX can listen on
+                                                   # Default: 127.0.0.1
+  [--nginx-min-port=N]                             # Minimal port NGINX can listen on
+                                                   # Default: 7300
+  [--nginx-max-port=N]                             # Maximal port NGINX can listen on
+                                                   # Default: 7400
+  --backend-endpoint=BACKEND-ENDPOINT              # Backend's gRPC endpoint
+                                                   # Default: 127.0.0.1:50051
+  [--backend-certificate=BACKEND-CERTIFICATE]      # Backend's certificate
+                                                   # Default: /etc/grid-security/backendcert.pem
+  --formats=one two three                          # List of acceptable formats images can be converted to
+                                                   # Default: ["qcow2"]
+  --logging-level=LOGGING-LEVEL
+                                                   # Default: ERROR
+                                                   # Possible values: DEBUG, INFO, WARN, ERROR, FATAL, UNKNOWN
+  [--logging-file=LOGGING-FILE]                    # File to write logs to
+                                                   # Default: /var/log/cloudkeeper/cloudkeeper.log
+  [--debug], [--no-debug]                          # Runs cloudkeeper in debug mode
+```
 
 ## Contributing
 1. Fork it ( https://github.com/the-cloudkeeper-project/cloudkeeper/fork )

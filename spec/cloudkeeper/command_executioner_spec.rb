@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Cloudkeeper::CommandExecutioner do
   subject(:command_executioner) { described_class }
+
   let(:command) { instance_spy(Mixlib::ShellOut) }
 
   before do

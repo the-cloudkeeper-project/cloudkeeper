@@ -42,6 +42,7 @@ describe Cloudkeeper::Entities::Image do
 
     context 'with proper image file' do
       let(:image_file) { instance_double(Cloudkeeper::Entities::ImageFile) }
+
       it 'adds image file into its array' do
         image.add_image_file image_file
         expect(image.image_files.count).to eq(1)

@@ -40,7 +40,7 @@ module Cloudkeeper
                   required: false,
                   default: Cloudkeeper::Settings['key'],
                   type: :string,
-                  desc: "Core's key certificate"
+                  desc: "Core's host key"
     method_option :'image-dir',
                   required: true,
                   default: Cloudkeeper::Settings['image-dir'],
@@ -148,11 +148,6 @@ module Cloudkeeper
       required_options.reduce(true) { |acc, elem| Cloudkeeper::Settings[elem] && acc }
     end
 
-    # Inits logging according to the settings
-    #
-    # @option parameters [String] logging-level
-    # @option parameters [String] logging-file file to log to
-    # @option parameters [TrueClass, FalseClass] debug debug mode
     def initialize_logger
       Cloudkeeper::Settings[:'logging-level'] = 'DEBUG' if Cloudkeeper::Settings[:debug]
 

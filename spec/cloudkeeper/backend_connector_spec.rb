@@ -11,6 +11,7 @@ end
 
 describe Cloudkeeper::BackendConnector do
   subject(:backend_connector) { described_class.new }
+
   let(:operation_success) { Operation.new nil, 'status' => 'SUCCESS' }
   let(:operation_error) { Operation.new nil, 'status' => 'ERROR', 'message' => 'Well, that escalated quickly' }
 

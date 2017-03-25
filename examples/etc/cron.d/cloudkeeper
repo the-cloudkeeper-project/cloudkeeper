@@ -1,0 +1,11 @@
+# Cron job running by default every two hours.
+# The lock file can be enabled or disabled via:
+#
+#  service cloudkeeper-cron start
+#  chkconfig cloudkeeper-cron on
+#
+# Note that the lock file not existing is a success (and
+# over-all success is needed in order to prevent error
+# messages from cron).
+
+30 */2 * * *	cloudkeeper	[ ! -f /var/lock/cloudkeeper-cron ] || /usr/bin/cloudkeeper

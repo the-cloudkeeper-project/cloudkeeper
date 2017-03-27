@@ -2,7 +2,7 @@ module Cloudkeeper
   module Entities
     module Convertables
       module Ova
-        CONVERT_OUTPUT_FORMATS = [:raw, :qcow2].freeze
+        CONVERT_OUTPUT_FORMATS = %i(raw qcow2).freeze
 
         def self.convert_output_formats
           CONVERT_OUTPUT_FORMATS

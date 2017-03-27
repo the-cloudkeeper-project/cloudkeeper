@@ -139,11 +139,11 @@ module Cloudkeeper
 
     def validate_configuration!
       validate_configuration_group! :authentication,
-                                    [:certificate, :key, :'backend-certificate'],
+                                    %i(certificate key backend-certificate),
                                     'Authentication configuration missing'
       validate_configuration_group! :'remote-mode',
-                                    [:'nginx-binary', :'nginx-error-log-file', :'nginx-access-log-file', :'nginx-pid-file',
-                                     :'nginx-ip-address', :'nginx-min-port', :'nginx-max-port'],
+                                    %i(nginx-binary nginx-error-log-file nginx-access-log-file nginx-pid-file
+                                       nginx-ip-address nginx-min-port nginx-max-port),
                                     'NGINX configuration missing'
     end
 

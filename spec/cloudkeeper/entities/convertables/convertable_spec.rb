@@ -72,7 +72,7 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
 
   describe '.convert_output_formats' do
     it 'returns an array of supported output fortmats' do
-      expect(described_class.send(:convert_output_formats)).to eq([:raw, :qcow2, :vmdk])
+      expect(described_class.send(:convert_output_formats)).to eq(%i(raw qcow2 vmdk))
     end
   end
 

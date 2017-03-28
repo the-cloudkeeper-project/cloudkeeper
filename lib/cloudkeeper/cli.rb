@@ -12,6 +12,11 @@ module Cloudkeeper
                  default: Cloudkeeper::Settings['logging']['file'],
                  type: :string,
                  desc: 'File to write logs to'
+    class_option :'lock-file',
+                 default: Cloudkeeper::Settings['lock-file'],
+                 required: true,
+                 type: :string,
+                 desc: 'File used to ensure only one running instance of cloudkeeper'
     class_option :debug,
                  default: Cloudkeeper::Settings['debug'],
                  type: :boolean,
@@ -102,7 +107,11 @@ module Cloudkeeper
     desc 'sync', 'Runs synchronization process'
     def sync
       initialize_sync options
-      Cloudkeeper::Managers::ApplianceManager.new.synchronize_appliances
+      File.open(Cloudkeeper::Settings[:'lock-file'], File::RDWR | File::CREAT, 0o644) do |file|
+        lock = file.flock(File::LOCK_EX | File::LOCK_NB)
+        Cloudkeeper::Managers::ApplianceManager.new.synchronize_appliances if lock
+        abort 'cloudkeeper instance is already running, quitting' unless lock
+      end
     rescue Cloudkeeper::Errors::InvalidConfigurationError => ex
       abort ex.message
     end
@@ -130,11 +139,11 @@ module Cloudkeeper
 
     def validate_configuration!
       validate_configuration_group! :authentication,
-                                    [:certificate, :key, :'backend-certificate'],
+                                    %i(certificate key backend-certificate),
                                     'Authentication configuration missing'
       validate_configuration_group! :'remote-mode',
-                                    [:'nginx-binary', :'nginx-error-log-file', :'nginx-access-log-file', :'nginx-pid-file',
-                                     :'nginx-ip-address', :'nginx-min-port', :'nginx-max-port'],
+                                    %i(nginx-binary nginx-error-log-file nginx-access-log-file nginx-pid-file
+                                       nginx-ip-address nginx-min-port nginx-max-port),
                                     'NGINX configuration missing'
     end
 

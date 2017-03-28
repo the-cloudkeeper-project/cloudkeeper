@@ -24,4 +24,5 @@ cloudkeeper:
   logging:
     level: ERROR # Logging level
     file: /var/log/cloudkeeper/cloudkeeper.log # File to write log to. To turn off file logging leave this field empty.
+  lock-file: /var/lock/cloudkeeper/cloudkeeper.lock # File used to ensure only one running instance of cloudkeeper
   debug: false # Debug mode

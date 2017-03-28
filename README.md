@@ -16,7 +16,7 @@ Currently supported image formats are:
 * OVA
 
 ## How does cloudkeeper work?
-cloudkeeper communicates with cloud specific components via [gRPC](http://www.grpc.io/) communication framework to manage individual clouds. 
+cloudkeeper communicates with cloud specific components via [gRPC](http://www.grpc.io/) communication framework to manage individual clouds.
 
 Currently supported clouds:
 * [OpenNebula](https://opennebula.org/) - component [cloudkeeper-one](https://github.com/the-cloudkeeper-project/cloudkeeper-one)
@@ -111,6 +111,8 @@ Options:
                                                    # Possible values: DEBUG, INFO, WARN, ERROR, FATAL, UNKNOWN
   [--logging-file=LOGGING-FILE]                    # File to write logs to
                                                    # Default: /var/log/cloudkeeper/cloudkeeper.log
+  --lock-file=LOCK-FILE                            # File used to ensure only one running instance of cloudkeeper
+                                                   # Default: /var/lock/cloudkeeper/cloudkeeper.lock
   [--debug], [--no-debug]                          # Runs cloudkeeper in debug mode
 ```
 

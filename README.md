@@ -112,7 +112,7 @@ Options:
   [--logging-file=LOGGING-FILE]                    # File to write logs to
                                                    # Default: /var/log/cloudkeeper/cloudkeeper.log
   --lock-file=LOCK-FILE                            # File used to ensure only one running instance of cloudkeeper
-                                                   # Default: /var/lock/cloudkeeper
+                                                   # Default: /var/lock/cloudkeeper/cloudkeeper.lock
   [--debug], [--no-debug]                          # Runs cloudkeeper in debug mode
 ```
 

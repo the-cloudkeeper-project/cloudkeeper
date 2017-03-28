@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Synchronize cloud appliances between AppDB and cloud platforms'
   spec.description   = 'Synchronize cloud appliances between AppDB and cloud platforms'
-  spec.homepage      = 'https://github.com/Misenko/cloudkeeper'
+  spec.homepage      = 'https://github.com/the-cloudkeeper-project/cloudkeeper'
   spec.license       = 'Apache License, Version 2.0'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }

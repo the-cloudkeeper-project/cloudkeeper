@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '~> 1.13'
-  spec.add_development_dependency 'rake', '~> 11.2'
+  spec.add_development_dependency 'rake', '~> 12.0'
   spec.add_development_dependency 'rspec', '~> 3.5'
   spec.add_development_dependency 'rubocop', '~> 0.48'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.15'
@@ -50,7 +50,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'grpc', '~> 1.0'
   spec.add_runtime_dependency 'settingslogic', '~> 2.0'
   spec.add_runtime_dependency 'zaru', '~> 0.1'
-  spec.add_runtime_dependency 'activesupport', '~> 4.0'
+  spec.add_runtime_dependency 'activesupport', '>= 4.0', '< 6.0'
   spec.add_runtime_dependency 'tilt', '~> 2.0'
   spec.add_runtime_dependency 'faraday', '~> 0.11'
 

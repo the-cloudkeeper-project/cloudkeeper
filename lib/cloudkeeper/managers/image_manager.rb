@@ -1,4 +1,4 @@
-require 'net/http'
+require 'net/https'
 
 module Cloudkeeper
   module Managers
@@ -60,7 +60,8 @@ module Cloudkeeper
         end
 
         def retrieve_image(uri, filename)
-          Net::HTTP.start(uri.host, uri.port) do |http|
+          use_ssl = uri.scheme == 'https'
+          Net::HTTP.start(uri.host, uri.port, use_ssl: use_ssl) do |http|
             request = Net::HTTP::Get.new(uri)
 
             http.request(request) do |response|

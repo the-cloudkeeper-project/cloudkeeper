@@ -51,6 +51,7 @@ module Cloudkeeper
       end
 
       def sync_image_list(image_list_identifier)
+        logger.debug "Synchronizing appliances for image list with id #{image_list_identifier.inspect}"
         backend_appliances = backend_connector.appliances image_list_identifier
         image_list_appliances = image_list_manager.image_lists[image_list_identifier].appliances
 

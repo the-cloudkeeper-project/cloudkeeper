@@ -65,6 +65,11 @@ module Cloudkeeper
             request = Net::HTTP::Get.new(uri)
 
             http.request(request) do |response|
+              if response.is_a? Net::HTTPRedirection
+                retrieve_image URI.join(uri, response.header['location']), filename
+                break
+              end
+
               response.value
               open(filename, 'w') { |file| response.read_body { |chunk| file.write(chunk) } }
             end

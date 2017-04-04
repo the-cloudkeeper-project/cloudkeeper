@@ -141,7 +141,7 @@ describe Cloudkeeper::BackendConnector do
   end
 
   describe '.image_lists' do
-    let(:image_list_identifiers) { %w(id123 id456 id789) }
+    let(:image_list_identifiers) { %w[id123 id456 id789] }
     let(:image_list_identifiers_proto) do
       [
         Struct.new(:image_list_identifier).new('id123'),
@@ -205,7 +205,7 @@ describe Cloudkeeper::BackendConnector do
     let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, image_files }
 
     before do
-      Cloudkeeper::Settings[:formats] = %w(qcow2 vmdk)
+      Cloudkeeper::Settings[:formats] = %w[qcow2 vmdk]
     end
 
     it 'returns image file that suffice format requirements' do
@@ -249,7 +249,7 @@ describe Cloudkeeper::BackendConnector do
     let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, image_files }
 
     before do
-      Cloudkeeper::Settings[:formats] = %w(qcow2 vmdk)
+      Cloudkeeper::Settings[:formats] = %w[qcow2 vmdk]
     end
 
     it 'converts image entity into image proto entity' do
@@ -358,7 +358,7 @@ describe Cloudkeeper::BackendConnector do
     let(:call) { :remove_appliance }
 
     before do
-      Cloudkeeper::Settings[:formats] = %w(qcow2 vmdk)
+      Cloudkeeper::Settings[:formats] = %w[qcow2 vmdk]
     end
 
     context 'in local mode' do
@@ -460,7 +460,7 @@ describe Cloudkeeper::BackendConnector do
 
       context 'without acceptable image format' do
         before do
-          Cloudkeeper::Settings[:formats] = %w(ova)
+          Cloudkeeper::Settings[:formats] = %w[ova]
         end
 
         it 'raises NoRequiredFormatAvailableError exception' do

@@ -4,7 +4,7 @@ module Cloudkeeper
   module Entities
     module Convertables
       module Convertable
-        CONVERT_OUTPUT_FORMATS = %i(raw qcow2 vmdk).freeze
+        CONVERT_OUTPUT_FORMATS = %i[raw qcow2 vmdk].freeze
 
         def self.convert_output_formats
           CONVERT_OUTPUT_FORMATS

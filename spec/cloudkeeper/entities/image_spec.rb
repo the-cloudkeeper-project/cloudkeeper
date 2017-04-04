@@ -151,7 +151,7 @@ describe Cloudkeeper::Entities::Image do
         Struct.new(:format).new(:raw)
       ]
     end
-    let(:formats) { %i(qcow raw vmdk) }
+    let(:formats) { %i[qcow raw vmdk] }
 
     before do
       image.image_files = image_files
@@ -181,7 +181,7 @@ describe Cloudkeeper::Entities::Image do
         Struct.new(:format).new(:raw)
       ]
     end
-    let(:formats) { %i(qcow raw vmdk) }
+    let(:formats) { %i[qcow raw vmdk] }
 
     before do
       image.image_files = image_files

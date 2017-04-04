@@ -4,7 +4,7 @@ module Cloudkeeper
       attr_accessor :identifier, :description, :mpuri, :title, :group, :ram, :core, :version, :architecture
       attr_accessor :operating_system, :image, :attributes, :vo, :expiration_date, :image_list_identifier
 
-      REJECTED_ATTRIBUTES = %i(vo expiration image_list_identifier).freeze
+      REJECTED_ATTRIBUTES = %i[vo expiration image_list_identifier].freeze
 
       def initialize(identifier, mpuri, vo, expiration_date, image_list_identifier, title = '', description = '', group = '',
                      ram = 1024, core = 1, version = '', architecture = '', operating_system = '', image = nil, attributes = {})

@@ -10,6 +10,7 @@ cloudkeeper:
     nginx: /usr/bin/nginx # nginx binary (HTTP server) location
   remote-mode: false # Remote mode starts HTTP server (NGINX) and serves images to backend via HTTP
   nginx:
+    runtime-dir: /var/run/cloudkeeper/ # Runtime directory for NGINX
     error-log-file: /var/log/cloudkeeper/nginx-error.log # File for NGINX error log
     access-log-file: /var/log/cloudkeeper/nginx-access.log # File for NGINX access log
     pid-file: /var/run/cloudkeeper/nginx.pid # NGINX pid file

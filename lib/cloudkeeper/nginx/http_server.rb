@@ -21,7 +21,9 @@ module Cloudkeeper
         prepare_configuration_file configuration
         fill_access_data credentials, configuration
 
-        Cloudkeeper::CommandExecutioner.execute Cloudkeeper::Settings[:'nginx-binary'], '-c', conf_file.path
+        Cloudkeeper::CommandExecutioner.execute Cloudkeeper::Settings[:'nginx-binary'],
+                                                '-c', conf_file.path,
+                                                '-p', Cloudkeeper::Settings[:'nginx-runtime-dir']
       rescue Cloudkeeper::Errors::CommandExecutionError, ::IOError => ex
         stop
         raise Cloudkeeper::Errors::NginxError, ex
@@ -30,7 +32,10 @@ module Cloudkeeper
       def stop
         logger.debug 'Stopping NGINX server'
         if conf_file
-          Cloudkeeper::CommandExecutioner.execute Cloudkeeper::Settings[:'nginx-binary'], '-s', 'stop', '-c', conf_file.path
+          Cloudkeeper::CommandExecutioner.execute Cloudkeeper::Settings[:'nginx-binary'],
+                                                  '-s', 'stop',
+                                                  '-c', conf_file.path,
+                                                  '-p', Cloudkeeper::Settings[:'nginx-runtime-dir']
           conf_file.unlink
         end
 

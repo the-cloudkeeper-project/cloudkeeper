@@ -177,6 +177,7 @@ describe Cloudkeeper::Nginx::HttpServer do
     let(:image_file) { '/cloudkeeper/images/image.ext' }
 
     before do
+      Cloudkeeper::Settings[:'nginx-runtime-dir'] = '/nginx/'
       Cloudkeeper::Settings[:'nginx-binary'] = '/path/to/nginx'
       Cloudkeeper::Settings[:'nginx-error-log-file'] = '/nginx/error.log'
       Cloudkeeper::Settings[:'nginx-access-log-file'] = '/nginx/access.log'
@@ -185,11 +186,12 @@ describe Cloudkeeper::Nginx::HttpServer do
       Cloudkeeper::Settings[:'nginx-min-port'] = 12_345
       Cloudkeeper::Settings[:'nginx-max-port'] = 12_345
 
-      allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with('/path/to/nginx', '-c', kind_of(String))
+      allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with('/path/to/nginx', '-c', kind_of(String), '-p', kind_of(String))
     end
 
     after do
-      expect(Cloudkeeper::CommandExecutioner).to have_received(:execute).with('/path/to/nginx', '-c', kind_of(String))
+      expect(Cloudkeeper::CommandExecutioner).to \
+        have_received(:execute).with('/path/to/nginx', '-c', kind_of(String), '-p', kind_of(String))
       http_server.auth_file.unlink
       http_server.conf_file.unlink
     end
@@ -208,17 +210,20 @@ describe Cloudkeeper::Nginx::HttpServer do
     let(:conf_file) { Tempfile.new('cloudkeeper-nginx-spec') }
 
     before do
+      Cloudkeeper::Settings[:'nginx-runtime-dir'] = '/nginx/'
       Cloudkeeper::Settings[:'nginx-binary'] = '/path/to/nginx'
       http_server.instance_variable_set(:@auth_file, auth_file)
       http_server.instance_variable_set(:@conf_file, conf_file)
 
-      allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with('/path/to/nginx', '-s', 'stop', '-c', kind_of(String))
+      allow(Cloudkeeper::CommandExecutioner).to \
+        receive(:execute).with('/path/to/nginx', '-s', 'stop', '-c', kind_of(String), '-p', kind_of(String))
       allow(auth_file).to receive(:unlink)
       allow(conf_file).to receive(:unlink)
     end
 
     after do
-      expect(Cloudkeeper::CommandExecutioner).to have_received(:execute).with('/path/to/nginx', '-s', 'stop', '-c', kind_of(String))
+      expect(Cloudkeeper::CommandExecutioner).to \
+        have_received(:execute).with('/path/to/nginx', '-s', 'stop', '-c', kind_of(String), '-p', kind_of(String))
     end
 
     it 'stops NGINX server and removes temporary files and access data' do

@@ -64,6 +64,10 @@ module Cloudkeeper
                   default: Cloudkeeper::Settings['remote-mode'],
                   type: :boolean,
                   desc: 'Remote mode starts HTTP server (NGINX) and serves images to backend via HTTP'
+    method_option :'nginx-runtime-dir',
+                  default: Cloudkeeper::Settings['nginx']['runtime-dir'],
+                  type: :string,
+                  desc: 'Runtime directory for NGINX'
     method_option :'nginx-error-log-file',
                   default: Cloudkeeper::Settings['nginx']['error-log-file'],
                   type: :string,
@@ -142,7 +146,7 @@ module Cloudkeeper
                                     %i[certificate key backend-certificate],
                                     'Authentication configuration missing'
       validate_configuration_group! :'remote-mode',
-                                    %i[nginx-binary nginx-error-log-file nginx-access-log-file nginx-pid-file
+                                    %i[nginx-binary nginx-runtime-dir nginx-error-log-file nginx-access-log-file nginx-pid-file
                                        nginx-ip-address nginx-min-port nginx-max-port],
                                     'NGINX configuration missing'
     end

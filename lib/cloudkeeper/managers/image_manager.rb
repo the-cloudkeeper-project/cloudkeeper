@@ -9,7 +9,8 @@ module Cloudkeeper
         qcow2: /qemu qcow image/i,
         ova: /posix tar archive/i,
         vmdk: /vmware4 disk image/i,
-        raw: /boot sector/i
+        raw: /boot sector/i,
+        vdi: /virtual(box)? disk image/i
       }.freeze
 
       class << self

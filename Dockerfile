@@ -2,9 +2,17 @@ FROM ubuntu:16.04
 
 ARG branch=master
 ARG version
-ENV imgDir /var/spool/cloudkeeper/images/
 
-LABEL application="cloudkeeper" \
+ENV name="cloudkeeper"
+ENV spoolDir="/var/spool/${name}"
+ENV imgDir="${spoolDir}/images" \
+    runDir="/var/run/${name}" \
+    logDir="/var/log/${name}" \
+    lockDir="/var/lock/${name}" \
+    nginxLogDir="/var/log/nginx" \
+    nginxLibDir="/var/lib/nginx"
+
+LABEL application=${name} \
       description="A tool for synchronizing appliances between AppDB and CMFs" \
       maintainer="kimle@cesnet.cz" \
       version=${version} \
@@ -26,13 +34,18 @@ deb http://repository.egi.eu/sw/production/cas/1/current egi-igtf core' > /etc/a
     apt-get --assume-yes install ca-policy-egi-core
 
 # cloudkeeper
-RUN gem install cloudkeeper -v ${version} --no-document
+RUN gem install ${name} -v ${version} --no-document
 
 # env
-RUN mkdir -p ${imgDir} /var/run/cloudkeeper/ /var/log/cloudkeeper/ /var/lock/cloudkeeper/
+RUN useradd --system --shell /bin/false --home ${spoolDir} --create-home ${name} && \
+    usermod -L ${name} && \
+    mkdir -p ${imgDir} ${runDir} ${logDir} ${lockDir} && \
+    chown -R ${name}:${name} ${spoolDir} ${runDir} ${logDir} ${lockDir} ${nginxLogDir} ${nginxLibDir}
 
 VOLUME ${imgDir}
 
 EXPOSE 7300-7400
+
+USER ${name}
 
 ENTRYPOINT ["cloudkeeper"]

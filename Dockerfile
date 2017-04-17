@@ -34,7 +34,7 @@ deb http://repository.egi.eu/sw/production/cas/1/current egi-igtf core' > /etc/a
     apt-get --assume-yes install ca-policy-egi-core
 
 # cloudkeeper
-RUN gem install ${name} -v ${version} --no-document
+RUN gem install ${name} -v "${version}" --no-document
 
 # env
 RUN useradd --system --shell /bin/false --home ${spoolDir} --create-home ${name} && \

@@ -3,6 +3,7 @@ require 'tempfile'
 require 'securerandom'
 require 'erb'
 require 'tilt/erb'
+require 'uri'
 
 module Cloudkeeper
   module Nginx
@@ -48,8 +49,13 @@ module Cloudkeeper
       private
 
       def fill_access_data(credentials, configuration)
+        host = configuration[:proxy_ip_address] || configuration[:ip_address]
+        port = configuration[:proxy_port] || configuration[:port]
+        scheme = configuration[:proxy_ip_address] && configuration[:proxy_ssl] ? 'https' : 'http'
+        path = configuration[:image_file]
+
         access_data.merge! credentials
-        access_data[:url] = "http://#{configuration[:ip_address]}:#{configuration[:port]}/#{configuration[:image_file]}"
+        access_data[:url] = "#{scheme}://#{host}:#{port}/#{path}"
       end
 
       def prepare_credentials
@@ -100,14 +106,13 @@ module Cloudkeeper
         nginx_configuration[:root_dir] = root_dir
         nginx_configuration[:image_file] = image_file
         nginx_configuration[:ip_address] = Cloudkeeper::Settings[:'nginx-ip-address']
-        nginx_configuration[:port] = choose_port
+        nginx_configuration[:port] = Cloudkeeper::Settings[:'nginx-port']
+        nginx_configuration[:proxy_ip_address] = Cloudkeeper::Settings[:'nginx-proxy-ip-address']
+        nginx_configuration[:proxy_port] = Cloudkeeper::Settings[:'nginx-proxy-port']
+        nginx_configuration[:proxy_ssl] = Cloudkeeper::Settings[:'nginx-proxy-ssl']
 
         logger.debug("NGINX configuration: #{nginx_configuration.inspect}")
         nginx_configuration
-      end
-
-      def choose_port
-        rand(Cloudkeeper::Settings[:'nginx-min-port']..Cloudkeeper::Settings[:'nginx-max-port'])
       end
 
       def random_string

@@ -15,8 +15,11 @@ cloudkeeper:
     access-log-file: /var/log/cloudkeeper/nginx-access.log # File for NGINX access log
     pid-file: /var/run/cloudkeeper/nginx.pid # NGINX pid file
     ip-address: 127.0.0.1 # IP address NGINX can listen on
-    min-port: 7300 # Minimal port NGINX can listen on
-    max-port: 7400 # Maximal port NGINX can listen on
+    port: 50505 # Port NGINX can listen on
+    proxy:
+      ip-address: # Proxy IP address
+      port: # Proxy port
+      ssl: false # Whether proxy will use SSL connection
   backend:
     endpoint: 127.0.0.1:50051 # Backend's gRPC endpoint
     certificate: /etc/grid-security/backendcert.pem # Backend's certificate

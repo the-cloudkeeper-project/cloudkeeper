@@ -84,14 +84,22 @@ module Cloudkeeper
                   default: Cloudkeeper::Settings['nginx']['ip-address'],
                   type: :string,
                   desc: 'IP address NGINX can listen on'
-    method_option :'nginx-min-port',
-                  default: Cloudkeeper::Settings['nginx']['min-port'],
+    method_option :'nginx-port',
+                  default: Cloudkeeper::Settings['nginx']['port'],
                   type: :numeric,
-                  desc: 'Minimal port NGINX can listen on'
-    method_option :'nginx-max-port',
-                  default: Cloudkeeper::Settings['nginx']['max-port'],
+                  desc: 'Port NGINX can listen on'
+    method_option :'nginx-proxy-ip-address',
+                  default: Cloudkeeper::Settings['nginx']['proxy']['ip-address'],
+                  type: :string,
+                  desc: 'Proxy IP address'
+    method_option :'nginx-proxy-port',
+                  default: Cloudkeeper::Settings['nginx']['proxy']['port'],
                   type: :numeric,
-                  desc: 'Maximal port NGINX can listen on'
+                  desc: 'Proxy port'
+    method_option :'nginx-proxy-ssl',
+                  default: Cloudkeeper::Settings['nginx']['proxy']['ssl'],
+                  type: :boolean,
+                  desc: 'Whether proxy will use SSL connection'
     method_option :'backend-endpoint',
                   required: true,
                   default: Cloudkeeper::Settings['backend']['endpoint'],
@@ -142,17 +150,20 @@ module Cloudkeeper
     end
 
     def validate_configuration!
-      validate_configuration_group! :authentication,
+      validate_configuration_group! %i[authentication],
                                     %i[certificate key backend-certificate],
                                     'Authentication configuration missing'
-      validate_configuration_group! :'remote-mode',
+      validate_configuration_group! %i[remote-mode],
                                     %i[nginx-binary nginx-runtime-dir nginx-error-log-file nginx-access-log-file nginx-pid-file
-                                       nginx-ip-address nginx-min-port nginx-max-port],
+                                       nginx-ip-address nginx-port],
                                     'NGINX configuration missing'
+      validate_configuration_group! %i[remote-mode nginx-proxy-ip-address],
+                                    %i[nginx-proxy-port],
+                                    'NGINX proxy configuration missing'
     end
 
-    def validate_configuration_group!(flag, required_options, error_message)
-      return unless Cloudkeeper::Settings[flag]
+    def validate_configuration_group!(flags, required_options, error_message)
+      return unless flags.reduce(true) { |acc, elem| Cloudkeeper::Settings[elem] && acc }
 
       raise Cloudkeeper::Errors::InvalidConfigurationError, error_message unless all_options_available(required_options)
     end

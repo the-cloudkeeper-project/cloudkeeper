@@ -29,26 +29,6 @@ describe Cloudkeeper::Nginx::HttpServer do
     end
   end
 
-  describe '.choose_port' do
-    before do
-      Cloudkeeper::Settings[:'nginx-min-port'] = 100
-      Cloudkeeper::Settings[:'nginx-max-port'] = 500
-    end
-
-    it 'returns a port number from within the set range' do
-      port1 = http_server.send(:choose_port)
-      port2 = http_server.send(:choose_port)
-      port3 = http_server.send(:choose_port)
-
-      expect(port1).to be >= 100
-      expect(port2).to be >= 100
-      expect(port3).to be >= 100
-      expect(port1).to be <= 500
-      expect(port2).to be <= 500
-      expect(port3).to be <= 500
-    end
-  end
-
   describe '.prepare_configuration' do
     let(:root_dir) { '/cloudkeeper/images' }
     let(:image_file) { 'image.ext' }
@@ -59,8 +39,7 @@ describe Cloudkeeper::Nginx::HttpServer do
       Cloudkeeper::Settings[:'nginx-access-log-file'] = '/nginx/access.log'
       Cloudkeeper::Settings[:'nginx-pid-file'] = '/nginx/nginx.pid'
       Cloudkeeper::Settings[:'nginx-ip-address'] = '127.0.0.1'
-      Cloudkeeper::Settings[:'nginx-min-port'] = 100
-      Cloudkeeper::Settings[:'nginx-max-port'] = 500
+      Cloudkeeper::Settings[:'nginx-port'] = 100
       http_server.instance_variable_set(:@auth_file, auth_file)
     end
 
@@ -78,8 +57,7 @@ describe Cloudkeeper::Nginx::HttpServer do
       expect(conf[:root_dir]).to eq(root_dir)
       expect(conf[:image_file]).to eq(image_file)
       expect(conf[:ip_address]).to eq('127.0.0.1')
-      expect(conf[:port]).to be >= 100
-      expect(conf[:port]).to be <= 500
+      expect(conf[:port]).to eq(100)
     end
   end
 
@@ -183,8 +161,7 @@ describe Cloudkeeper::Nginx::HttpServer do
       Cloudkeeper::Settings[:'nginx-access-log-file'] = '/nginx/access.log'
       Cloudkeeper::Settings[:'nginx-pid-file'] = '/nginx/nginx.pid'
       Cloudkeeper::Settings[:'nginx-ip-address'] = '127.0.0.1'
-      Cloudkeeper::Settings[:'nginx-min-port'] = 12_345
-      Cloudkeeper::Settings[:'nginx-max-port'] = 12_345
+      Cloudkeeper::Settings[:'nginx-port'] = 12_345
 
       allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with('/path/to/nginx', '-c', kind_of(String), '-p', kind_of(String))
     end
@@ -251,12 +228,40 @@ describe Cloudkeeper::Nginx::HttpServer do
       }
     end
 
-    it 'fills access_data attribute' do
-      http_server.send(:fill_access_data, credentials, conf)
+    context 'without proxy' do
+      it 'fills access_data attribute' do
+        http_server.send(:fill_access_data, credentials, conf)
 
-      expect(http_server.access_data[:username]).to eq('albus')
-      expect(http_server.access_data[:password]).to eq('Rictusempra')
-      expect(http_server.access_data[:url]).to eq('http://127.0.0.1:12345/image.ext')
+        expect(http_server.access_data[:username]).to eq('albus')
+        expect(http_server.access_data[:password]).to eq('Rictusempra')
+        expect(http_server.access_data[:url]).to eq('http://127.0.0.1:12345/image.ext')
+      end
+    end
+
+    context 'with proxy' do
+      let(:conf) do
+        {
+          error_log_file: '/nginx/error.log',
+          access_log_file: '/nginx/access.log',
+          pid_file: '/nginx/nginx.pid',
+          auth_file: '/nginx/file.auth',
+          root_dir: '/cloudkeeper/images',
+          image_file: 'image.ext',
+          ip_address: '127.0.0.1',
+          port: 12_345,
+          proxy_ip_address: '123.123.123.123',
+          proxy_port: 54_321,
+          proxy_ssl: true
+        }
+      end
+
+      it 'fills access_data attribute' do
+        http_server.send(:fill_access_data, credentials, conf)
+
+        expect(http_server.access_data[:username]).to eq('albus')
+        expect(http_server.access_data[:password]).to eq('Rictusempra')
+        expect(http_server.access_data[:url]).to eq('https://123.123.123.123:54321/image.ext')
+      end
     end
   end
 end

@@ -1,10 +1,11 @@
 # cloudkeeper
 cloudkeeper is an AppDB <-> cloud synchronization utility
 
-[![Build Status](https://secure.travis-ci.org/the-cloudkeeper-project/cloudkeeper.png)](http://travis-ci.org/the-cloudkeeper-project/cloudkeeper)
-[![Dependency Status](https://gemnasium.com/the-cloudkeeper-project/cloudkeeper.png)](https://gemnasium.com/the-cloudkeeper-project/cloudkeeper)
-[![Gem Version](https://fury-badge.herokuapp.com/rb/cloudkeeper.png)](https://badge.fury.io/rb/cloudkeeper)
-[![Code Climate](https://codeclimate.com/github/the-cloudkeeper-project/cloudkeeper.png)](https://codeclimate.com/github/the-cloudkeeper-project/cloudkeeper)
+[![Travis](https://img.shields.io/travis/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square)](http://travis-ci.org/the-cloudkeeper-project/cloudkeeper)
+[![Gemnasium](https://img.shields.io/gemnasium/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square)](https://gemnasium.com/the-cloudkeeper-project/cloudkeeper)
+[![Gem](https://img.shields.io/gem/v/cloudkeeper.svg?style=flat-square)](https://rubygems.org/gems/cloudkeeper)
+[![Code Climate](https://img.shields.io/codeclimate/github/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square)](https://codeclimate.com/github/the-cloudkeeper-project/cloudkeeper)
+[![DockerHub](https://img.shields.io/badge/docker-ready-blue.svg?style=flat-square)](https://hub.docker.com/r/cloudkeeper/cloudkeeper/)
 
 ## What does cloudkeeper do?
 cloudkeeper is able to read image lists provided by EGI AppDB, parse their content and decide what cloud appliances should be added, updated or removed from managed cloud. During the addition and update cloudkeeper is able to download an appliance's image and convert it to the format supported by the managed cloud.

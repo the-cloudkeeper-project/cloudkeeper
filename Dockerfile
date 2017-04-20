@@ -44,7 +44,7 @@ RUN useradd --system --shell /bin/false --home ${spoolDir} --create-home ${name}
 
 VOLUME ${imgDir}
 
-EXPOSE 7300-7400
+EXPOSE 50505
 
 USER ${name}
 

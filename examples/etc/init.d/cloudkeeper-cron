@@ -14,7 +14,17 @@ lockfile="/var/lock/cloudkeeper-cron"
 retval=0
 name=`basename $0`
 
+run_dir="/var/run/cloudkeeper"
+lock_dir="/var/lock/cloudkeeper"
+user="cloudkeeper"
+
+setup_dirs() {
+    mkdir -p "$run_dir" "$lock_dir"
+    chown "$user":"$user" "$run_dir" "$lock_dir"
+}
+
 start() {
+    setup_dirs
     touch $lockfile
     echo "Enabling periodic $name"
     retval=0

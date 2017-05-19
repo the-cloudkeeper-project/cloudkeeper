@@ -8,6 +8,7 @@ describe Cloudkeeper::CommandExecutioner do
   before do
     allow(command).to receive(:error?) { false }
     allow(command).to receive(:stdout) { 'output' }
+    Cloudkeeper::Settings[:'external-tools-execution-timeout'] = 123
   end
 
   after do
@@ -16,11 +17,11 @@ describe Cloudkeeper::CommandExecutioner do
 
   describe '#execute' do
     before do
-      allow(Mixlib::ShellOut).to receive(:new).with('arg1', 'arg2', 'arg3') { command }
+      allow(Mixlib::ShellOut).to receive(:new).with('arg1', 'arg2', 'arg3', timeout: 123) { command }
     end
 
     after do
-      expect(Mixlib::ShellOut).to have_received(:new).with('arg1', 'arg2', 'arg3') { command }
+      expect(Mixlib::ShellOut).to have_received(:new).with('arg1', 'arg2', 'arg3', timeout: 123) { command }
     end
 
     context 'normal run' do
@@ -44,12 +45,12 @@ describe Cloudkeeper::CommandExecutioner do
     let(:archive) { instance_double('archive') }
 
     before do
-      allow(Mixlib::ShellOut).to receive(:new).with('tar', '-t', '-f', archive) { command }
+      allow(Mixlib::ShellOut).to receive(:new).with('tar', '-t', '-f', archive, timeout: 123) { command }
       allow(command).to receive(:stdout) { "image.ovf\nimage.vmdk\nimage.mf\n" }
     end
 
     after do
-      expect(Mixlib::ShellOut).to have_received(:new).with('tar', '-t', '-f', archive) { command }
+      expect(Mixlib::ShellOut).to have_received(:new).with('tar', '-t', '-f', archive, timeout: 123) { command }
     end
 
     it 'calls the right command to list content of the archive' do

@@ -53,13 +53,18 @@ module Cloudkeeper
                   desc: 'Directory to store images to'
     method_option :'qemu-img-binary',
                   required: true,
-                  default: Cloudkeeper::Settings['binaries']['qemu-img'],
+                  default: Cloudkeeper::Settings['external-tools']['binaries']['qemu-img'],
                   type: :string,
                   desc: 'Path to qemu-img binary (image conversion)'
     method_option :'nginx-binary',
-                  default: Cloudkeeper::Settings['binaries']['nginx'],
+                  default: Cloudkeeper::Settings['external-tools']['binaries']['nginx'],
                   type: :string,
                   desc: 'Path to nginx binary (HTTP server)'
+    method_option :'external-tools-execution-timeout',
+                  required: true,
+                  default: Cloudkeeper::Settings['external-tools']['execution-timeout'],
+                  type: :numeric,
+                  desc: 'Timeout for execution of external tools in seconds'
     method_option :'remote-mode',
                   default: Cloudkeeper::Settings['remote-mode'],
                   type: :boolean,

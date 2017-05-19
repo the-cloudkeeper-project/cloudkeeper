@@ -2,7 +2,7 @@ module Cloudkeeper
   class CommandExecutioner
     class << self
       def execute(*args)
-        command = Mixlib::ShellOut.new(*args)
+        command = Mixlib::ShellOut.new(*args, timeout: Cloudkeeper::Settings[:'external-tools-execution-timeout'])
         logger.debug "Executing command: #{command.command.inspect}"
         command.run_command
 

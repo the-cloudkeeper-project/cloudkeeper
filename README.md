@@ -71,50 +71,53 @@ cloudkeeper is run with executable `cloudkeeper`. For further assistance run `cl
 $ cloudkeeper help sync
 
 Usage:
-  cloudkeeper sync --backend-endpoint=BACKEND-ENDPOINT --formats=one two three --image-dir=IMAGE-DIR --image-lists=one two three --qemu-img-binary=QEMU-IMG-BINARY
+  cloudkeeper sync --backend-endpoint=BACKEND-ENDPOINT --external-tools-execution-timeout=N --formats=one two three --image-dir=IMAGE-DIR --image-lists=one two three --qemu-img-binary=QEMU-IMG-BINARY
 
 Options:
-  --image-lists=one two three                      # List of image lists to sync against
-  [--ca-dir=CA-DIR]                                # CA directory
-                                                   # Default: /etc/grid-security/certificates/
-  [--authentication], [--no-authentication]        # Client <-> server authentication
-  [--certificate=CERTIFICATE]                      # Core's host certificate
-                                                   # Default: /etc/grid-security/hostcert.pem
-  [--key=KEY]                                      # Core's host key
-                                                   # Default: /etc/grid-security/hostkey.pem
-  --image-dir=IMAGE-DIR                            # Directory to store images to
-                                                   # Default: /var/spool/cloudkeeper/images/
-  --qemu-img-binary=QEMU-IMG-BINARY                # Path to qemu-img binary (image conversion)
-                                                   # Default: /usr/bin/qemu-img
-  [--nginx-binary=NGINX-BINARY]                    # Path to nginx binary (HTTP server)
-                                                   # Default: /usr/bin/nginx
-  [--remote-mode], [--no-remote-mode]              # Remote mode starts HTTP server (NGINX) and serves images to backend via HTTP
-  [--nginx-error-log-file=NGINX-ERROR-LOG-FILE]    # NGINX error log file
-                                                   # Default: /var/log/cloudkeeper/nginx-error.log
-  [--nginx-access-log-file=NGINX-ACCESS-LOG-FILE]  # NGINX access log file
-                                                   # Default: /var/log/cloudkeeper/nginx-access.log
-  [--nginx-pid-file=NGINX-PID-FILE]                # NGINX pid file
-                                                   # Default: /var/run/cloudkeeper/nginx.pid
-  [--nginx-ip-address=NGINX-IP-ADDRESS]            # IP address NGINX can listen on
-                                                   # Default: 127.0.0.1
-  [--nginx-min-port=N]                             # Minimal port NGINX can listen on
-                                                   # Default: 7300
-  [--nginx-max-port=N]                             # Maximal port NGINX can listen on
-                                                   # Default: 7400
-  --backend-endpoint=BACKEND-ENDPOINT              # Backend's gRPC endpoint
-                                                   # Default: 127.0.0.1:50051
-  [--backend-certificate=BACKEND-CERTIFICATE]      # Backend's certificate
-                                                   # Default: /etc/grid-security/backendcert.pem
-  --formats=one two three                          # List of acceptable formats images can be converted to
-                                                   # Default: ["qcow2"]
+  --image-lists=one two three                        # List of image lists to sync against
+  [--ca-dir=CA-DIR]                                  # CA directory
+                                                     # Default: /etc/grid-security/certificates/
+  [--authentication], [--no-authentication]          # Client <-> server authentication
+  [--certificate=CERTIFICATE]                        # Core's host certificate
+                                                     # Default: /etc/grid-security/hostcert.pem
+  [--key=KEY]                                        # Core's host key
+                                                     # Default: /etc/grid-security/hostkey.pem
+  --image-dir=IMAGE-DIR                              # Directory to store images to
+                                                     # Default: /var/spool/cloudkeeper/images/
+  --qemu-img-binary=QEMU-IMG-BINARY                  # Path to qemu-img binary (image conversion)
+                                                     # Default: /usr/bin/qemu-img
+  [--nginx-binary=NGINX-BINARY]                      # Path to nginx binary (HTTP server)
+                                                     # Default: /usr/bin/nginx
+  --external-tools-execution-timeout=N               # Timeout for execution of external tools in seconds
+                                                     # Default: 600
+  [--remote-mode], [--no-remote-mode]                # Remote mode starts HTTP server (NGINX) and serves images to backend via HTTP
+  [--nginx-error-log-file=NGINX-ERROR-LOG-FILE]      # NGINX error log file
+                                                     # Default: /var/log/cloudkeeper/nginx-error.log
+  [--nginx-access-log-file=NGINX-ACCESS-LOG-FILE]    # NGINX access log file
+                                                     # Default: /var/log/cloudkeeper/nginx-access.log
+  [--nginx-pid-file=NGINX-PID-FILE]                  # NGINX pid file
+                                                     # Default: /var/run/cloudkeeper/nginx.pid
+  [--nginx-ip-address=NGINX-IP-ADDRESS]              # IP address NGINX can listen on
+                                                     # Default: 127.0.0.1
+  [--nginx-port=N]                                   # Port NGINX can listen on
+                                                     # Default: 50505
+  [--nginx-proxy-ip-address=NGINX-PROXY-IP-ADDRESS]  # Proxy IP address
+  [--nginx-proxy-port=N]                             # Proxy port
+  [--nginx-proxy-ssl], [--no-nginx-proxy-ssl]        # Whether proxy will use SSL connection
+  --backend-endpoint=BACKEND-ENDPOINT                # Backend's gRPC endpoint
+                                                     # Default: 127.0.0.1:50051
+  [--backend-certificate=BACKEND-CERTIFICATE]        # Backend's certificate
+                                                     # Default: /etc/grid-security/backendcert.pem
+  --formats=one two three                            # List of acceptable formats images can be converted to
+                                                     # Default: ["qcow2"]
   --logging-level=LOGGING-LEVEL
-                                                   # Default: ERROR
-                                                   # Possible values: DEBUG, INFO, WARN, ERROR, FATAL, UNKNOWN
-  [--logging-file=LOGGING-FILE]                    # File to write logs to
-                                                   # Default: /var/log/cloudkeeper/cloudkeeper.log
-  --lock-file=LOCK-FILE                            # File used to ensure only one running instance of cloudkeeper
-                                                   # Default: /var/lock/cloudkeeper/cloudkeeper.lock
-  [--debug], [--no-debug]                          # Runs cloudkeeper in debug mode
+                                                     # Default: ERROR
+                                                     # Possible values: DEBUG, INFO, WARN, ERROR, FATAL, UNKNOWN
+  [--logging-file=LOGGING-FILE]                      # File to write logs to
+                                                     # Default: /var/log/cloudkeeper/cloudkeeper.log
+  --lock-file=LOCK-FILE                              # File used to ensure only one running instance of cloudkeeper
+                                                     # Default: /var/lock/cloudkeeper/cloudkeeper.lock
+  [--debug], [--no-debug]                            # Runs cloudkeeper in debug mode
 ```
 
 ## Contributing

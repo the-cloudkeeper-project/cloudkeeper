@@ -2,11 +2,7 @@ module Cloudkeeper
   module Entities
     module Convertables
       module Ova
-        CONVERT_OUTPUT_FORMATS = %i[raw qcow2 vdi].freeze
-
-        def self.convert_output_formats
-          CONVERT_OUTPUT_FORMATS
-        end
+        CONVERT_OUTPUT_FORMATS = %i[raw qcow2 vdi ova].freeze
 
         def self.extended(base)
           raise Cloudkeeper::Errors::Convertables::ConvertabilityError, "#{base.inspect} cannot become OVA convertable" \
@@ -15,12 +11,13 @@ module Cloudkeeper
           super
         end
 
-        def to_vmdk
-          image_file(extract_disk, :vmdk)
+        def convert_output_formats
+          CONVERT_OUTPUT_FORMATS
         end
 
-        def to_ova
-          self
+        def to_vmdk
+          logger.debug "Converting file #{file.inspect} from #{format.inspect} to vmdk"
+          image_file(extract_disk, :vmdk)
         end
 
         private
@@ -37,8 +34,12 @@ module Cloudkeeper
         def extract_disk
           archived_disk = disk_file
           disk_directory = File.dirname(file)
+          extracted_file = File.join(disk_directory, archived_disk)
           Cloudkeeper::CommandExecutioner.execute('tar', '-x', '-f', file, '-C', disk_directory, archived_disk)
-          File.join(disk_directory, archived_disk)
+          extracted_file
+        rescue Cloudkeeper::Errors::CommandExecutionError => ex
+          delete_if_exists extracted_file
+          raise ex
         end
 
         def archive_files

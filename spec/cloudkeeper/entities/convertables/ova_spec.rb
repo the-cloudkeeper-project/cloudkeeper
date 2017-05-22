@@ -179,4 +179,10 @@ describe Cloudkeeper::Entities::Convertables::Ova do
       expect(image_file.original).to be_falsy
     end
   end
+
+  describe '.convert_output_formats' do
+    it 'returns an array of supported output fortmats' do
+      expect(convertable_instance_ova.convert_output_formats).to eq(%i[raw qcow2 vdi ova])
+    end
+  end
 end

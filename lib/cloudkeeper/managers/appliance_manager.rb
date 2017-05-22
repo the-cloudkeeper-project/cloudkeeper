@@ -63,7 +63,7 @@ module Cloudkeeper
       def remove_appliances(backend_appliances, image_list_appliances)
         logger.debug 'Removing previously registered appliances...'
         remove_list = backend_appliances.keys - image_list_appliances.keys
-        remove_list.each { |appliance_identifier| backend_connector.remove_appliance image_list_appliances[appliance_identifier] }
+        remove_list.each { |appliance_identifier| backend_connector.remove_appliance backend_appliances[appliance_identifier] }
       end
 
       def add_appliances(backend_appliances, image_list_appliances)

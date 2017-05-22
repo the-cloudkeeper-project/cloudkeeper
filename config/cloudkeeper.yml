@@ -5,9 +5,11 @@ cloudkeeper:
   certificate: /etc/grid-security/hostcert.pem # Core's host certificate
   key: /etc/grid-security/hostkey.pem # Core's host key
   image-dir: /var/spool/cloudkeeper/images/ # Directory to store images to
-  binaries:
-    qemu-img: /usr/bin/qemu-img # qemu-img binary (image conversion) location
-    nginx: /usr/bin/nginx # nginx binary (HTTP server) location
+  external-tools:
+    binaries:
+      qemu-img: /usr/bin/qemu-img # qemu-img binary (image conversion) location
+      nginx: /usr/bin/nginx # nginx binary (HTTP server) location
+    execution-timeout: 600 # timeout for execution of external tools in seconds
   remote-mode: false # Remote mode starts HTTP server (NGINX) and serves images to backend via HTTP
   nginx:
     runtime-dir: /var/run/cloudkeeper/ # Runtime directory for NGINX

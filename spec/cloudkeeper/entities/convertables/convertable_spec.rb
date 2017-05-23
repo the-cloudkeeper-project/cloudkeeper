@@ -72,17 +72,11 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
 
   describe '.convert_output_formats' do
     it 'returns an array of supported output fortmats' do
-      expect(described_class.send(:convert_output_formats)).to eq(%i[raw qcow2 vmdk vdi])
+      expect(convertable_instance_raw.convert_output_formats).to eq(%i[raw qcow2 vmdk vdi])
     end
   end
 
   describe '.convert' do
-    context 'with the same output format' do
-      it 'returns itself' do
-        expect(convertable_instance_raw.send(:convert, :raw)).to eq(convertable_instance_raw)
-      end
-    end
-
     context 'with different supported output format' do
       before do
         allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with(Cloudkeeper::Settings[:'qemu-img-binary'],
@@ -146,6 +140,12 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
         expect(image_file.format).to eq(:qcow2)
         expect(image_file.checksum).to eq(convertable_instance_qcow2.checksum)
         expect(image_file.original).to be_falsy
+      end
+    end
+
+    context 'with the same output format' do
+      it 'returns itself' do
+        expect(convertable_instance_raw.to_raw).to eq(convertable_instance_raw)
       end
     end
 

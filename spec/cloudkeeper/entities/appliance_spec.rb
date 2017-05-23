@@ -139,7 +139,7 @@ describe Cloudkeeper::Entities::Appliance do
 
     context 'with hash with missing optional values' do
       before do
-        hash[:'ad:core_recommended'] = nil
+        hash[:'hv:core_minimum'] = nil
         hash[:'hv:version'] = nil
       end
 

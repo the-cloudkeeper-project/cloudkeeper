@@ -54,8 +54,8 @@ module Cloudkeeper
                                     appliance_hash[:'dc:title'],
                                     appliance_hash[:'dc:description'],
                                     appliance_hash[:'ad:group'],
-                                    appliance_hash[:'ad:ram_recommended'],
-                                    appliance_hash[:'ad:core_recommended'],
+                                    appliance_hash[:'hv:ram_minimum'],
+                                    appliance_hash[:'hv:core_minimum'],
                                     appliance_hash[:'hv:version'],
                                     appliance_hash[:'sl:arch']
 

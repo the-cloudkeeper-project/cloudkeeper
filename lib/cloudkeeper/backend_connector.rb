@@ -20,22 +20,22 @@ module Cloudkeeper
     end
 
     def add_appliance(appliance)
-      logger.debug "'add_appliance' gRPC method call"
+      logger.debug "'add_appliance' gRPC method call (appliance.identifier: #{appliance.identifier})"
       manage_appliance appliance, :add_appliance
     end
 
     def update_appliance(appliance)
-      logger.debug "'update_appliance' gRPC method call"
+      logger.debug "'update_appliance' gRPC method call (appliance.identifier: #{appliance.identifier})"
       manage_appliance appliance, :update_appliance
     end
 
     def remove_appliance(appliance)
-      logger.debug "'remove_appliance' gRPC method call"
+      logger.debug "'remove_appliance' gRPC method call (appliance.identifier: #{appliance.identifier})"
       manage_appliance appliance, :remove_appliance
     end
 
     def remove_image_list(image_list_identifier)
-      logger.debug "'remove_image_list' gRPC method call"
+      logger.debug "'remove_image_list' gRPC method call (image_list_identifier: #{image_list_identifier})"
       handle_errors grpc_client.remove_image_list(
         CloudkeeperGrpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier),
         return_op: true

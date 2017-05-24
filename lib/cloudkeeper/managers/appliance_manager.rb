@@ -39,6 +39,7 @@ module Cloudkeeper
       def sync_new_image_lists(backend_image_lists)
         logger.debug 'Registering appliances from new image lists...'
         add_list = image_list_manager.image_lists.keys - backend_image_lists
+        logger.debug "Image lists to register: #{add_list.inspect}"
         add_list.each do |image_list_identifier|
           image_list_manager.image_lists[image_list_identifier].appliances.each_value { |appliance| add_appliance appliance }
         end
@@ -47,6 +48,7 @@ module Cloudkeeper
       def sync_old_image_lists(backend_image_lists)
         logger.debug 'Synchronizing registered appliances...'
         sync_list = image_list_manager.image_lists.keys & backend_image_lists
+        logger.debug "Image lists to synchronize: #{sync_list.inspect}"
         sync_list.each { |image_list_identifier| sync_image_list image_list_identifier }
       end
 
@@ -63,18 +65,21 @@ module Cloudkeeper
       def remove_appliances(backend_appliances, image_list_appliances)
         logger.debug 'Removing previously registered appliances...'
         remove_list = backend_appliances.keys - image_list_appliances.keys
+        logger.debug "Appliances to remove: #{remove_list.inspect}"
         remove_list.each { |appliance_identifier| backend_connector.remove_appliance backend_appliances[appliance_identifier] }
       end
 
       def add_appliances(backend_appliances, image_list_appliances)
         logger.debug 'Registering new appliances...'
         add_list = image_list_appliances.keys - backend_appliances.keys
+        logger.debug "Appliances to register: #{add_list.inspect}"
         add_list.each { |appliance_identifier| add_appliance image_list_appliances[appliance_identifier] }
       end
 
       def update_appliances(backend_appliances, image_list_appliances)
         logger.debug 'Updating appliances...'
         update_list = backend_appliances.keys & image_list_appliances.keys
+        logger.debug "Appliances for potential update: #{update_list.inspect}"
         update_list.each do |appliance_identifier|
           image_list_appliance = image_list_appliances[appliance_identifier]
           backend_appliance = backend_appliances[appliance_identifier]

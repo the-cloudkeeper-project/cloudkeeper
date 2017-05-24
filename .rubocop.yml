@@ -28,6 +28,11 @@ Metrics/ClassLength:
   Exclude:
     - 'lib/cloudkeeper/cli.rb'
 
+Metrics/ClassLength:
+  Max: 125
+  Include:
+    - 'lib/cloudkeeper/managers/appliance_manager.rb'
+
 RSpec/MultipleExpectations:
   Enabled: false
 

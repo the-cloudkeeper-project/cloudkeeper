@@ -31,6 +31,7 @@ module Cloudkeeper
 
     def remove_appliance(appliance)
       logger.debug "'remove_appliance' gRPC method call (appliance.identifier: #{appliance.identifier})"
+      appliance.image = nil
       manage_appliance appliance, :remove_appliance
     end
 

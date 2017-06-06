@@ -1,17 +1,18 @@
 module Cloudkeeper
   module Entities
     class ImageFile
-      attr_accessor :file, :checksum, :format, :original
+      attr_accessor :file, :format, :checksum, :size, :original
 
       include Cloudkeeper::Entities::Convertables::Convertable
 
-      def initialize(file, format, checksum, original = false)
-        raise Cloudkeeper::Errors::ArgumentError, 'file, format and checksum cannot be nil nor empty'\
-          if file.blank? || format.blank? || checksum.blank?
+      def initialize(file, format, checksum, size, original = false)
+        raise Cloudkeeper::Errors::ArgumentError, 'file, format, checksum and size cannot be nil nor empty'\
+          if file.blank? || format.blank? || checksum.blank? || size.blank?
 
         @file = file
-        @checksum = checksum
         @format = format
+        @checksum = checksum
+        @size = size
         @original = original
 
         format_const_symbol = format.to_s.classify.to_sym

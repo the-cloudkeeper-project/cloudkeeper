@@ -239,7 +239,7 @@ describe Cloudkeeper::BackendConnector do
   end
 
   describe '.convert_image' do
-    let(:selected_image_file) { Struct.new(:format, :checksum, :file).new(:qcow2, '1a2b3c4d5e', '/some/image/file.ext') }
+    let(:selected_image_file) { Struct.new(:format, :checksum, :file, :size).new(:qcow2, '1a2b3c4d5e', '/some/image/file.ext', 154) }
     let(:image_files) do
       [
         selected_image_file,
@@ -258,7 +258,7 @@ describe Cloudkeeper::BackendConnector do
       expect(image_proto.mode).to eq(:LOCAL)
       expect(image_proto.location).to eq('/some/image/file.ext')
       expect(image_proto.checksum).to eq('1a2b3c4d5e')
-      expect(image_proto.size).to eq(10)
+      expect(image_proto.size).to eq(154)
       expect(image_proto.uri).to eq('http://some.uri.net')
     end
   end

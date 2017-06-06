@@ -54,7 +54,8 @@ module Cloudkeeper
           filename = generate_filename(uri)
           retrieve_image(uri, filename)
 
-          Cloudkeeper::Entities::ImageFile.new filename, format(filename), Cloudkeeper::Utils::Checksum.compute(filename), true
+          Cloudkeeper::Entities::ImageFile.new filename, format(filename), Cloudkeeper::Utils::Checksum.compute(filename),
+                                               File.size(filename), true
         rescue Cloudkeeper::Errors::InvalidURLError, Cloudkeeper::Errors::Image::Format::RecognitionError,
                Cloudkeeper::Errors::ArgumentError, Cloudkeeper::Errors::NetworkConnectionError, ::IOError => ex
           raise Cloudkeeper::Errors::Image::DownloadError, ex

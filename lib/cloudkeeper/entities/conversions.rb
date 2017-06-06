@@ -7,7 +7,7 @@ module Cloudkeeper
         image_file = acceptable_image_file image
 
         CloudkeeperGrpc::Image.new mode: :LOCAL, location: image_file.file, format: image_file.format.upcase,
-                                   checksum: image_file.checksum, size: image.size.to_i, uri: image.uri
+                                   checksum: image_file.checksum, size: image_file.size.to_i, uri: image.uri
       end
 
       def convert_appliance(appliance, image_proto)

@@ -62,7 +62,7 @@ module Cloudkeeper
 
         def image_file(converted_file, output_format)
           Cloudkeeper::Entities::ImageFile.new converted_file, output_format.to_sym,
-                                               Cloudkeeper::Utils::Checksum.compute(converted_file), false
+                                               Cloudkeeper::Utils::Checksum.compute(converted_file), File.size(converted_file)
         end
 
         def delete_if_exists(file)

@@ -6,7 +6,7 @@ module Cloudkeeper
       include Cloudkeeper::Entities::Convertables::Convertable
 
       def initialize(file, format, checksum, size, original = false)
-        raise Cloudkeeper::Errors::ArgumentError, 'file, format and checksum cannot be nil nor empty'\
+        raise Cloudkeeper::Errors::ArgumentError, 'file, format, checksum and size cannot be nil nor empty'\
           if file.blank? || format.blank? || checksum.blank? || size.blank?
 
         @file = file

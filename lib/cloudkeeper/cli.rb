@@ -131,6 +131,9 @@ module Cloudkeeper
       end
     rescue Cloudkeeper::Errors::InvalidConfigurationError => ex
       abort ex.message
+    rescue => ex
+      logger.error "Unexpected error: #{ex.message}"
+      raise ex
     end
 
     desc 'version', 'Prints cloudkeeper version'

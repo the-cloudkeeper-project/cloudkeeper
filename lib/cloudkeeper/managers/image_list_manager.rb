@@ -33,7 +33,7 @@ module Cloudkeeper
             image_lists[image_list.identifier] = image_list
           rescue Cloudkeeper::Errors::ImageList::DownloadError, Cloudkeeper::Errors::ImageList::VerificationError,
                  Cloudkeeper::Errors::Parsing::ParsingError => ex
-            logger.warn "Image list #{url} couldn't be donwloaded\n#{ex.message}"
+            logger.warn "Image list #{url} couldn't be downloaded\n#{ex.message}"
             next
           end
         end

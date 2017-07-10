@@ -62,8 +62,7 @@ module Cloudkeeper
         end
 
         def retrieve_image(uri, filename)
-          use_ssl = uri.scheme == 'https'
-          Net::HTTP.start(uri.host, uri.port, use_ssl: use_ssl) do |http|
+          Net::HTTP.start(uri.host, uri.port, connection_options(uri)) do |http|
             request = Net::HTTP::Get.new(uri)
 
             http.request(request) do |response|
@@ -77,8 +76,15 @@ module Cloudkeeper
             end
           end
         rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, Errno::ECONNREFUSED, Net::HTTPBadResponse,
-               Net::HTTPHeaderSyntaxError, EOFError, Net::HTTPServerException, Net::HTTPRetriableError => ex
+               Net::HTTPHeaderSyntaxError, EOFError, Net::HTTPServerException, Net::HTTPRetriableError,
+               OpenSSL::SSL::SSLError => ex
           raise Cloudkeeper::Errors::NetworkConnectionError, ex
+        end
+
+        def connection_options(uri)
+          use_ssl = uri.scheme == 'https'
+          ca_path = Cloudkeeper::Settings[:'ca-dir'] if Cloudkeeper::Settings[:'ca-dir']
+          { use_ssl: use_ssl, ca_path: ca_path }
         end
 
         def generate_filename(uri)

@@ -55,12 +55,14 @@ module Cloudkeeper
         raise Cloudkeeper::Errors::ImageList::RetrievalError,
               "couldn't download image list from url #{url.inspect}\n#{response.to_hash.inspect}"
       rescue Cloudkeeper::Errors::ImageList::RetrievalError, Cloudkeeper::Errors::InvalidURLError, ::IOError,
-             ::Faraday::ConnectionFailed => ex
+             ::Faraday::ConnectionFailed, ::Faraday::SSLError => ex
         raise Cloudkeeper::Errors::ImageList::DownloadError, ex
       end
 
       def make_request(uri)
-        conn = Faraday.new url: uri
+        ssl = {}
+        ssl = { ca_path: Cloudkeeper::Settings[:'ca-dir'], cert_store: OpenSSL::X509::Store.new } if Cloudkeeper::Settings[:'ca-dir']
+        conn = Faraday.new url: uri, ssl: ssl
         conn.get
       end
 

@@ -6,22 +6,14 @@ describe Cloudkeeper::CommandExecutioner do
   let(:command) { instance_spy(Mixlib::ShellOut) }
 
   before do
-    allow(command).to receive(:error?) { false }
-    allow(command).to receive(:stdout) { 'output' }
+    allow(command).to receive(:error?).and_return(false)
+    allow(command).to receive(:stdout).and_return('output')
     Cloudkeeper::Settings[:'external-tools-execution-timeout'] = 123
-  end
-
-  after do
-    expect(command).to have_received(:run_command)
   end
 
   describe '#execute' do
     before do
       allow(Mixlib::ShellOut).to receive(:new).with('arg1', 'arg2', 'arg3', timeout: 123) { command }
-    end
-
-    after do
-      expect(Mixlib::ShellOut).to have_received(:new).with('arg1', 'arg2', 'arg3', timeout: 123) { command }
     end
 
     context 'normal run' do
@@ -32,7 +24,7 @@ describe Cloudkeeper::CommandExecutioner do
 
     context 'with error' do
       before do
-        allow(command).to receive(:error?) { true }
+        allow(command).to receive(:error?).and_return(true)
       end
 
       it 'executes command and raises CommandExecutionError exception' do
@@ -46,11 +38,7 @@ describe Cloudkeeper::CommandExecutioner do
 
     before do
       allow(Mixlib::ShellOut).to receive(:new).with('tar', '-t', '-f', archive, timeout: 123) { command }
-      allow(command).to receive(:stdout) { "image.ovf\nimage.vmdk\nimage.mf\n" }
-    end
-
-    after do
-      expect(Mixlib::ShellOut).to have_received(:new).with('tar', '-t', '-f', archive, timeout: 123) { command }
+      allow(command).to receive(:stdout).and_return("image.ovf\nimage.vmdk\nimage.mf\n")
     end
 
     it 'calls the right command to list content of the archive' do

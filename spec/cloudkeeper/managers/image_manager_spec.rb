@@ -159,10 +159,6 @@ describe Cloudkeeper::Managers::ImageManager do
       allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with('file', '-b', file) { output }
     end
 
-    after do
-      expect(Cloudkeeper::CommandExecutioner).to have_received(:execute).with('file', '-b', file) { output }
-    end
-
     it 'returns file description' do
       expect(described_class.file_description(file)).to eq(output)
     end
@@ -250,7 +246,7 @@ describe Cloudkeeper::Managers::ImageManager do
 
     context 'with valid url' do
       before do
-        allow(described_class).to receive(:format) { :qcow2 }
+        allow(described_class).to receive(:format).and_return(:qcow2)
       end
 
       it 'returns populated image file instance' do

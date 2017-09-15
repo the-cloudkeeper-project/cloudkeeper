@@ -6,7 +6,7 @@ describe Cloudkeeper::Utils::Hash do
 
     context 'with all values available and not blank' do
       it 'returns true' do
-        expect(described_class.values?(hash, 'name', 'gender', 'company')).to be_truthy
+        expect(described_class).to be_values(hash, 'name', 'gender', 'company')
       end
     end
 
@@ -14,7 +14,7 @@ describe Cloudkeeper::Utils::Hash do
       let(:hash) { load_file('hash02.json') }
 
       it 'returns false' do
-        expect(described_class.values?(hash, 'name', 'gender', 'company')).to be_falsy
+        expect(described_class).not_to be_values(hash, 'name', 'gender', 'company')
       end
     end
 
@@ -22,7 +22,7 @@ describe Cloudkeeper::Utils::Hash do
       let(:hash) { load_file('hash03.json') }
 
       it 'returns false' do
-        expect(described_class.values?(hash, 'name', 'picture', 'age')).to be_falsy
+        expect(described_class).not_to be_values(hash, 'name', 'picture', 'age')
       end
     end
   end

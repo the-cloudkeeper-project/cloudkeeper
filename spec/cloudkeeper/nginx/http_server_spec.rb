@@ -167,8 +167,6 @@ describe Cloudkeeper::Nginx::HttpServer do
     end
 
     after do
-      expect(Cloudkeeper::CommandExecutioner).to \
-        have_received(:execute).with('/path/to/nginx', '-c', kind_of(String), '-p', kind_of(String))
       http_server.auth_file.unlink
       http_server.conf_file.unlink
     end
@@ -196,11 +194,6 @@ describe Cloudkeeper::Nginx::HttpServer do
         receive(:execute).with('/path/to/nginx', '-s', 'stop', '-c', kind_of(String), '-p', kind_of(String))
       allow(auth_file).to receive(:unlink)
       allow(conf_file).to receive(:unlink)
-    end
-
-    after do
-      expect(Cloudkeeper::CommandExecutioner).to \
-        have_received(:execute).with('/path/to/nginx', '-s', 'stop', '-c', kind_of(String), '-p', kind_of(String))
     end
 
     it 'stops NGINX server and removes temporary files and access data' do

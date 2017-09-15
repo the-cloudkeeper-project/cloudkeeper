@@ -54,17 +54,6 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
                                                                        convertable_instance_qcow2.file)
     end
 
-    after do
-      expect(Cloudkeeper::CommandExecutioner).to have_received(:execute).with(Cloudkeeper::Settings[:'qemu-img-binary'],
-                                                                              'convert',
-                                                                              '-f',
-                                                                              'raw',
-                                                                              '-O',
-                                                                              'qcow2',
-                                                                              convertable_instance_raw.file,
-                                                                              convertable_instance_qcow2.file)
-    end
-
     it 'calls qemu-img binary with specified options' do
       expect { convertable_instance_raw.send(:run_convert_command, :qcow2, convertable_instance_qcow2.file) }.not_to raise_error
     end
@@ -89,17 +78,6 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
                                                                          convertable_instance_qcow2.file)
       end
 
-      after do
-        expect(Cloudkeeper::CommandExecutioner).to have_received(:execute).with(Cloudkeeper::Settings[:'qemu-img-binary'],
-                                                                                'convert',
-                                                                                '-f',
-                                                                                'raw',
-                                                                                '-O',
-                                                                                'qcow2',
-                                                                                convertable_instance_raw.file,
-                                                                                convertable_instance_qcow2.file)
-      end
-
       it 'converts image to specified format and returns new instance of ImageFile' do
         image_file = convertable_instance_raw.send(:convert, :qcow2)
         expect(image_file.file).to eq(convertable_instance_qcow2.file)
@@ -121,17 +99,6 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
                                                                          'qcow2',
                                                                          convertable_instance_raw.file,
                                                                          convertable_instance_qcow2.file)
-      end
-
-      after do
-        expect(Cloudkeeper::CommandExecutioner).to have_received(:execute).with(Cloudkeeper::Settings[:'qemu-img-binary'],
-                                                                                'convert',
-                                                                                '-f',
-                                                                                'raw',
-                                                                                '-O',
-                                                                                'qcow2',
-                                                                                convertable_instance_raw.file,
-                                                                                convertable_instance_qcow2.file)
       end
 
       it 'calls convert method' do

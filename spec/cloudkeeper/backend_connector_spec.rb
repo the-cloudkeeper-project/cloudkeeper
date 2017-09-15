@@ -42,15 +42,16 @@ describe Cloudkeeper::BackendConnector do
       allow(backend_connector.grpc_client).to receive(:pre_action) { operation }
     end
 
-    after do
-      expect(backend_connector.grpc_client).to have_received(:pre_action) { operation }
-    end
-
     context 'with successfull run' do
       let(:operation) { operation_success }
 
       it "doesn't raise any errors" do
         expect { backend_connector.pre_action }.not_to raise_error
+      end
+
+      it 'calls method on gRPC client instance' do
+        backend_connector.pre_action
+        expect(backend_connector.grpc_client).to have_received(:pre_action) { operation }
       end
     end
 
@@ -68,15 +69,16 @@ describe Cloudkeeper::BackendConnector do
       allow(backend_connector.grpc_client).to receive(:post_action) { operation }
     end
 
-    after do
-      expect(backend_connector.grpc_client).to have_received(:post_action) { operation }
-    end
-
     context 'with successfull run' do
       let(:operation) { operation_success }
 
       it "doesn't raise any errors" do
         expect { backend_connector.post_action }.not_to raise_error
+      end
+
+      it 'calls method on gRPC client instance' do
+        backend_connector.post_action
+        expect(backend_connector.grpc_client).to have_received(:post_action) { operation }
       end
     end
 
@@ -87,12 +89,9 @@ describe Cloudkeeper::BackendConnector do
         allow(backend_connector.logger).to receive(:error)
       end
 
-      after do
-        expect(backend_connector.logger).to have_received(:error)
-      end
-
       it 'logs an error' do
         backend_connector.post_action
+        expect(backend_connector.logger).to have_received(:error)
       end
     end
   end
@@ -108,18 +107,17 @@ describe Cloudkeeper::BackendConnector do
         { operation }
     end
 
-    after do
-      expect(CloudkeeperGrpc::ImageListIdentifier).to have_received(:new).with(image_list_identifier: image_list_identifier) \
-        { image_list_identifier_proto }
-      expect(backend_connector.grpc_client).to have_received(:remove_image_list).with(image_list_identifier_proto, return_op: true) \
-        { operation }
-    end
-
     context 'with successfull run' do
       let(:operation) { operation_success }
 
       it "doesn't raise any errors" do
         expect { backend_connector.remove_image_list(image_list_identifier) }.not_to raise_error
+      end
+
+      it 'calls method on gRPC client instance' do
+        backend_connector.remove_image_list(image_list_identifier)
+        expect(backend_connector.grpc_client).to have_received(:remove_image_list).with(image_list_identifier_proto, return_op: true) \
+          { operation }
       end
     end
 
@@ -130,12 +128,9 @@ describe Cloudkeeper::BackendConnector do
         allow(backend_connector.logger).to receive(:error)
       end
 
-      after do
-        expect(backend_connector.logger).to have_received(:error)
-      end
-
       it 'logs an error' do
         backend_connector.remove_image_list(image_list_identifier)
+        expect(backend_connector.logger).to have_received(:error)
       end
     end
   end
@@ -155,12 +150,13 @@ describe Cloudkeeper::BackendConnector do
       allow(backend_connector.grpc_client).to receive(:image_lists) { operation }
     end
 
-    after do
-      expect(backend_connector.grpc_client).to have_received(:image_lists) { operation }
-    end
-
     it 'returns a list of image list identifiers' do
       expect(backend_connector.image_lists).to eq(image_list_identifiers)
+    end
+
+    it 'calls method on gRPC client instance' do
+      backend_connector.image_lists
+      expect(backend_connector.grpc_client).to have_received(:image_lists) { operation }
     end
   end
 
@@ -183,12 +179,9 @@ describe Cloudkeeper::BackendConnector do
           allow(backend_connector.logger).to receive(:error)
         end
 
-        after do
-          expect(backend_connector.logger).to have_received(:error)
-        end
-
         it 'logs an error' do
           backend_connector.send(:check_status, operation_error.trailing_metadata)
+          expect(backend_connector.logger).to have_received(:error)
         end
       end
     end
@@ -369,17 +362,24 @@ describe Cloudkeeper::BackendConnector do
         allow(backend_connector.grpc_client).to receive(call) { operation }
       end
 
-      after do
-        expect(backend_connector.nginx).not_to have_received(:start)
-        expect(backend_connector.nginx).not_to have_received(:stop)
-        expect(backend_connector.grpc_client).to have_received(call) { operation }
-      end
-
       context 'with successfull run' do
         let(:operation) { operation_success }
 
-        it 'converts appliance and calls specified gRPC method' do
+        it 'converts appliance' do
           expect { backend_connector.send(:manage_appliance, appliance, call) }.not_to raise_error
+        end
+
+        it 'calls method on gRPC client instance' do
+          backend_connector.send(:manage_appliance, appliance, call)
+          expect(backend_connector.grpc_client).to have_received(call) { operation }
+        end
+
+        it 'starts nginx server' do
+          expect(backend_connector.nginx).not_to have_received(:start)
+        end
+
+        it 'stops nginx server' do
+          expect(backend_connector.nginx).not_to have_received(:stop)
         end
       end
 
@@ -390,12 +390,9 @@ describe Cloudkeeper::BackendConnector do
           allow(backend_connector.logger).to receive(:error)
         end
 
-        after do
-          expect(backend_connector.logger).to have_received(:error)
-        end
-
         it 'logs an error' do
           backend_connector.send(:manage_appliance, appliance, call)
+          expect(backend_connector.logger).to have_received(:error)
         end
       end
     end
@@ -415,7 +412,7 @@ describe Cloudkeeper::BackendConnector do
         appliance.image = image
         allow(backend_connector.nginx).to receive(:start)
         allow(backend_connector.nginx).to receive(:stop)
-        allow(backend_connector.nginx).to receive(:access_data) { { url: '', username: '', password: '' } }
+        allow(backend_connector.nginx).to receive(:access_data).and_return(url: '', username: '', password: '')
       end
 
       context 'with successfull run' do
@@ -425,15 +422,21 @@ describe Cloudkeeper::BackendConnector do
           allow(backend_connector.grpc_client).to receive(call) { operation }
         end
 
-        after do
-          expect(backend_connector.grpc_client).to have_received(call) { operation }
-          expect(backend_connector.nginx).to have_received(:stop)
-          expect(backend_connector.nginx).to have_received(:start)
-          expect(backend_connector.nginx).to have_received(:access_data) { { url: '', username: '', password: '' } }
+        it 'converts appliance' do
+          expect { backend_connector.send(:manage_appliance, appliance, call) }.not_to raise_error
         end
 
-        it 'converts appliance, starts HTTP server calls specified gRPC method and stops HTTP server' do
-          expect { backend_connector.send(:manage_appliance, appliance, call) }.not_to raise_error
+        it 'calls method on gRPC client instance' do
+          backend_connector.send(:manage_appliance, appliance, call)
+          expect(backend_connector.grpc_client).to have_received(call) { operation }
+        end
+
+        it 'starts nginx server' do
+          expect(backend_connector.nginx).not_to have_received(:start)
+        end
+
+        it 'stops nginx server' do
+          expect(backend_connector.nginx).not_to have_received(:stop)
         end
       end
 
@@ -445,16 +448,22 @@ describe Cloudkeeper::BackendConnector do
           allow(backend_connector.logger).to receive(:error)
         end
 
-        after do
-          expect(backend_connector.grpc_client).to have_received(call) { operation }
-          expect(backend_connector.logger).to have_received(:error)
-          expect(backend_connector.nginx).to have_received(:stop)
-          expect(backend_connector.nginx).to have_received(:start)
-          expect(backend_connector.nginx).to have_received(:access_data) { { url: '', username: '', password: '' } }
-        end
-
         it 'logs an error' do
           backend_connector.send(:manage_appliance, appliance, call)
+          expect(backend_connector.logger).to have_received(:error)
+        end
+
+        it 'calls method on gRPC client instance' do
+          backend_connector.send(:manage_appliance, appliance, call)
+          expect(backend_connector.grpc_client).to have_received(call) { operation }
+        end
+
+        it 'starts nginx server' do
+          expect(backend_connector.nginx).not_to have_received(:start)
+        end
+
+        it 'stops nginx server' do
+          expect(backend_connector.nginx).not_to have_received(:stop)
         end
       end
 
@@ -486,21 +495,28 @@ describe Cloudkeeper::BackendConnector do
         Cloudkeeper::Settings[:'remote-mode'] = true
         allow(backend_connector.nginx).to receive(:start)
         allow(backend_connector.nginx).to receive(:stop)
-        allow(backend_connector.nginx).to receive(:access_data) { { url: '', username: '', password: '' } }
+        allow(backend_connector.nginx).to receive(:access_data).and_return(url: '', username: '', password: '')
         allow(backend_connector.grpc_client).to receive(call) { operation }
-      end
-
-      after do
-        expect(backend_connector.nginx).not_to have_received(:start)
-        expect(backend_connector.nginx).not_to have_received(:stop)
-        expect(backend_connector.grpc_client).to have_received(call) { operation }
       end
 
       context 'with successfull run' do
         let(:operation) { operation_success }
 
-        it 'converts appliance and calls specified gRPC method' do
+        it 'converts appliance' do
           expect { backend_connector.send(:manage_appliance, appliance, call) }.not_to raise_error
+        end
+
+        it 'calls method on gRPC client instance' do
+          backend_connector.send(:manage_appliance, appliance, call)
+          expect(backend_connector.grpc_client).to have_received(call) { operation }
+        end
+
+        it 'starts nginx server' do
+          expect(backend_connector.nginx).not_to have_received(:start)
+        end
+
+        it 'stops nginx server' do
+          expect(backend_connector.nginx).not_to have_received(:stop)
         end
       end
 
@@ -511,12 +527,9 @@ describe Cloudkeeper::BackendConnector do
           allow(backend_connector.logger).to receive(:error)
         end
 
-        after do
-          expect(backend_connector.logger).to have_received(:error)
-        end
-
         it 'raises BackendError exception' do
           backend_connector.send(:manage_appliance, appliance, call)
+          expect(backend_connector.logger).to have_received(:error)
         end
       end
     end
@@ -604,10 +617,6 @@ describe Cloudkeeper::BackendConnector do
       allow(backend_connector.grpc_client).to receive(:appliances) { operation }
     end
 
-    after do
-      expect(backend_connector.grpc_client).to have_received(:appliances) { operation }
-    end
-
     it 'returns list of appliances for specified image list identifier' do
       appliances = backend_connector.appliances(image_list_identifier)
 
@@ -661,6 +670,11 @@ describe Cloudkeeper::BackendConnector do
       expect(appliance.expiration_date.to_date).to eq(date.to_date)
       expect(appliance.image_list_identifier).to eq('id12345')
       expect(appliance.image).to eq(nil)
+    end
+
+    it 'calls method on gRPC client instance' do
+      backend_connector.appliances(image_list_identifier)
+      expect(backend_connector.grpc_client).to have_received(:appliances) { operation }
     end
   end
 

@@ -3,7 +3,7 @@ module Cloudkeeper
     class ApplianceManager
       attr_reader :backend_connector, :image_list_manager, :acceptable_formats
 
-      IMAGE_UPDATE_ATTRIBUTES = ['hv:uri', 'sl:checksum:sha512', 'hv:size'].freeze
+      IMAGE_UPDATE_ATTRIBUTES = ['hv:version', 'sl:checksum:sha512', 'hv:size'].freeze
 
       def initialize
         @backend_connector = Cloudkeeper::BackendConnector.new

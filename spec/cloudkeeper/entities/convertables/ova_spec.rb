@@ -84,10 +84,6 @@ describe Cloudkeeper::Entities::Convertables::Ova do
       allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with('tar', '-t', '-f', convertable_instance_ova.file) { output }
     end
 
-    after do
-      expect(Cloudkeeper::CommandExecutioner).to have_received(:execute).with('tar', '-t', '-f', convertable_instance_ova.file)
-    end
-
     it 'returns archive files in an array' do
       expect(convertable_instance_ova.send(:archive_files)).to \
         eq(['image.ovf', File.basename(convertable_instance_vmdk.file), 'image.mf'])
@@ -168,7 +164,7 @@ describe Cloudkeeper::Entities::Convertables::Ova do
                                                                        'qcow2',
                                                                        convertable_instance_vmdk.file,
                                                                        convertable_instance_qcow2.file)
-      allow(File).to receive(:delete) { nil }
+      allow(File).to receive(:delete).and_return(nil)
     end
 
     it 'converts image to specified format and returns new instance of ImageFile' do

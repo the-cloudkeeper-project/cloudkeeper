@@ -40,7 +40,7 @@ describe Cloudkeeper::Entities::ImageList do
       let(:appliance) { instance_double Cloudkeeper::Entities::Appliance }
 
       before do
-        allow(appliance).to receive(:identifier) { 'id123' }
+        allow(appliance).to receive(:identifier).and_return('id123')
       end
 
       it 'adds appliance to image list' do
@@ -270,13 +270,13 @@ describe Cloudkeeper::Entities::ImageList do
       end
 
       it 'returns true' do
-        expect(image_list.expired?).to be_truthy
+        expect(image_list).to be_expired
       end
     end
 
     context 'with non-expired image list' do
       it 'returns false' do
-        expect(image_list.expired?).to be_falsy
+        expect(image_list).not_to be_expired
       end
     end
   end

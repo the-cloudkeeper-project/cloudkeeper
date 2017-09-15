@@ -11,7 +11,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
       let(:output) { "image.ovf\nimage.vmdk\n" }
 
       it 'returns true' do
-        expect(ova_class.ova?(file)).to be_truthy
+        expect(ova_class).to be_ova(file)
       end
     end
 
@@ -20,7 +20,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
       let(:output) { "dummy-file\nimage.ovf\n" }
 
       it 'returns false' do
-        expect(ova_class.ova?(file)).to be_falsy
+        expect(ova_class).not_to be_ova(file)
       end
     end
 
@@ -29,7 +29,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
       let(:output) { "dummy-file\nimage.vmdk\n" }
 
       it 'returns false' do
-        expect(ova_class.ova?(file)).to be_falsy
+        expect(ova_class).not_to be_ova(file)
       end
     end
 
@@ -38,7 +38,7 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
       let(:output) { "dummy-file\n" }
 
       it 'returns false' do
-        expect(ova_class.ova?(file)).to be_falsy
+        expect(ova_class).not_to be_ova(file)
       end
     end
 

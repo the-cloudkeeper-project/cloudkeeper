@@ -93,7 +93,7 @@ module Cloudkeeper
       end
 
       def prepare_configuration_file_content(configuration)
-        conf_template = Tilt::ERBTemplate.new(File.join(File.expand_path(File.dirname(__FILE__)), 'templates', 'nginx.conf.erb'))
+        conf_template = Tilt::ERBTemplate.new(File.join(__dir__, 'templates', 'nginx.conf.erb'))
         conf_template.render(Object.new, configuration)
       end
 

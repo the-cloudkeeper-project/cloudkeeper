@@ -35,10 +35,6 @@ describe Cloudkeeper::Managers::ImageListManager do
         Cloudkeeper::Settings[:'ca-dir'] = '/some/ca/directory'
       end
 
-      after do
-        expect(OpenSSL::X509::Store).to have_received(:new) { openssl_dummy_store }
-      end
-
       it 'prepares openssl_store attribute as OpenSSL::X509::Store instance with custom CA directory' do
         described_class.new
 
@@ -55,13 +51,9 @@ describe Cloudkeeper::Managers::ImageListManager do
         Cloudkeeper::Settings[:'ca-dir'] = nil
       end
 
-      after do
-        expect(OpenSSL::X509::Store).to have_received(:new) { openssl_dummy_store }
-        expect(openssl_dummy_store).not_to have_received(:add_path)
-      end
-
       it 'prepares openssl_store attribute as OpenSSL::X509::Store instance without custom CA directory' do
         described_class.new
+        expect(openssl_dummy_store).not_to have_received(:add_path)
       end
     end
   end
@@ -218,7 +210,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         VCR.use_cassette('imagelist-basic-auth') do
           filename = ilm.send(:download_image_list, 'http://test:test@localhost:9292/imagelist-basic-auth.plain', tmpdir)
 
-          expect(File.exist?(filename)).to be_truthy
+          expect(File).to be_exist(filename)
           expect(filename).to eq(File.join(tmpdir.to_s, 'localhostimagelist-basic-auth.plain'))
         end
       end
@@ -229,7 +221,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         VCR.use_cassette('imagelist') do
           filename = ilm.send(:download_image_list, 'http://localhost:9292/imagelist.plain', tmpdir)
 
-          expect(File.exist?(filename)).to be_truthy
+          expect(File).to be_exist(filename)
           expect(filename).to eq(File.join(tmpdir.to_s, 'localhostimagelist.plain'))
         end
       end

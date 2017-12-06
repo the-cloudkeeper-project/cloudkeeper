@@ -441,145 +441,291 @@ describe Cloudkeeper::Managers::ImageListManager do
 
     before do
       Cloudkeeper::Settings[:'ca-dir'] = File.join(MOCK_DIR, 'ca')
-      Cloudkeeper::Settings[:'image-lists'] = [
-        'http://localhost:9292/imagelist01.signed',
-        'http://localhost:9292/imagelist02.signed',
-        'http://localhost:9292/imagelist03.signed'
-      ]
     end
 
-    it 'downloads, parse and populates image lists from given urls' do
-      VCR.use_cassette('download-image-lists') do
-        ilm.download_image_lists
+    context 'when reading image lists from option' do
+      before do
+        Cloudkeeper::Settings[:'image-lists'] = [
+          'http://localhost:9292/imagelist01.signed',
+          'http://localhost:9292/imagelist02.signed',
+          'http://localhost:9292/imagelist03.signed'
+        ]
+      end
 
-        il = ilm.image_lists['76fdee70-8119-5d33-cccc-3c57e1c60df1']
+      it 'downloads, parse and populates image lists from given urls' do
+        VCR.use_cassette('download-image-lists') do
+          ilm.download_image_lists
 
-        expect(il.identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
-        expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
-        expect(il.description).to eq('This is a VO-wide image list for some2.vo.net VO.')
-        expect(il.source).to eq('https://some.unknown.source/')
-        expect(il.title).to eq('Dummy image list number 2.')
+          il = ilm.image_lists['76fdee70-8119-5d33-cccc-3c57e1c60df1']
 
-        appliance = il.appliances[il.appliances.keys.first]
+          expect(il.identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
+          expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
+          expect(il.description).to eq('This is a VO-wide image list for some2.vo.net VO.')
+          expect(il.source).to eq('https://some.unknown.source/')
+          expect(il.title).to eq('Dummy image list number 2.')
 
-        expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-cccc-a750174a186b')
-        expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
-      					    '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources')
-        expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-cccc-a750174a186b:484/')
-        expect(appliance.title).to eq('Image for CernVM [Scientific Linux/6.0/KVM]')
-        expect(appliance.group).to eq('General group')
-        expect(appliance.ram).to eq('512')
-        expect(appliance.core).to eq('1')
-        expect(appliance.version).to eq('3.3.0-1')
-        expect(appliance.architecture).to eq('x86_64')
-        expect(appliance.operating_system).to eq('Linux Scientific Linux 6.0')
-        expect(appliance.vo).to eq('some2.vo.net')
-        expect(appliance.expiration_date).to eq(expiration)
-        expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
-        expect(appliance.attributes).to eq(attributes1)
+          appliance = il.appliances[il.appliances.keys.first]
 
-        appliance = il.appliances[il.appliances.keys.last]
+          expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-cccc-a750174a186b')
+          expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
+          '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources')
+          expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-cccc-a750174a186b:484/')
+          expect(appliance.title).to eq('Image for CernVM [Scientific Linux/6.0/KVM]')
+          expect(appliance.group).to eq('General group')
+          expect(appliance.ram).to eq('512')
+          expect(appliance.core).to eq('1')
+          expect(appliance.version).to eq('3.3.0-1')
+          expect(appliance.architecture).to eq('x86_64')
+          expect(appliance.operating_system).to eq('Linux Scientific Linux 6.0')
+          expect(appliance.vo).to eq('some2.vo.net')
+          expect(appliance.expiration_date).to eq(expiration)
+          expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
+          expect(appliance.attributes).to eq(attributes1)
 
-        expect(appliance.identifier).to eq('662b0e71-3e21-dddd-b6a1-cc2f51319fa7')
-        expect(appliance.description).to be_empty
-        expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-dddd-b6a1-cc2f51319fa7:485/')
-        expect(appliance.title).to eq('Image for CentOS 6 minimal [CentOS/6.x/KVM]')
-        expect(appliance.group).to eq('General group')
-        expect(appliance.ram).to be_nil
-        expect(appliance.core).to be_nil
-        expect(appliance.version).to eq('20141029')
-        expect(appliance.architecture).to eq('x86_64')
-        expect(appliance.operating_system).to eq('Linux CentOS 6.6')
-        expect(appliance.vo).to eq('some2.vo.net')
-        expect(appliance.expiration_date).to eq(expiration)
-        expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
-        expect(appliance.attributes).to eq(attributes2)
+          appliance = il.appliances[il.appliances.keys.last]
 
-        il = ilm.image_lists['76fdee70-8119-5d33-gggg-3c57e1c60df1']
+          expect(appliance.identifier).to eq('662b0e71-3e21-dddd-b6a1-cc2f51319fa7')
+          expect(appliance.description).to be_empty
+          expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-dddd-b6a1-cc2f51319fa7:485/')
+          expect(appliance.title).to eq('Image for CentOS 6 minimal [CentOS/6.x/KVM]')
+          expect(appliance.group).to eq('General group')
+          expect(appliance.ram).to be_nil
+          expect(appliance.core).to be_nil
+          expect(appliance.version).to eq('20141029')
+          expect(appliance.architecture).to eq('x86_64')
+          expect(appliance.operating_system).to eq('Linux CentOS 6.6')
+          expect(appliance.vo).to eq('some2.vo.net')
+          expect(appliance.expiration_date).to eq(expiration)
+          expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
+          expect(appliance.attributes).to eq(attributes2)
 
-        expect(il.identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
-        expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
-        expect(il.description).to eq('This is a VO-wide image list for some4.vo.net VO.')
-        expect(il.source).to eq('https://some.unknown.source/')
-        expect(il.title).to eq('Dummy image list number 4.')
+          il = ilm.image_lists['76fdee70-8119-5d33-gggg-3c57e1c60df1']
 
-        appliance = il.appliances[il.appliances.keys.first]
+          expect(il.identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
+          expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
+          expect(il.description).to eq('This is a VO-wide image list for some4.vo.net VO.')
+          expect(il.source).to eq('https://some.unknown.source/')
+          expect(il.title).to eq('Dummy image list number 4.')
 
-        expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-gggg-a750174a186b')
-        expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
-      					    '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources')
-        expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-gggg-a750174a186b:484/')
-        expect(appliance.title).to eq('Image for CernVM [Scientific Linux/6.0/KVM]')
-        expect(appliance.group).to eq('General group')
-        expect(appliance.ram).to eq('512')
-        expect(appliance.core).to eq('1')
-        expect(appliance.version).to eq('3.3.0-1')
-        expect(appliance.architecture).to eq('x86_64')
-        expect(appliance.operating_system).to eq('Linux Scientific Linux 6.0')
-        expect(appliance.vo).to eq('some4.vo.net')
-        expect(appliance.expiration_date).to eq(expiration)
-        expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
-        expect(appliance.attributes).to eq(attributes3)
+          appliance = il.appliances[il.appliances.keys.first]
 
-        appliance = il.appliances[il.appliances.keys.last]
+          expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-gggg-a750174a186b')
+          expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
+          '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources')
+          expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-gggg-a750174a186b:484/')
+          expect(appliance.title).to eq('Image for CernVM [Scientific Linux/6.0/KVM]')
+          expect(appliance.group).to eq('General group')
+          expect(appliance.ram).to eq('512')
+          expect(appliance.core).to eq('1')
+          expect(appliance.version).to eq('3.3.0-1')
+          expect(appliance.architecture).to eq('x86_64')
+          expect(appliance.operating_system).to eq('Linux Scientific Linux 6.0')
+          expect(appliance.vo).to eq('some4.vo.net')
+          expect(appliance.expiration_date).to eq(expiration)
+          expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
+          expect(appliance.attributes).to eq(attributes3)
 
-        expect(appliance.identifier).to eq('662b0e71-3e21-hhhh-b6a1-cc2f51319fa7')
-        expect(appliance.description).to be_empty
-        expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-hhhh-b6a1-cc2f51319fa7:485/')
-        expect(appliance.title).to eq('Image for CentOS 6 minimal [CentOS/6.x/KVM]')
-        expect(appliance.group).to eq('General group')
-        expect(appliance.ram).to be_nil
-        expect(appliance.core).to be_nil
-        expect(appliance.version).to eq('20141029')
-        expect(appliance.architecture).to eq('x86_64')
-        expect(appliance.operating_system).to eq('Linux CentOS 6.6')
-        expect(appliance.vo).to eq('some4.vo.net')
-        expect(appliance.expiration_date).to eq(expiration)
-        expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
-        expect(appliance.attributes).to eq(attributes4)
+          appliance = il.appliances[il.appliances.keys.last]
 
-        il = ilm.image_lists['76fdee70-8119-5d33-eeee-3c57e1c60df1']
+          expect(appliance.identifier).to eq('662b0e71-3e21-hhhh-b6a1-cc2f51319fa7')
+          expect(appliance.description).to be_empty
+          expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-hhhh-b6a1-cc2f51319fa7:485/')
+          expect(appliance.title).to eq('Image for CentOS 6 minimal [CentOS/6.x/KVM]')
+          expect(appliance.group).to eq('General group')
+          expect(appliance.ram).to be_nil
+          expect(appliance.core).to be_nil
+          expect(appliance.version).to eq('20141029')
+          expect(appliance.architecture).to eq('x86_64')
+          expect(appliance.operating_system).to eq('Linux CentOS 6.6')
+          expect(appliance.vo).to eq('some4.vo.net')
+          expect(appliance.expiration_date).to eq(expiration)
+          expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
+          expect(appliance.attributes).to eq(attributes4)
 
-        expect(il.identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
-        expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
-        expect(il.description).to eq('This is a VO-wide image list for some3.vo.net VO.')
-        expect(il.source).to eq('https://some.unknown.source/')
-        expect(il.title).to eq('Dummy image list number 3.')
+          il = ilm.image_lists['76fdee70-8119-5d33-eeee-3c57e1c60df1']
 
-        appliance = il.appliances[il.appliances.keys.first]
+          expect(il.identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
+          expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
+          expect(il.description).to eq('This is a VO-wide image list for some3.vo.net VO.')
+          expect(il.source).to eq('https://some.unknown.source/')
+          expect(il.title).to eq('Dummy image list number 3.')
 
-        expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-eeee-a750174a186b')
-        expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
-      					    '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources')
-        expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-eeee-a750174a186b:484/')
-        expect(appliance.title).to eq('Image for CernVM [Scientific Linux/6.0/KVM]')
-        expect(appliance.group).to eq('General group')
-        expect(appliance.ram).to eq('512')
-        expect(appliance.core).to eq('1')
-        expect(appliance.version).to eq('3.3.0-1')
-        expect(appliance.architecture).to eq('x86_64')
-        expect(appliance.operating_system).to eq('Linux Scientific Linux 6.0')
-        expect(appliance.vo).to eq('some3.vo.net')
-        expect(appliance.expiration_date).to eq(expiration)
-        expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
-        expect(appliance.attributes).to eq(attributes5)
+          appliance = il.appliances[il.appliances.keys.first]
 
-        appliance = il.appliances[il.appliances.keys.last]
+          expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-eeee-a750174a186b')
+          expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
+          '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources')
+          expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-eeee-a750174a186b:484/')
+          expect(appliance.title).to eq('Image for CernVM [Scientific Linux/6.0/KVM]')
+          expect(appliance.group).to eq('General group')
+          expect(appliance.ram).to eq('512')
+          expect(appliance.core).to eq('1')
+          expect(appliance.version).to eq('3.3.0-1')
+          expect(appliance.architecture).to eq('x86_64')
+          expect(appliance.operating_system).to eq('Linux Scientific Linux 6.0')
+          expect(appliance.vo).to eq('some3.vo.net')
+          expect(appliance.expiration_date).to eq(expiration)
+          expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
+          expect(appliance.attributes).to eq(attributes5)
 
-        expect(appliance.identifier).to eq('662b0e71-3e21-ffff-b6a1-cc2f51319fa7')
-        expect(appliance.description).to be_empty
-        expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-ffff-b6a1-cc2f51319fa7:485/')
-        expect(appliance.title).to eq('Image for CentOS 6 minimal [CentOS/6.x/KVM]')
-        expect(appliance.group).to eq('General group')
-        expect(appliance.ram).to be_nil
-        expect(appliance.core).to be_nil
-        expect(appliance.version).to eq('20141029')
-        expect(appliance.architecture).to eq('x86_64')
-        expect(appliance.operating_system).to eq('Linux CentOS 6.6')
-        expect(appliance.vo).to eq('some3.vo.net')
-        expect(appliance.expiration_date).to eq(expiration)
-        expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
-        expect(appliance.attributes).to eq(attributes6)
+          appliance = il.appliances[il.appliances.keys.last]
+
+          expect(appliance.identifier).to eq('662b0e71-3e21-ffff-b6a1-cc2f51319fa7')
+          expect(appliance.description).to be_empty
+          expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-ffff-b6a1-cc2f51319fa7:485/')
+          expect(appliance.title).to eq('Image for CentOS 6 minimal [CentOS/6.x/KVM]')
+          expect(appliance.group).to eq('General group')
+          expect(appliance.ram).to be_nil
+          expect(appliance.core).to be_nil
+          expect(appliance.version).to eq('20141029')
+          expect(appliance.architecture).to eq('x86_64')
+          expect(appliance.operating_system).to eq('Linux CentOS 6.6')
+          expect(appliance.vo).to eq('some3.vo.net')
+          expect(appliance.expiration_date).to eq(expiration)
+          expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
+          expect(appliance.attributes).to eq(attributes6)
+        end
+      end
+    end
+
+    context 'when reading image lists from file' do
+      before do
+        Cloudkeeper::Settings[:'image-lists-file'] = File.join(MOCK_DIR, 'image-lists-file')
+      end
+
+      it 'downloads, parse and populates image lists from given urls' do
+        VCR.use_cassette('download-image-lists') do
+          ilm.download_image_lists
+
+          il = ilm.image_lists['76fdee70-8119-5d33-cccc-3c57e1c60df1']
+
+          expect(il.identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
+          expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
+          expect(il.description).to eq('This is a VO-wide image list for some2.vo.net VO.')
+          expect(il.source).to eq('https://some.unknown.source/')
+          expect(il.title).to eq('Dummy image list number 2.')
+
+          appliance = il.appliances[il.appliances.keys.first]
+
+          expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-cccc-a750174a186b')
+          expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
+          '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources')
+          expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-cccc-a750174a186b:484/')
+          expect(appliance.title).to eq('Image for CernVM [Scientific Linux/6.0/KVM]')
+          expect(appliance.group).to eq('General group')
+          expect(appliance.ram).to eq('512')
+          expect(appliance.core).to eq('1')
+          expect(appliance.version).to eq('3.3.0-1')
+          expect(appliance.architecture).to eq('x86_64')
+          expect(appliance.operating_system).to eq('Linux Scientific Linux 6.0')
+          expect(appliance.vo).to eq('some2.vo.net')
+          expect(appliance.expiration_date).to eq(expiration)
+          expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
+          expect(appliance.attributes).to eq(attributes1)
+
+          appliance = il.appliances[il.appliances.keys.last]
+
+          expect(appliance.identifier).to eq('662b0e71-3e21-dddd-b6a1-cc2f51319fa7')
+          expect(appliance.description).to be_empty
+          expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-dddd-b6a1-cc2f51319fa7:485/')
+          expect(appliance.title).to eq('Image for CentOS 6 minimal [CentOS/6.x/KVM]')
+          expect(appliance.group).to eq('General group')
+          expect(appliance.ram).to be_nil
+          expect(appliance.core).to be_nil
+          expect(appliance.version).to eq('20141029')
+          expect(appliance.architecture).to eq('x86_64')
+          expect(appliance.operating_system).to eq('Linux CentOS 6.6')
+          expect(appliance.vo).to eq('some2.vo.net')
+          expect(appliance.expiration_date).to eq(expiration)
+          expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
+          expect(appliance.attributes).to eq(attributes2)
+
+          il = ilm.image_lists['76fdee70-8119-5d33-gggg-3c57e1c60df1']
+
+          expect(il.identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
+          expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
+          expect(il.description).to eq('This is a VO-wide image list for some4.vo.net VO.')
+          expect(il.source).to eq('https://some.unknown.source/')
+          expect(il.title).to eq('Dummy image list number 4.')
+
+          appliance = il.appliances[il.appliances.keys.first]
+
+          expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-gggg-a750174a186b')
+          expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
+          '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources')
+          expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-gggg-a750174a186b:484/')
+          expect(appliance.title).to eq('Image for CernVM [Scientific Linux/6.0/KVM]')
+          expect(appliance.group).to eq('General group')
+          expect(appliance.ram).to eq('512')
+          expect(appliance.core).to eq('1')
+          expect(appliance.version).to eq('3.3.0-1')
+          expect(appliance.architecture).to eq('x86_64')
+          expect(appliance.operating_system).to eq('Linux Scientific Linux 6.0')
+          expect(appliance.vo).to eq('some4.vo.net')
+          expect(appliance.expiration_date).to eq(expiration)
+          expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
+          expect(appliance.attributes).to eq(attributes3)
+
+          appliance = il.appliances[il.appliances.keys.last]
+
+          expect(appliance.identifier).to eq('662b0e71-3e21-hhhh-b6a1-cc2f51319fa7')
+          expect(appliance.description).to be_empty
+          expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-hhhh-b6a1-cc2f51319fa7:485/')
+          expect(appliance.title).to eq('Image for CentOS 6 minimal [CentOS/6.x/KVM]')
+          expect(appliance.group).to eq('General group')
+          expect(appliance.ram).to be_nil
+          expect(appliance.core).to be_nil
+          expect(appliance.version).to eq('20141029')
+          expect(appliance.architecture).to eq('x86_64')
+          expect(appliance.operating_system).to eq('Linux CentOS 6.6')
+          expect(appliance.vo).to eq('some4.vo.net')
+          expect(appliance.expiration_date).to eq(expiration)
+          expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
+          expect(appliance.attributes).to eq(attributes4)
+
+          il = ilm.image_lists['76fdee70-8119-5d33-eeee-3c57e1c60df1']
+
+          expect(il.identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
+          expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
+          expect(il.description).to eq('This is a VO-wide image list for some3.vo.net VO.')
+          expect(il.source).to eq('https://some.unknown.source/')
+          expect(il.title).to eq('Dummy image list number 3.')
+
+          appliance = il.appliances[il.appliances.keys.first]
+
+          expect(appliance.identifier).to eq('c0482bc2-bf41-5d49-eeee-a750174a186b')
+          expect(appliance.description).to eq('This version of CERNVM has been modified - default OS extended to 40GB of disk '\
+          '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources')
+          expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-eeee-a750174a186b:484/')
+          expect(appliance.title).to eq('Image for CernVM [Scientific Linux/6.0/KVM]')
+          expect(appliance.group).to eq('General group')
+          expect(appliance.ram).to eq('512')
+          expect(appliance.core).to eq('1')
+          expect(appliance.version).to eq('3.3.0-1')
+          expect(appliance.architecture).to eq('x86_64')
+          expect(appliance.operating_system).to eq('Linux Scientific Linux 6.0')
+          expect(appliance.vo).to eq('some3.vo.net')
+          expect(appliance.expiration_date).to eq(expiration)
+          expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
+          expect(appliance.attributes).to eq(attributes5)
+
+          appliance = il.appliances[il.appliances.keys.last]
+
+          expect(appliance.identifier).to eq('662b0e71-3e21-ffff-b6a1-cc2f51319fa7')
+          expect(appliance.description).to be_empty
+          expect(appliance.mpuri).to eq('https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-ffff-b6a1-cc2f51319fa7:485/')
+          expect(appliance.title).to eq('Image for CentOS 6 minimal [CentOS/6.x/KVM]')
+          expect(appliance.group).to eq('General group')
+          expect(appliance.ram).to be_nil
+          expect(appliance.core).to be_nil
+          expect(appliance.version).to eq('20141029')
+          expect(appliance.architecture).to eq('x86_64')
+          expect(appliance.operating_system).to eq('Linux CentOS 6.6')
+          expect(appliance.vo).to eq('some3.vo.net')
+          expect(appliance.expiration_date).to eq(expiration)
+          expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
+          expect(appliance.attributes).to eq(attributes6)
+        end
       end
     end
   end

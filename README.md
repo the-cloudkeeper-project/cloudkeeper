@@ -74,7 +74,8 @@ Usage:
   cloudkeeper sync --backend-endpoint=BACKEND-ENDPOINT --external-tools-execution-timeout=N --formats=one two three --image-dir=IMAGE-DIR --image-lists=one two three --qemu-img-binary=QEMU-IMG-BINARY
 
 Options:
-  --image-lists=one two three                        # List of image lists to sync against
+  [--image-lists=one two three]                      # List of image lists to sync against
+  [--image-lists-file=IMAGE-LISTS-FILE]              # File containing list of image lists to sync against
   [--ca-dir=CA-DIR]                                  # CA directory
                                                      # Default: /etc/grid-security/certificates/
   [--authentication], [--no-authentication]          # Client <-> server authentication

@@ -89,7 +89,7 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
   end
 
   describe '.method_missing' do
-    context 'for known formats' do
+    context 'with known formats' do
       before do
         allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with(Cloudkeeper::Settings[:'qemu-img-binary'],
                                                                          'convert',
@@ -116,7 +116,7 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
       end
     end
 
-    context 'for unknown method' do
+    context 'with unknown method' do
       it 'raises NoMethodError exception' do
         expect { convertable_instance_raw.nonexistent_method }.to raise_error(NoMethodError)
       end

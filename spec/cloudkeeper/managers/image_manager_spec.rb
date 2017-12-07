@@ -172,7 +172,7 @@ describe Cloudkeeper::Managers::ImageManager do
       allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with('file', '-b', file) { output }
     end
 
-    context 'if everything goes well' do
+    context 'when everything goes well' do
       it 'returns image format' do
         expect(described_class.format(file)).to eq(:qcow2)
       end

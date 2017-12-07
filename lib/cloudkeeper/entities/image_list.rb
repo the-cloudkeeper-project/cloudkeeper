@@ -26,7 +26,7 @@ module Cloudkeeper
       end
 
       def expired?
-        expiration_date < DateTime.now
+        expiration_date < Time.now
       end
 
       class << self
@@ -65,7 +65,7 @@ module Cloudkeeper
         end
 
         def parse_date(date)
-          date.blank? ? '' : DateTime.strptime(date, DATE_FORMAT)
+          date.blank? ? '' : Time.strptime(date, DATE_FORMAT)
         end
 
         def populate_appliances!(image_list, image_list_hash)

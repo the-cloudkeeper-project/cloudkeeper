@@ -257,7 +257,7 @@ describe Cloudkeeper::BackendConnector do
   end
 
   describe '.convert_appliance' do
-    let(:date) { DateTime.now }
+    let(:date) { Time.now }
     let(:image_proto) { CloudkeeperGrpc::Image.new }
     let(:appliance) do
       Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title',
@@ -304,7 +304,7 @@ describe Cloudkeeper::BackendConnector do
   end
 
   describe '.convert_appliance_proto' do
-    let(:date) { DateTime.now }
+    let(:date) { Time.now }
     let(:image) { instance_double(Cloudkeeper::Entities::Image) }
     let(:appliance_proto) do
       Struct.new(:identifier, :description, :mpuri, :title, :group,
@@ -336,7 +336,7 @@ describe Cloudkeeper::BackendConnector do
   end
 
   describe '.manage_appliance' do
-    let(:date) { DateTime.now }
+    let(:date) { Time.now }
     let(:appliance) do
       Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title',
                                            'description', 'group', 2048, 6, 'v01', 'x86_64', 'Linux', nil, 'key' => 'value'
@@ -354,7 +354,7 @@ describe Cloudkeeper::BackendConnector do
       Cloudkeeper::Settings[:formats] = %w[qcow2 vmdk]
     end
 
-    context 'in local mode' do
+    context 'when in local mode' do
       before do
         Cloudkeeper::Settings[:'remote-mode'] = false
         allow(backend_connector.nginx).to receive(:start)
@@ -397,7 +397,7 @@ describe Cloudkeeper::BackendConnector do
       end
     end
 
-    context 'in remote mode with image' do
+    context 'when in remote mode with image' do
       let(:image_files) do
         [
           Struct.new(:format, :checksum, :file).new(:qcow2, '1a2b3c4d5e', '/some/image/file.ext'),
@@ -490,7 +490,7 @@ describe Cloudkeeper::BackendConnector do
       end
     end
 
-    context 'in remote mode without image' do
+    context 'when in remote mode without image' do
       before do
         Cloudkeeper::Settings[:'remote-mode'] = true
         allow(backend_connector.nginx).to receive(:start)
@@ -536,7 +536,7 @@ describe Cloudkeeper::BackendConnector do
   end
 
   describe '.add_appliance' do
-    let(:date) { DateTime.now }
+    let(:date) { Time.now }
     let(:appliance) do
       Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title',
                                            'description', 'group', 2048, 6, 'v01', 'x86_64', 'Linux', nil, 'key' => 'value'
@@ -554,7 +554,7 @@ describe Cloudkeeper::BackendConnector do
   end
 
   describe '.update_appliance' do
-    let(:date) { DateTime.now }
+    let(:date) { Time.now }
     let(:appliance) do
       Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title',
                                            'description', 'group', 2048, 6, 'v01', 'x86_64', 'Linux', nil, 'key' => 'value'
@@ -572,7 +572,7 @@ describe Cloudkeeper::BackendConnector do
   end
 
   describe '.remove_appliance' do
-    let(:date) { DateTime.now }
+    let(:date) { Time.now }
     let(:appliance) do
       Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title',
                                            'description', 'group', 2048, 6, 'v01', 'x86_64', 'Linux', nil, 'key' => 'value'
@@ -590,7 +590,7 @@ describe Cloudkeeper::BackendConnector do
   end
 
   describe '.appliances' do
-    let(:date) { DateTime.now }
+    let(:date) { Time.now }
     let(:image_list_identifier) { 'id12345' }
     let(:appliances_proto) do
       [

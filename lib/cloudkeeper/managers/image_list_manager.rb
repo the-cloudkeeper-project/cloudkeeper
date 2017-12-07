@@ -19,7 +19,7 @@ module Cloudkeeper
       def download_image_lists
         logger.debug 'Downloading fresh image lists...'
         Dir.mktmpdir('cloudkeeper') do |dir|
-          urls = Cloudkeeper::Settings[:'image-lists']
+          urls = Cloudkeeper::Settings[:'image-lists'] || File.read(Cloudkeeper::Settings[:'image-lists-file']).split("\n")
           retrieve_image_lists urls, dir
         end
       end

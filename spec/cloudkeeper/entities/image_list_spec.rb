@@ -53,7 +53,7 @@ describe Cloudkeeper::Entities::ImageList do
   describe '#prepare_appliance_hash' do
     let(:image_hash) { load_file 'image_list01.json', symbolize: true }
     let(:vo) { 'some.vo' }
-    let(:expiration) { DateTime.new(2015, 6, 18, 21, 14) }
+    let(:expiration) { Time.new(2015, 6, 18, 21, 14) }
     let(:image_list_identifier) { '76fdee70-8119-5d33-xxxx-3c57e1c60df1' }
     let(:endorser) { load_file 'image_list02.json', symbolize: true }
     let(:appliance_hash) { load_file 'image_list03.json', symbolize: true }
@@ -104,8 +104,8 @@ describe Cloudkeeper::Entities::ImageList do
         il = described_class.populate_image_list image_list_hash
 
         expect(il.identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
-        expect(il.expiration_date).to eq(DateTime.new(2499, 12, 31, 22))
-        expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
+        expect(il.expiration_date).to eq(Time.new(2499, 12, 31, 22))
+        expect(il.creation_date).to eq(Time.new(2015, 6, 18, 21, 14))
         expect(il.description).to eq('This is a VO-wide image list for some1.vo.net VO.')
         expect(il.source).to eq('https://some.unknown.source/')
         expect(il.title).to eq('Dummy image list number 1.')
@@ -119,8 +119,8 @@ describe Cloudkeeper::Entities::ImageList do
         il = described_class.populate_image_list image_list_hash
 
         expect(il.identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
-        expect(il.expiration_date).to eq(DateTime.new(2499, 12, 31, 22))
-        expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
+        expect(il.expiration_date).to eq(Time.new(2499, 12, 31, 22))
+        expect(il.creation_date).to eq(Time.new(2015, 6, 18, 21, 14))
         expect(il.description).to eq('This is a VO-wide image list for some1.vo.net VO.')
         expect(il.source).to be_nil
         expect(il.title).to eq('Dummy image list number 1.')
@@ -138,7 +138,7 @@ describe Cloudkeeper::Entities::ImageList do
   end
 
   describe '#populate_appliances!' do
-    let(:expiration) { DateTime.new(2499, 12, 31, 22) }
+    let(:expiration) { Time.new(2499, 12, 31, 22) }
     let(:image_list_hash) { load_file 'image_list07.json', symbolize: true }
     let(:attributes1) { load_file 'image_list08.json' }
     let(:attributes2) { load_file 'image_list09.json' }
@@ -191,7 +191,7 @@ describe Cloudkeeper::Entities::ImageList do
 
   describe '#from_hash' do
     context 'with image list in form of hash' do
-      let(:expiration) { DateTime.new(2499, 12, 31, 22) }
+      let(:expiration) { Time.new(2499, 12, 31, 22) }
       let(:image_list_hash) { load_file 'image_list10.json' }
       let(:attributes1) { load_file 'image_list11.json' }
       let(:attributes2) { load_file 'image_list12.json' }
@@ -200,7 +200,7 @@ describe Cloudkeeper::Entities::ImageList do
         il = described_class.from_hash image_list_hash
 
         expect(il.identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
-        expect(il.creation_date).to eq(DateTime.new(2015, 6, 18, 21, 14))
+        expect(il.creation_date).to eq(Time.new(2015, 6, 18, 21, 14))
         expect(il.description).to eq('This is a VO-wide image list for some1.vo.net VO.')
         expect(il.source).to eq('https://some.unknown.source/')
         expect(il.title).to eq('Dummy image list number 1.')
@@ -257,8 +257,8 @@ describe Cloudkeeper::Entities::ImageList do
     end
 
     context 'with real date' do
-      it 'returns parsed DateTime instance' do
-        expect(described_class.parse_date('2015-06-18T21:14:00Z')).to eq(DateTime.new(2015, 6, 18, 21, 14))
+      it 'returns parsed Time instance' do
+        expect(described_class.parse_date('2015-06-18T21:14:00Z')).to eq(Time.new(2015, 6, 18, 21, 14))
       end
     end
   end
@@ -266,7 +266,7 @@ describe Cloudkeeper::Entities::ImageList do
   describe '.expired?' do
     context 'with expired image list' do
       before do
-        image_list.expiration_date = DateTime.new(1991, 10, 10)
+        image_list.expiration_date = Time.new(1991, 10, 10)
       end
 
       it 'returns true' do

@@ -4,8 +4,9 @@ cloudkeeper is an AppDB <-> cloud synchronization utility
 [![Travis](https://img.shields.io/travis/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square)](http://travis-ci.org/the-cloudkeeper-project/cloudkeeper)
 [![Gemnasium](https://img.shields.io/gemnasium/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square)](https://gemnasium.com/the-cloudkeeper-project/cloudkeeper)
 [![Gem](https://img.shields.io/gem/v/cloudkeeper.svg?style=flat-square)](https://rubygems.org/gems/cloudkeeper)
-[![Code Climate](https://img.shields.io/codeclimate/github/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square)](https://codeclimate.com/github/the-cloudkeeper-project/cloudkeeper)
+[![Code Climate](https://img.shields.io/codeclimate/maintainability/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square)](https://codeclimate.com/github/the-cloudkeeper-project/cloudkeeper)
 [![DockerHub](https://img.shields.io/badge/docker-ready-blue.svg?style=flat-square)](https://hub.docker.com/r/cloudkeeper/cloudkeeper/)
+[![DOI](https://img.shields.io/badge/dynamic/json.svg?label=DOI&colorB=0D7EBE&prefix=&suffix=&query=$.doi&uri=https%3A%2F%2Fzenodo.org%2Fapi%2Frecords%2F891886&style=flat-square)](https://zenodo.org/record/891886)
 
 ## What does cloudkeeper do?
 cloudkeeper is able to read image lists provided by EGI AppDB, parse their content and decide what cloud appliances should be added, updated or removed from managed cloud. During the addition and update cloudkeeper is able to download an appliance's image and convert it to the format supported by the managed cloud.

@@ -191,7 +191,7 @@ describe Cloudkeeper::Entities::Image do
       expect(image.image_file(:vmdk)).to eq(selected_image_file)
     end
 
-    context 'if such a format is not available' do
+    context 'when such a format is not available' do
       it 'returns nil' do
         expect(image.image_file(:non_existing_format)).to be_nil
       end

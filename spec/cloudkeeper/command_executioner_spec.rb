@@ -16,7 +16,7 @@ describe Cloudkeeper::CommandExecutioner do
       allow(Mixlib::ShellOut).to receive(:new).with('arg1', 'arg2', 'arg3', timeout: 123) { command }
     end
 
-    context 'normal run' do
+    context 'with successful run' do
       it 'executes external command and returns standard output' do
         expect(command_executioner.execute('arg1', 'arg2', 'arg3')).to eq('output')
       end

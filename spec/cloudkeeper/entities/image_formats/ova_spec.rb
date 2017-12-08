@@ -62,5 +62,23 @@ describe Cloudkeeper::Entities::ImageFormats::Ova do
         expect { ova_class.ova?(file) }.to raise_error(Cloudkeeper::Errors::Image::Format::Ova::OvaFormatError)
       end
     end
+
+    context 'with fake ova image file - multiple drive files' do
+      let(:file) { File.join(MOCK_DIR, 'image_formats', 'fake-image06.ova') }
+      let(:output) { "image-disk002.vmdk\nimage-disk001.vmdk\nimage.ovf\n" }
+
+      it 'raises a CommandExecutionError exception' do
+        expect { ova_class.ova?(file) }.to raise_error(Cloudkeeper::Errors::Image::Format::Ova::OvaFormatError)
+      end
+    end
+
+    context 'with fake ova image file - multiple descriptor files' do
+      let(:file) { File.join(MOCK_DIR, 'image_formats', 'fake-image07.ova') }
+      let(:output) { "image-fake.ovf\nimage-disk001.vmdk\nimage.ovf\n" }
+
+      it 'raises a CommandExecutionError exception' do
+        expect { ova_class.ova?(file) }.to raise_error(Cloudkeeper::Errors::Image::Format::Ova::OvaFormatError)
+      end
+    end
   end
 end

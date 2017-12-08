@@ -17,19 +17,20 @@ module Cloudkeeper
         end
 
         def ova_structure?(files)
-          check_count! files
-          has_ovf = has_vmdk = false
+          check_file_count! files
 
-          files.each do |file|
-            has_ovf ||= OVF_REGEX =~ file
-            has_vmdk ||= VMDK_REGEX =~ file
-            break if has_ovf && has_vmdk
-          end
+          vmdk_count = files.select { |file| VMDK_REGEX =~ file }.count
+          ovf_count = files.select { |file| OVF_REGEX =~ file }.count
 
-          has_ovf && has_vmdk
+          raise Cloudkeeper::Errors::Image::Format::Ova::InvalidArchiveError, 'Archive contains multiple drives (VMDK files)' \
+            if vmdk_count > 1
+          raise Cloudkeeper::Errors::Image::Format::Ova::InvalidArchiveError, 'Archive contains multiple descriptors (OVF files)' \
+            if ovf_count > 1
+
+          vmdk_count == 1 && ovf_count == 1
         end
 
-        def check_count!(files)
+        def check_file_count!(files)
           return unless files.count > ARCHIVE_MAX_FILES
 
           raise Cloudkeeper::Errors::Image::Format::Ova::InvalidArchiveError, "Too many files in archive: #{files.count}. "\

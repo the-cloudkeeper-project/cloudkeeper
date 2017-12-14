@@ -132,6 +132,7 @@ describe Cloudkeeper::Managers::ImageListManager do
                   'ad:core_recommended' => '4',
                   'hv:size' => '121243136', 'hv:uri' => 'https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova',
                   'hv:version' => '3.3.0-1',
+                  'dc:date:expires' => '2499-12-31T22:00:00Z',
                   'sl:arch' => 'x86_64',
                   'sl:checksum:sha512' => '5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4'\
                   'b5dc3d68a3b22581b3318db35dd3364e83dab0',
@@ -153,6 +154,7 @@ describe Cloudkeeper::Managers::ImageListManager do
                   'hv:size' => '581816320',
                   'hv:uri' => 'https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova',
                   'hv:version' => '20141029',
+                  'dc:date:expires' => '2499-12-31T22:00:00Z',
                   'sl:arch' => 'x86_64',
                   'sl:checksum:sha512' => '02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a85465'\
                   '4ff645097c47da236e46ad54806c6fc72a29ce',
@@ -283,6 +285,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         'hv:size': '121243136',
         'hv:uri': 'https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova',
         'hv:version': '3.3.0-1',
+        "dc:date:expires": '2499-12-31T22:00:00Z',
         'sl:arch': 'x86_64',
         'sl:checksum:sha512': '5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4'\
         'b5dc3d68a3b22581b3318db35dd3364e83dab0',
@@ -309,6 +312,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         'hv:size': '581816320',
         'hv:uri': 'https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova',
         'hv:version': '20141029',
+        "dc:date:expires": '2499-12-31T22:00:00Z',
         'sl:arch': 'x86_64',
         'sl:checksum:sha512': '02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a85465'\
         '4ff645097c47da236e46ad54806c6fc72a29ce',
@@ -340,6 +344,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         'hv:size': '121243136',
         'hv:uri': 'https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova',
         'hv:version': '3.3.0-1',
+        "dc:date:expires": '2499-12-31T22:00:00Z',
         'sl:arch': 'x86_64',
         'sl:checksum:sha512': '5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4'\
         'b5dc3d68a3b22581b3318db35dd3364e83dab0',
@@ -366,6 +371,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         'hv:size': '581816320',
         'hv:uri': 'https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova',
         'hv:version': '20141029',
+        "dc:date:expires": '2499-12-31T22:00:00Z',
         'sl:arch': 'x86_64',
         'sl:checksum:sha512': '02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a85465'\
         '4ff645097c47da236e46ad54806c6fc72a29ce',
@@ -397,6 +403,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         'hv:size': '121243136',
         'hv:uri': 'https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova',
         'hv:version': '3.3.0-1',
+        "dc:date:expires": '2499-12-31T22:00:00Z',
         'sl:arch': 'x86_64',
         'sl:checksum:sha512': '5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4'\
         'b5dc3d68a3b22581b3318db35dd3364e83dab0',
@@ -423,6 +430,7 @@ describe Cloudkeeper::Managers::ImageListManager do
         'hv:size': '581816320',
         'hv:uri': 'https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova',
         'hv:version': '20141029',
+        "dc:date:expires": '2499-12-31T22:00:00Z',
         'sl:arch': 'x86_64',
         'sl:checksum:sha512': '02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a85465'\
         '4ff645097c47da236e46ad54806c6fc72a29ce',
@@ -446,10 +454,11 @@ describe Cloudkeeper::Managers::ImageListManager do
     context 'when reading image lists from option' do
       before do
         Cloudkeeper::Settings[:'image-lists'] = [
-          'http://localhost:9292/imagelist01.signed',
           'http://localhost:9292/imagelist02.signed',
+          'http://localhost:9292/imagelist04.signed',
           'http://localhost:9292/imagelist03.signed'
         ]
+        Cloudkeeper::Settings[:'image-lists-file'] = nil
       end
 
       it 'downloads, parse and populates image lists from given urls' do
@@ -590,6 +599,7 @@ describe Cloudkeeper::Managers::ImageListManager do
 
     context 'when reading image lists from file' do
       before do
+        Cloudkeeper::Settings[:'image-lists'] = nil
         Cloudkeeper::Settings[:'image-lists-file'] = File.join(MOCK_DIR, 'image-lists-file')
       end
 

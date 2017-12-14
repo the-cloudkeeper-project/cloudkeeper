@@ -1,9 +1,9 @@
 module Cloudkeeper
   module Managers
     class ApplianceManager
-      attr_reader :backend_connector, :image_list_manager, :acceptable_formats
+      include Cloudkeeper::Utils::Appliance
 
-      IMAGE_UPDATE_ATTRIBUTES = ['hv:version', 'sl:checksum:sha512', 'hv:size'].freeze
+      attr_reader :backend_connector, :image_list_manager, :acceptable_formats
 
       def initialize
         @backend_connector = Cloudkeeper::BackendConnector.new
@@ -41,7 +41,14 @@ module Cloudkeeper
         add_list = image_list_manager.image_lists.keys - backend_image_lists
         logger.debug "Image lists to register: #{add_list.inspect}"
         add_list.each do |image_list_identifier|
-          image_list_manager.image_lists[image_list_identifier].appliances.each_value { |appliance| add_appliance appliance }
+          image_list_manager.image_lists[image_list_identifier].appliances.each_value do |appliance|
+            if appliance.expired?
+              log_expired appliance, 'Skipping expired appliance'
+              next
+            end
+
+            add_appliance appliance
+          end
         end
       end
 
@@ -73,7 +80,15 @@ module Cloudkeeper
         logger.debug 'Registering new appliances...'
         add_list = image_list_appliances.keys - backend_appliances.keys
         logger.debug "Appliances to register: #{add_list.inspect}"
-        add_list.each { |appliance_identifier| add_appliance image_list_appliances[appliance_identifier] }
+        add_list.each do |appliance_identifier|
+          appliance = image_list_appliances[appliance_identifier]
+          if appliance.expired?
+            log_expired appliance, 'Skipping expired appliance'
+            next
+          end
+
+          add_appliance appliance
+        end
       end
 
       def update_appliances(backend_appliances, image_list_appliances)
@@ -84,38 +99,16 @@ module Cloudkeeper
           image_list_appliance = image_list_appliances[appliance_identifier]
           backend_appliance = backend_appliances[appliance_identifier]
 
+          if image_list_appliance.expired?
+            log_expired image_list_appliance, 'Removing expired appliance'
+            backend_connector.remove_appliance image_list_appliance
+            next
+          end
+
           image_update = update_image?(image_list_appliance, backend_appliance)
           image_list_appliance.image = nil unless image_update
           update_appliance image_list_appliance if image_update || update_metadata?(image_list_appliance, backend_appliance)
         end
-      end
-
-      def clean_image_files(appliance)
-        return unless appliance && appliance.image
-
-        logger.debug "Cleaning downloaded image files for appliance #{appliance.identifier.inspect}"
-        appliance.image.image_files.each { |image_file| clean_image_file image_file.file }
-      rescue ::IOError => ex
-        logger.warn "Appliance cleanup error: #{ex.message}"
-      end
-
-      def clean_image_file(filename)
-        File.delete(filename) if File.exist?(filename)
-      end
-
-      def update_image?(image_list_appliance, backend_appliance)
-        image_list_attributes = image_list_appliance.attributes
-        backend_attributes = backend_appliance.attributes
-
-        IMAGE_UPDATE_ATTRIBUTES.reduce(false) { |red, elem| red || (image_list_attributes[elem] != backend_attributes[elem]) }
-      end
-
-      def update_metadata?(image_list_appliance, backend_appliance)
-        image_list_appliance.attributes != backend_appliance.attributes
-      end
-
-      def update_appliance(appliance)
-        modify_appliance :update_appliance, appliance
       end
 
       def add_appliance(appliance)
@@ -131,27 +124,6 @@ module Cloudkeeper
         logger.error "Appliance propagation error: #{ex.message}"
       ensure
         clean_image_files appliance
-      end
-
-      def prepare_image!(appliance)
-        image_file = Cloudkeeper::Managers::ImageManager.download_image(appliance.image.uri)
-        appliance.image.add_image_file image_file
-        return if acceptable_formats.include? image_file.format
-
-        convert_image! appliance, image_file
-      end
-
-      def convert_image!(appliance, image_file)
-        format = acceptable_formats.find { |acceptable_format| image_file.respond_to? "to_#{acceptable_format}".to_sym }
-        unless format
-          raise Cloudkeeper::Errors::Image::Format::NoRequiredFormatAvailableError,
-                "image #{image.inspect} cannot be converted to any acceptable format"
-        end
-
-        appliance.image.add_image_file image_file.send("to_#{format}".to_sym)
-      rescue Cloudkeeper::Errors::Image::Format::NoRequiredFormatAvailableError, Cloudkeeper::Errors::CommandExecutionError,
-             Cloudkeeper::Errors::ArgumentError, ::IOError => ex
-        raise Cloudkeeper::Errors::Image::ConversionError, ex
       end
     end
   end

@@ -4,7 +4,7 @@ module Cloudkeeper
       attr_accessor :identifier, :description, :mpuri, :title, :group, :ram, :core, :version, :architecture
       attr_accessor :operating_system, :image, :attributes, :vo, :expiration_date, :image_list_identifier
 
-      REJECTED_ATTRIBUTES = %i[vo expiration image_list_identifier].freeze
+      REJECTED_ATTRIBUTES = %i[vo image_list_identifier].freeze
 
       def initialize(identifier, mpuri, vo, expiration_date, image_list_identifier, title = '', description = '', group = '',
                      ram = 1024, core = 1, version = '', architecture = '', operating_system = '', image = nil, attributes = {})
@@ -34,6 +34,10 @@ module Cloudkeeper
         @image_list_identifier = image_list_identifier
       end
 
+      def expired?
+        expiration_date < Time.now
+      end
+
       class << self
         def from_hash(appliance_hash)
           appliance_hash.deep_symbolize_keys!
@@ -46,19 +50,7 @@ module Cloudkeeper
         def populate_appliance(appliance_hash)
           raise Cloudkeeper::Errors::Parsing::InvalidApplianceHashError, 'invalid appliance hash' if appliance_hash.blank?
 
-          appliance = Appliance.new appliance_hash[:'dc:identifier'],
-                                    appliance_hash[:'ad:mpuri'],
-                                    appliance_hash[:vo],
-                                    appliance_hash[:expiration],
-                                    appliance_hash[:image_list_identifier],
-                                    appliance_hash[:'dc:title'],
-                                    appliance_hash[:'dc:description'],
-                                    appliance_hash[:'ad:group'],
-                                    appliance_hash[:'hv:ram_minimum'],
-                                    appliance_hash[:'hv:core_minimum'],
-                                    appliance_hash[:'hv:version'],
-                                    appliance_hash[:'sl:arch']
-
+          appliance = construct_appliance(appliance_hash)
           construct_os_name!(appliance, appliance_hash)
           populate_attributes!(appliance, appliance_hash)
 
@@ -66,6 +58,21 @@ module Cloudkeeper
         rescue Cloudkeeper::Errors::ArgumentError => ex
           raise Cloudkeeper::Errors::Parsing::InvalidApplianceHashError, ex, "appliance hash #{appliance_hash.inspect} " \
                                                                              "doesn't contain all the necessary data"
+        end
+
+        def construct_appliance(appliance_hash)
+          Appliance.new appliance_hash[:'dc:identifier'],
+                        appliance_hash[:'ad:mpuri'],
+                        appliance_hash[:vo],
+                        Cloudkeeper::Utils::Date.parse(appliance_hash[:'dc:date:expires']),
+                        appliance_hash[:image_list_identifier],
+                        appliance_hash[:'dc:title'],
+                        appliance_hash[:'dc:description'],
+                        appliance_hash[:'ad:group'],
+                        appliance_hash[:'hv:ram_minimum'],
+                        appliance_hash[:'hv:core_minimum'],
+                        appliance_hash[:'hv:version'],
+                        appliance_hash[:'sl:arch']
         end
 
         def construct_os_name!(appliance, appliance_hash)

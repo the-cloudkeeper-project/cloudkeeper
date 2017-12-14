@@ -684,7 +684,7 @@ describe Cloudkeeper::BackendConnector do
         Cloudkeeper::Settings[:authentication] = true
         Cloudkeeper::Settings[:certificate] = File.join(MOCK_DIR, 'auth', 'cert.pem')
         Cloudkeeper::Settings[:key] = File.join(MOCK_DIR, 'auth', 'key.pem')
-        Cloudkeeper::Settings[:'backend-certificate'] = File.join(MOCK_DIR, 'auth', 'backendcert.pem')
+        Cloudkeeper::Settings[:'backend-certificate'] = File.join(MOCK_DIR, 'auth', 'cert.pem')
       end
 
       it 'returns credentials' do

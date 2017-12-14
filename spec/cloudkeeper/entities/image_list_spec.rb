@@ -53,18 +53,13 @@ describe Cloudkeeper::Entities::ImageList do
   describe '#prepare_appliance_hash' do
     let(:image_hash) { load_file 'image_list01.json', symbolize: true }
     let(:vo) { 'some.vo' }
-    let(:expiration) { Time.new(2015, 6, 18, 21, 14) }
     let(:image_list_identifier) { '76fdee70-8119-5d33-xxxx-3c57e1c60df1' }
     let(:endorser) { load_file 'image_list02.json', symbolize: true }
     let(:appliance_hash) { load_file 'image_list03.json', symbolize: true }
 
-    before do
-      appliance_hash[:expiration] = expiration
-    end
-
     context 'with all the data' do
       it 'creates full appliance hash' do
-        expect(described_class.prepare_appliance_hash(image_hash, endorser, expiration, vo, \
+        expect(described_class.prepare_appliance_hash(image_hash, endorser, vo, \
                                                       image_list_identifier)).to eq(appliance_hash)
       end
     end
@@ -74,7 +69,7 @@ describe Cloudkeeper::Entities::ImageList do
       let(:appliance_hash) { load_file 'image_list04.json', symbolize: true }
 
       it 'creates partial appliance hash' do
-        expect(described_class.prepare_appliance_hash(image_hash, endorser, expiration, vo, \
+        expect(described_class.prepare_appliance_hash(image_hash, endorser, vo, \
                                                       image_list_identifier)).to eq(appliance_hash)
       end
     end
@@ -84,7 +79,7 @@ describe Cloudkeeper::Entities::ImageList do
       let(:appliance_hash) { load_file 'image_list13.json', symbolize: true }
 
       it 'creates partial appliance hash' do
-        expect(described_class.prepare_appliance_hash(image_hash, endorser, expiration, vo, \
+        expect(described_class.prepare_appliance_hash(image_hash, endorser, vo, \
                                                       image_list_identifier)).to eq(appliance_hash)
       end
     end
@@ -239,26 +234,6 @@ describe Cloudkeeper::Entities::ImageList do
         expect(appliance.expiration_date).to eq(expiration)
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
         expect(appliance.attributes).to eq(attributes2)
-      end
-    end
-  end
-
-  describe '#parse_date' do
-    context 'with nil date' do
-      it 'returns empty string' do
-        expect(described_class.parse_date(nil)).to eq('')
-      end
-    end
-
-    context 'with empty date' do
-      it 'returns empty string' do
-        expect(described_class.parse_date('')).to eq('')
-      end
-    end
-
-    context 'with real date' do
-      it 'returns parsed Time instance' do
-        expect(described_class.parse_date('2015-06-18T21:14:00Z')).to eq(Time.new(2015, 6, 18, 21, 14))
       end
     end
   end

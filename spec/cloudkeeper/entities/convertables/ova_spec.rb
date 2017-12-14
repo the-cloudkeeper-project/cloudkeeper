@@ -3,7 +3,6 @@ describe Cloudkeeper::Entities::Convertables::Ova do
     Class.new do
       attr_accessor :file, :format, :checksum
       include Cloudkeeper::Entities::Convertables::Convertable
-
       def initialize
         extend(Cloudkeeper::Entities::Convertables::Ova)
       end

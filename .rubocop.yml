@@ -12,6 +12,14 @@ Metrics/LineLength:
 Style/Documentation:
   Enabled: false
 
+Style/FormatStringToken:
+  Exclude:
+    - 'lib/cloudkeeper/utils/date.rb'
+
+Style/MixinUsage:
+  Exclude:
+    - 'spec/cloudkeeper/entities/convertables/ova_spec.rb'
+
 Metrics/MethodLength:
   Max: 15
   Exclude:

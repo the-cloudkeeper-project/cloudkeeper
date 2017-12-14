@@ -23,7 +23,7 @@
   "ad:user:guid": "9d9dd6cf-b61a-aaaa-b1df-b5731adf717c",
   "ad:user:uri": "https://appdb.somewhere.net/store/person/bruce.wayne",
   "vo": "some.vo",
-  "expiration": "2016-10-26T12:41:44+02:00",
+  "dc:date:expires": "2016-10-25T15:57:45Z",
   "image_list_identifier": "76fdee70-8119-5d33-xxxx-3c57e1c60df1",
   "dc:creator": "Applications Database",
   "hv:ca": "/DC=XXX/DC=YYY/CN=SOME TEST CA",

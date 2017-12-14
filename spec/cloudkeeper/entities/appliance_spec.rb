@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Cloudkeeper::Entities::Appliance do
-  subject(:appliance) { described_class.new 'identifier123', 'http://some/mpuri', 'vo', '2499-12-31T22:00:00Z', 'identifier456' }
+  subject(:appliance) { described_class.new 'identifier123', 'http://some/mpuri', 'vo', Time.new(2499, 12, 31, 22), 'identifier456' }
 
   let(:hash) { load_file 'appliance01.json', symbolize: true }
 
@@ -20,21 +20,21 @@ describe Cloudkeeper::Entities::Appliance do
 
     context 'with nil identifier' do
       it 'raises ArgumentError exception' do
-        expect { described_class.new nil, 'http://some/mpuri', 'vo', '2499-12-31T22:00:00Z', 'identifier456' }.to \
+        expect { described_class.new nil, 'http://some/mpuri', 'vo', Time.new(2499, 12, 31, 22), 'identifier456' }.to \
           raise_error(Cloudkeeper::Errors::ArgumentError)
       end
     end
 
     context 'with nil mpuri' do
       it 'raises ArgumentError exception' do
-        expect { described_class.new 'identifier123', nil, 'vo', '2499-12-31T22:00:00Z', 'identifier456' }.to \
+        expect { described_class.new 'identifier123', nil, 'vo', Time.new(2499, 12, 31, 22), 'identifier456' }.to \
           raise_error(Cloudkeeper::Errors::ArgumentError)
       end
     end
 
     context 'with nil vo' do
       it 'raises ArgumentError exception' do
-        expect { described_class.new 'identifier123', 'http://some/mpuri', nil, '2499-12-31T22:00:00Z', 'identifier456' }.to \
+        expect { described_class.new 'identifier123', 'http://some/mpuri', nil, Time.new(2499, 12, 31, 22), 'identifier456' }.to \
           raise_error(Cloudkeeper::Errors::ArgumentError)
       end
     end
@@ -48,7 +48,7 @@ describe Cloudkeeper::Entities::Appliance do
 
     context 'with nil image list identifier' do
       it 'raises ArgumentError exception' do
-        expect { described_class.new 'identifier123', 'http://some/mpuri', 'vo', '2499-12-31T22:00:00Z', nil }.to \
+        expect { described_class.new 'identifier123', 'http://some/mpuri', 'vo', Time.new(2499, 12, 31, 22), nil }.to \
           raise_error(Cloudkeeper::Errors::ArgumentError)
       end
     end
@@ -121,7 +121,7 @@ describe Cloudkeeper::Entities::Appliance do
         expect(appliance.architecture).to eq('x86_64')
         expect(appliance.operating_system).to eq('Linux Other TinyCoreLinux')
         expect(appliance.vo).to eq('some.dummy.vo')
-        expect(appliance.expiration_date).to eq('2016-10-25T15:57:45+02:00')
+        expect(appliance.expiration_date).to eq(Time.new(2016, 10, 25, 15, 57, 45))
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
       end
     end
@@ -157,7 +157,7 @@ describe Cloudkeeper::Entities::Appliance do
         expect(appliance.architecture).to eq('x86_64')
         expect(appliance.operating_system).to eq('Linux Other TinyCoreLinux')
         expect(appliance.vo).to eq('some.dummy.vo')
-        expect(appliance.expiration_date).to eq('2016-10-25T15:57:45+02:00')
+        expect(appliance.expiration_date).to eq(Time.new(2016, 10, 25, 15, 57, 45))
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
       end
     end
@@ -197,7 +197,7 @@ describe Cloudkeeper::Entities::Appliance do
         expect(appliance.architecture).to eq('x86_64')
         expect(appliance.operating_system).to eq('Linux Other TinyCoreLinux')
         expect(appliance.vo).to eq('some.dummy.vo')
-        expect(appliance.expiration_date).to eq('2016-10-25T15:57:45+02:00')
+        expect(appliance.expiration_date).to eq(Time.new(2016, 10, 25, 15, 57, 45))
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
       end
     end
@@ -220,12 +220,30 @@ describe Cloudkeeper::Entities::Appliance do
       expect(appliance.architecture).to eq('x86_64')
       expect(appliance.operating_system).to eq('Linux Other TinyCoreLinux')
       expect(appliance.vo).to eq('some.dummy.vo')
-      expect(appliance.expiration_date).to eq('2016-10-25T15:57:45+02:00')
+      expect(appliance.expiration_date).to eq(Time.new(2016, 10, 25, 15, 57, 45))
       expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
       expect(appliance.image.size).to eq(42)
       expect(appliance.image.uri).to eq('http://some.uri.net/some/path')
       expect(appliance.image.checksum).to eq('81a106e4f352b2ff21c691280d9bfd3dfafdbe07154f414ae563d1786ff55a254e66e94e6644ae1f175'\
                                             '70a502cd46d3e7f2ece043fcd211818eed871f4aaef53')
+    end
+  end
+
+  describe '.expired?' do
+    context 'with expired appliance' do
+      before do
+        appliance.expiration_date = Time.new(1991, 10, 10)
+      end
+
+      it 'returns true' do
+        expect(appliance).to be_expired
+      end
+    end
+
+    context 'with non-expired appliance' do
+      it 'returns false' do
+        expect(appliance).not_to be_expired
+      end
     end
   end
 end

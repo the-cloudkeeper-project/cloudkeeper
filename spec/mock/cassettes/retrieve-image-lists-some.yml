@@ -8,60 +8,86 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - Faraday v0.11.0
+      - Faraday v0.13.1
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
   response:
     status:
-      code: 404
-      message: 'Not Found '
+      code: 200
+      message: OK
     headers:
-      Content-Type:
-      - text/html;charset=utf-8
-      X-Cascade:
-      - pass
-      Content-Length:
-      - '480'
-      X-Xss-Protection:
-      - 1; mode=block
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - SAMEORIGIN
       Server:
-      - WEBrick/1.3.1 (Ruby/2.3.3/2016-11-21)
+      - nginx/1.13.7
       Date:
-      - Mon, 16 Jan 2017 15:35:49 GMT
+      - Thu, 14 Dec 2017 10:09:40 GMT
+      Content-Type:
+      - application/octet-stream
+      Content-Length:
+      - '6402'
+      Last-Modified:
+      - Thu, 14 Dec 2017 09:19:22 GMT
       Connection:
-      - Keep-Alive
+      - keep-alive
+      Etag:
+      - '"5a32421a-1902"'
+      Accept-Ranges:
+      - bytes
     body:
       encoding: UTF-8
-      string: |
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style type="text/css">
-          body { text-align:center;font-family:helvetica,arial;font-size:22px;
-            color:#888;margin:20px}
-          #c {margin:0 auto;width:500px;text-align:left}
-          </style>
-        </head>
-        <body>
-          <h2>Sinatra doesn&rsquo;t know this ditty.</h2>
-          <img src='http://localhost:9292/__sinatra__/404.png'>
-          <div id="c">
-            Try this:
-            <pre>get &#x27;&#x2F;imagelist01.signed&#x27; do
-          &quot;Hello World&quot;
-        end
-        </pre>
-          </div>
-        </body>
-        </html>
+      string: "MIME-Version: 1.0\nContent-Type: multipart/signed; protocol=\"application/x-pkcs7-signature\";
+        micalg=\"sha-256\"; boundary=\"----D58BD31E5641B23A1A65ED14F00D4E95\"\n\nThis
+        is an S/MIME signed message\n\n------D58BD31E5641B23A1A65ED14F00D4E95\n{\r\n
+        \  \"hv:imagelist\": {\r\n      \"dc:date:created\": \"2015-06-18T21:14:00Z\",\r\n
+        \     \"dc:date:expires\": \"2499-12-31T22:00:00Z\",\r\n      \"dc:description\":
+        \"This is a VO-wide image list for some1.vo.net VO.\",\r\n      \"dc:identifier\":
+        \"76fdee70-8119-5d33-aaaa-3c57e1c60df1\",\r\n      \"dc:source\": \"https://some.unknown.source/\",\r\n
+        \     \"dc:title\": \"Dummy image list number 1.\",\r\n      \"ad:vo\": \"some1.vo.net\",\r\n
+        \     \"hv:endorser\": {\r\n         \"hv:x509\": {\r\n            \"dc:creator\":
+        \"Applications Database\",\r\n            \"hv:ca\": \"/DC=XXX/DC=YYY/CN=SOME
+        TEST CA\",\r\n            \"hv:dn\": \"/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source\",\r\n
+        \           \"hv:email\": \"dontwriteme@please.net\"\r\n         }\r\n      },\r\n
+        \     \"hv:images\": [\r\n         {\r\n            \"hv:image\": {\r\n               \"dc:description\":
+        \"This version of CERNVM has been modified - default OS extended to 40GB of
+        disk - updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled
+        all Cloud-Init data sources\",\r\n               \"dc:identifier\": \"c0482bc2-bf41-5d49-aaaa-a750174a186b\",\r\n
+        \              \"ad:mpuri\": \"https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-aaaa-a750174a186b:484/\",\r\n
+        \              \"dc:title\": \"Image for CernVM [Scientific Linux/6.0/KVM]\",\r\n
+        \              \"ad:group\": \"General group\",\r\n               \"hv:hypervisor\":
+        \"KVM\",\r\n               \"hv:format\": \"OVA\",\r\n               \"hv:ram_minimum\":
+        \"512\",\r\n               \"ad:ram_recommended\": \"1024\",\r\n               \"hv:core_minimum\":
+        \"1\",\r\n               \"ad:core_recommended\": \"4\",\r\n               \"hv:size\":
+        \"121243136\",\r\n               \"hv:uri\": \"https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova\",\r\n
+        \              \"hv:version\": \"3.3.0-1\",\r\n               \"dc:date:expires\":
+        \"2499-12-31T22:00:00Z\",\r\n               \"sl:arch\": \"x86_64\",\r\n               \"sl:checksum:sha512\":
+        \"5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4b5dc3d68a3b22581b3318db35dd3364e83dab0\",\r\n
+        \              \"sl:comments\": \"\",\r\n               \"sl:os\": \"Linux\",\r\n
+        \              \"sl:osname\": \"Scientific Linux\",\r\n               \"sl:osversion\":
+        \"6.0\",\r\n               \"ad:user:fullname\": \"Bruce Wayne\",\r\n               \"ad:user:guid\":
+        \"9d9dd6cf-b61a-aaaa-b1df-b5731adf717c\",\r\n               \"ad:user:uri\":
+        \"https://appdb.somewhere.net/store/person/bruce.wayne\"\r\n            }\r\n
+        \        },\r\n         {\r\n            \"hv:image\": {\r\n               \"dc:description\":
+        \"\",\r\n               \"dc:identifier\": \"662b0e71-3e21-bbbb-b6a1-cc2f51319fa7\",\r\n
+        \              \"ad:mpuri\": \"https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-bbbb-b6a1-cc2f51319fa7:485/\",\r\n
+        \              \"dc:title\": \"Image for CentOS 6 minimal [CentOS/6.x/KVM]\",\r\n
+        \              \"ad:group\": \"General group\",\r\n               \"hv:hypervisor\":
+        \"KVM\",\r\n               \"hv:format\": \"OVA\",\r\n               \"hv:size\":
+        \"581816320\",\r\n               \"hv:uri\": \"https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova\",\r\n
+        \              \"hv:version\": \"20141029\",\r\n               \"dc:date:expires\":
+        \"2499-12-31T22:00:00Z\",\r\n               \"sl:arch\": \"x86_64\",\r\n               \"sl:checksum:sha512\":
+        \"02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a854654ff645097c47da236e46ad54806c6fc72a29ce\",\r\n
+        \              \"sl:comments\": \"\",\r\n               \"sl:os\": \"Linux\",\r\n
+        \              \"sl:osname\": \"CentOS\",\r\n               \"sl:osversion\":
+        \"6.6\",\r\n               \"ad:user:fullname\": \"Barry Allen\",\r\n               \"ad:user:guid\":
+        \"e85470d8-2af9-bbbb-8c26-0014c23dfd8c\",\r\n               \"ad:user:uri\":
+        \"https://appdb.somewhere.net/store/person/barry.allen\"\r\n            }\r\n
+        \        }\r\n      ],\r\n      \"hv:uri\": \"https://appdb.somewhere.net/store/vo/some1.vo.net/image.list\",\r\n
+        \     \"hv:version\": \"20150618211400\"\r\n   }\r\n}\r\n\n------D58BD31E5641B23A1A65ED14F00D4E95\nContent-Type:
+        application/x-pkcs7-signature; name=\"smime.p7s\"\nContent-Transfer-Encoding:
+        base64\nContent-Disposition: attachment; filename=\"smime.p7s\"\n\nMIIGBAYJKoZIhvcNAQcCoIIF9TCCBfECAQExDzANBglghkgBZQMEAgEFADALBgkq\nhkiG9w0BBwGgggNkMIIDYDCCAkigAwIBAgIJAL9+mpdaade9MA0GCSqGSIb3DQEB\nCwUAMEUxCzAJBgNVBAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQK\nDBhJbnRlcm5ldCBXaWRnaXRzIFB0eSBMdGQwHhcNMTcxMjE0MDkxOTA3WhcNMTgw\nMTEzMDkxOTA3WjBFMQswCQYDVQQGEwJBVTETMBEGA1UECAwKU29tZS1TdGF0ZTEh\nMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIIBIjANBgkqhkiG9w0B\nAQEFAAOCAQ8AMIIBCgKCAQEA6Hf/CeHLg0v4an3A72088b6fu864n9ZSIMDxH+yC\nMP/dIOmwYjyCGJfh1yQfgKEYWZv7CyeF3mnl92tpFH8/4C3t+Ct29NKJIRXAvyGx\n3Vc2LjgJj//B8OcQGnDxmuOH/PhPVt+2QGRlToWb428W+VCrdw017qbMeHaZ174G\nVFBsDpapTWPcIWO9guOS7yrf7ECf72Qj1mcnDfKVKr6311wmlp80/6NuZbGuQDLh\nrlgHRtLNd/MDq8N+m/kBqHuAE+B/HdWQ4MBM+ERVCxI/Zgn6x3xZr1MOC6QowSe5\nayd4RPbdptZqpPl2CEIcfeuX6MLmR2Z2T3tmsyEHdu6jAQIDAQABo1MwUTAdBgNV\nHQ4EFgQURuQ9z1OuftLyM+FD6F6giL75prMwHwYDVR0jBBgwFoAURuQ9z1OuftLy\nM+FD6F6giL75prMwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEA\ngDQpKqmY09/qFk1Ud69GP3A21rPw/zlnvHoPVAxFU8jr0jk36sufivvHsjVrtLHm\nsdfCtLd+CWC6sNBaT7eLq5n8wQJiI2r/i3EtxSCTPqyFJdwyF/AkeBdDvNUfcibK\n8E6UTh6uUess6VGUVg9qm5sv1BfjlcCIBZRNWIvQsTKZVbEbeRqkCMFhCs0gQL3X\nUaB2PSxC2m/pPmUbf1pHB5VHyfHt/3xKxTHde9FDiAT9Nfk0lPUf4U7nr8m+81al\ndPcn1kblgOE1QLTLKVWXCl9sSAhHftA+R89RRBZNLz0DSB1oPsaZ0vTQYsGGaR/J\nIll0GjxY+3yO51fdESXrCTGCAmQwggJgAgEBMFIwRTELMAkGA1UEBhMCQVUxEzAR\nBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGEludGVybmV0IFdpZGdpdHMgUHR5\nIEx0ZAIJAL9+mpdaade9MA0GCWCGSAFlAwQCAQUAoIHkMBgGCSqGSIb3DQEJAzEL\nBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE3MTIxNDA5MTkyMlowLwYJKoZI\nhvcNAQkEMSIEIHrsZmLg6zioN836IQeuh7aM2KWfPVDJ/ialVYGzy8SCMHkGCSqG\nSIb3DQEJDzFsMGowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQME\nAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcG\nBSsOAwIHMA0GCCqGSIb3DQMCAgEoMA0GCSqGSIb3DQEBAQUABIIBALBJaBAafQun\nOz+wtcngAPwSxRjOY2VGPLJgQj5hYBGEdkoo0HrrQ09GIU6986DHOUTWUvCeWuRW\nlJp3bYojnR89fUgZ/3k+rMPjDk3egDV1UCsvQTqD0AuNF/UMGrb0PpDEvUhvR4SL\n6C3ANYwPwTVzQMeJC5Fq7k4Hx8+HbQNV7TwRS7yfSmjUKt7dX6kfQfbPpAZqMWEI\nNbrlchhCm85oRLrInXrEscDe8DrAqMHfSSq9zffU5+6l2/5MbUmFV5zT6kwDoTPD\nqU8JH+vbvku8rPxMVI+6ZtbbYpHdJ6RUggoufaToNFiauvo2o6o/gKtcKbiuP0zl\nuoGPi7f43Qg=\n\n------D58BD31E5641B23A1A65ED14F00D4E95--\n\n"
     http_version: 
-  recorded_at: Mon, 16 Jan 2017 15:35:49 GMT
+  recorded_at: Thu, 14 Dec 2017 10:09:40 GMT
 - request:
     method: get
     uri: http://localhost:9292/imagelist02.signed
@@ -70,82 +96,32 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - Faraday v0.11.0
+      - Faraday v0.13.1
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
   response:
     status:
-      code: 200
-      message: 'OK '
+      code: 404
+      message: Not Found
     headers:
-      Content-Type:
-      - application/octet-stream
-      Last-Modified:
-      - Fri, 14 Oct 2016 11:11:59 GMT
-      Content-Length:
-      - '7411'
-      X-Content-Type-Options:
-      - nosniff
       Server:
-      - WEBrick/1.3.1 (Ruby/2.3.3/2016-11-21)
+      - nginx/1.13.7
       Date:
-      - Mon, 16 Jan 2017 15:35:49 GMT
+      - Thu, 14 Dec 2017 10:09:40 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '169'
       Connection:
-      - Keep-Alive
+      - keep-alive
     body:
       encoding: UTF-8
-      string: "MIME-Version: 1.0\nContent-Type: multipart/signed; protocol=\"application/x-pkcs7-signature\";
-        micalg=\"sha-256\"; boundary=\"----E142FAB8043C53C7E22FD51905AE3E61\"\n\nThis
-        is an S/MIME signed message\n\n------E142FAB8043C53C7E22FD51905AE3E61\n{\r\n
-        \  \"hv:imagelist\": {\r\n      \"dc:date:created\": \"2015-06-18T21:14:00Z\",\r\n
-        \     \"dc:date:expires\": \"2499-12-31T22:00:00Z\",\r\n      \"dc:description\":
-        \"This is a VO-wide image list for some4.vo.net VO.\",\r\n      \"dc:identifier\":
-        \"76fdee70-8119-5d33-gggg-3c57e1c60df1\",\r\n      \"dc:source\": \"https://some.unknown.source/\",\r\n
-        \     \"dc:title\": \"Dummy image list number 4.\",\r\n      \"ad:vo\": \"some4.vo.net\",\r\n
-        \     \"hv:endorser\": {\r\n         \"hv:x509\": {\r\n            \"dc:creator\":
-        \"Applications Database\",\r\n            \"hv:ca\": \"/DC=XXX/DC=YYY/CN=SOME
-        TEST CA\",\r\n            \"hv:dn\": \"/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source\",\r\n
-        \           \"hv:email\": \"dontwriteme@please.net\"\r\n         }\r\n      },\r\n
-        \     \"hv:images\": [\r\n         {\r\n            \"hv:image\": {\r\n               \"dc:description\":
-        \"This version of CERNVM has been modified - default OS extended to 40GB of
-        disk - updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled
-        all Cloud-Init data sources\",\r\n               \"dc:identifier\": \"c0482bc2-bf41-5d49-gggg-a750174a186b\",\r\n
-        \              \"ad:mpuri\": \"https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-gggg-a750174a186b:484/\",\r\n
-        \              \"dc:title\": \"Image for CernVM [Scientific Linux/6.0/KVM]\",\r\n
-        \              \"ad:group\": \"General group\",\r\n               \"hv:hypervisor\":
-        \"KVM\",\r\n               \"hv:format\": \"OVA\",\r\n               \"hv:ram_minimum\":
-        \"512\",\r\n               \"ad:ram_recommended\": \"1024\",\r\n               \"hv:core_minimum\":
-        \"1\",\r\n               \"ad:core_recommended\": \"4\",\r\n               \"hv:size\":
-        \"121243136\",\r\n               \"hv:uri\": \"https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova\",\r\n
-        \              \"hv:version\": \"3.3.0-1\",\r\n               \"sl:arch\":
-        \"x86_64\",\r\n               \"sl:checksum:sha512\": \"5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4b5dc3d68a3b22581b3318db35dd3364e83dab0\",\r\n
-        \              \"sl:comments\": \"\",\r\n               \"sl:os\": \"Linux\",\r\n
-        \              \"sl:osname\": \"Scientific Linux\",\r\n               \"sl:osversion\":
-        \"6.0\",\r\n               \"ad:user:fullname\": \"Victor Stone\",\r\n               \"ad:user:guid\":
-        \"9d9dd6cf-b61a-gggg-b1df-b5731adf717c\",\r\n               \"ad:user:uri\":
-        \"https://appdb.somewhere.net/store/person/victor.stone\"\r\n            }\r\n
-        \        },\r\n         {\r\n            \"hv:image\": {\r\n               \"dc:description\":
-        \"\",\r\n               \"dc:identifier\": \"662b0e71-3e21-hhhh-b6a1-cc2f51319fa7\",\r\n
-        \              \"ad:mpuri\": \"https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-hhhh-b6a1-cc2f51319fa7:485/\",\r\n
-        \              \"dc:title\": \"Image for CentOS 6 minimal [CentOS/6.x/KVM]\",\r\n
-        \              \"ad:group\": \"General group\",\r\n               \"hv:hypervisor\":
-        \"KVM\",\r\n               \"hv:format\": \"OVA\",\r\n               \"hv:size\":
-        \"581816320\",\r\n               \"hv:uri\": \"https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova\",\r\n
-        \              \"hv:version\": \"20141029\",\r\n               \"sl:arch\":
-        \"x86_64\",\r\n               \"sl:checksum:sha512\": \"02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a854654ff645097c47da236e46ad54806c6fc72a29ce\",\r\n
-        \              \"sl:comments\": \"\",\r\n               \"sl:os\": \"Linux\",\r\n
-        \              \"sl:osname\": \"CentOS\",\r\n               \"sl:osversion\":
-        \"6.6\",\r\n               \"ad:user:fullname\": \"Billy Batson\",\r\n               \"ad:user:guid\":
-        \"e85470d8-2af9-hhhh-8c26-0014c23dfd8c\",\r\n               \"ad:user:uri\":
-        \"https://appdb.somewhere.net/store/person/billy.batson\"\r\n            }\r\n
-        \        }\r\n      ],\r\n      \"hv:uri\": \"https://appdb.somewhere.net/store/vo/some4.vo.net/image.list\",\r\n
-        \     \"hv:version\": \"20150618211400\"\r\n   }\r\n}\r\n\r\n\n------E142FAB8043C53C7E22FD51905AE3E61\nContent-Type:
-        application/x-pkcs7-signature; name=\"smime.p7s\"\nContent-Transfer-Encoding:
-        base64\nContent-Disposition: attachment; filename=\"smime.p7s\"\n\nMIIJQAYJKoZIhvcNAQcCoIIJMTCCCS0CAQExDzANBglghkgBZQMEAgEFADALBgkq\nhkiG9w0BBwGgggWLMIIFhzCCA2+gAwIBAgIJAK23jjoxtkh4MA0GCSqGSIb3DQEB\nCwUAMFoxCzAJBgNVBAYTAk5BMQ8wDQYDVQQIDAZOYXJuaWExDTALBgNVBAcMBEF2\nZXIxDTALBgNVBAoMBFRFU1QxDTALBgNVBAsMBFRFU1QxDTALBgNVBAMMBFRFU1Qw\nHhcNMTYxMDEyMTIzMzI0WhcNMjExMDExMTIzMzI0WjBaMQswCQYDVQQGEwJOQTEP\nMA0GA1UECAwGTmFybmlhMQ0wCwYDVQQHDARBdmVyMQ0wCwYDVQQKDARURVNUMQ0w\nCwYDVQQLDARURVNUMQ0wCwYDVQQDDARURVNUMIICIjANBgkqhkiG9w0BAQEFAAOC\nAg8AMIICCgKCAgEAwjcoOoGTeqBAyiQF4dxuaow9ViOWmcJofsku6wH+/cVMRGAX\nqxLTHA1F5BLc7aDJ01h3m2eu3/ZRg1Mi6G4mPCb6KZlyXr9jTkQEhwA0rILbeUAg\n4ULWA+ngwAg0tobVVNs8cSBevgRCjQABY9cr+HhVXSPCz1mPc8UdNxHS/YeXUvI0\nzFcUzXyFHY8weMS3T1HiCaOTWa96LjXdRmBHWszC72WTCulZxzb/e0YsFUo/16dM\nnpc3HP0IVG5EF7MYqhgVBlpObRru1+28O4NhtXUL8YN7DEHuKdJmyKiRyS9BkacI\nr9tZ9NpfQRacZh3x/tW+U2A3cg1SK3ye7W8/h2kIXbUP665uuPw8GR+wCbvx38GX\nI4rEqmOqxsO712GwTT//MKrfaHPktj+rPgy8mAUEVEPsPmkhUqxXiFNKurgF2mx/\n9wxWW09pGe200kFhcC3PH4QWFcUaDdMsmRF+cTvxoVHqt2VBXKrO3lOrb7PvFNTb\nxvL1LnM9BoEMSf/9fO0n3ZDclU3+e0b+dpRPhLyXYcy9BEaBoWZiJSa0n4LzDVNo\n0WlWYjo1mv/eK3XRr7/iDLCctUvmQOwkC20I/nKkP717uC27iuEHdwaQIMP9KoYD\nKELkqytYdUaCm0jCtxzzPiuxdNkEioa+OvkE/jQkjcq4lGLlZRvNnimyJcUCAwEA\nAaNQME4wHQYDVR0OBBYEFCAToop9lucWYJvUadZbZUeK4mXhMB8GA1UdIwQYMBaA\nFCAToop9lucWYJvUadZbZUeK4mXhMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEL\nBQADggIBABsvThBZ50SeBwr4KBGDmd3IXR86RdK5av/UfJIKfWzgaLZY3g/87sNg\n00p6NwvPwkisY7bp490dRB1KW2egzcw4Cr/y/Mj9BTpTOJLL8REEMXLm7e4JW7Kx\nh6CzPABdOubl7z6o9rPd5Z0eG0LMbaj4jK9mnFcMGIRfGI6gIq3UtCYzP78eZu4+\nlKoCOkyp/jhVkrQkD829fvN2t3yVNp/0LJA9IVvdFn6CA0SBaZHOMoWzx3f892x2\nH9E8n7fFq3sdnhj0hOfrpUGJZOvKHLHIbhkf0LFhlp18hf4qkjQljkBU7WefDmTg\njmG1HyJb3Gaia2LHJ4x4sIOt9pCLK/KgJd1V4PKSvs00nZBF3xd4r646zWysA43I\n5dxzuHVMJnBOrjaCL6b9n4dCHJeMUQYVgQRwXlidZ+sxXdIqZRjwcEb8au4MzFJN\nI1pCbzD1E5J31q+TXkeCEEtDmSe22QvpEGyvaHvQ77+zZyvs6hCw7fvNv2KYV757\ndbdno9mrjPD8kybejp9EOdlpTMEh3isESdsNQHX1yJdkd7h3KDGun9YBwzgNLBEB\npwu4Z5vHBasvmsxdMot5tch6aNetBSTgWqHtZQMncucMxeFaHeMS0/Ft0L34of5j\nlPdZRQBVNOBeJoMZGM7ZlQUtmn1I4K+IS5QnSFzdH/19jn8sYXpfMYIDeTCCA3UC\nAQEwZzBaMQswCQYDVQQGEwJOQTEPMA0GA1UECAwGTmFybmlhMQ0wCwYDVQQHDARB\ndmVyMQ0wCwYDVQQKDARURVNUMQ0wCwYDVQQLDARURVNUMQ0wCwYDVQQDDARURVNU\nAgkArbeOOjG2SHgwDQYJYIZIAWUDBAIBBQCggeQwGAYJKoZIhvcNAQkDMQsGCSqG\nSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTYxMDEyMTQwNTM2WjAvBgkqhkiG9w0B\nCQQxIgQgmOfPtR/8oqKDtnhscY6gLKG0xr5yoJpdm0FJwxXdy2IweQYJKoZIhvcN\nAQkPMWwwajALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAK\nBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAwBwYFKw4D\nAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggIAWxWUzZq/8m1UcV2s\nXHK5VJo34pA56NHql+Dxiwglg06voJQjUhE6MuqNqDMF/BOYcuwFyIc9Te3CvyOw\nCvHNF9i1TvNplushoRdhWrHs1x4jMxhExiaoJCnEGrAvMaFmeLtx+OdT79F1H6E8\nwCtGY4oMBk+09fWpvPPyC5/tuIFXnFV1M6OhdqPY7UeviIp/mz9H/qQcBom6SKcV\nyFgwbqqs0l1Lw1GmVvzRVF+lgSG2dy+VXZJT3Wlf2edO7I/aAfzLeYDbd9xTNwEU\n65oz6Okx3Y1pgcPcBHmqGyEpavvQGU0LPSDpyP/sHpzd1wmQx3puTxHcvGnkcRNT\nN9k6p3+j8ACNBzdryJ/o39CnhcadC8CGnaVyX4DATUTM+GpRgyQ1OFxftZM0J/c1\ngX5jU4ZsCCRcFcy9Ilt7PGfmcMi5xSaNJG2jWP7y4j5xEbEuTa7Mfya1yZbrrAbn\nJbKOk9MyCxCPpb+88p4pcVmB1Hb/VmMnddGwfV22B1fpaGJI4T2LVkWqKipFZUBL\nCOF41oD2380oYtFbZzgbKPKYbAYjl55kN1m66ynNl50wvIeRoCDeUtRb6ufcT9yR\n87HOyUBGCZk+VpYVh98/ukqjQptJZVlCct0H6kGwyyywtvNAfUjMbwGYXkTbb5pC\nSi/e2cmiHrVjJ4e7/pO4oaCnhUA=\n\n------E142FAB8043C53C7E22FD51905AE3E61--\n\n"
+      string: "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body bgcolor=\"white\">\r\n<center><h1>404
+        Not Found</h1></center>\r\n<hr><center>nginx/1.13.7</center>\r\n</body>\r\n</html>\r\n"
     http_version: 
-  recorded_at: Mon, 16 Jan 2017 15:35:49 GMT
+  recorded_at: Thu, 14 Dec 2017 10:09:40 GMT
 - request:
     method: get
     uri: http://localhost:9292/imagelist03.signed
@@ -154,7 +130,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - Faraday v0.11.0
+      - Faraday v0.13.1
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -162,50 +138,22 @@ http_interactions:
   response:
     status:
       code: 404
-      message: 'Not Found '
+      message: Not Found
     headers:
-      Content-Type:
-      - text/html;charset=utf-8
-      X-Cascade:
-      - pass
-      Content-Length:
-      - '480'
-      X-Xss-Protection:
-      - 1; mode=block
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - SAMEORIGIN
       Server:
-      - WEBrick/1.3.1 (Ruby/2.3.3/2016-11-21)
+      - nginx/1.13.7
       Date:
-      - Mon, 16 Jan 2017 15:35:49 GMT
+      - Thu, 14 Dec 2017 10:09:40 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '169'
       Connection:
-      - Keep-Alive
+      - keep-alive
     body:
       encoding: UTF-8
-      string: |
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style type="text/css">
-          body { text-align:center;font-family:helvetica,arial;font-size:22px;
-            color:#888;margin:20px}
-          #c {margin:0 auto;width:500px;text-align:left}
-          </style>
-        </head>
-        <body>
-          <h2>Sinatra doesn&rsquo;t know this ditty.</h2>
-          <img src='http://localhost:9292/__sinatra__/404.png'>
-          <div id="c">
-            Try this:
-            <pre>get &#x27;&#x2F;imagelist03.signed&#x27; do
-          &quot;Hello World&quot;
-        end
-        </pre>
-          </div>
-        </body>
-        </html>
+      string: "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body bgcolor=\"white\">\r\n<center><h1>404
+        Not Found</h1></center>\r\n<hr><center>nginx/1.13.7</center>\r\n</body>\r\n</html>\r\n"
     http_version: 
-  recorded_at: Mon, 16 Jan 2017 15:35:49 GMT
+  recorded_at: Thu, 14 Dec 2017 10:09:40 GMT
 recorded_with: VCR 3.0.3

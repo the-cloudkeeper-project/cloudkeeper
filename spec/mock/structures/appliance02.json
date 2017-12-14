@@ -15,6 +15,6 @@
   "image_list_identifier": "76fdee70-8119-5d33-aaaa-3c57e1c60df1",
   "hv:size": 42,
   "hv:uri": "http://some.uri.net/some/path",
-  "expiration": "2016-10-25T15:57:45+02:00",
+  "dc:date:expires": "2016-10-25T15:57:45Z",
   "sl:checksum:sha512": "81a106e4f352b2ff21c691280d9bfd3dfafdbe07154f414ae563d1786ff55a254e66e94e6644ae1f17570a502cd46d3e7f2ece043fcd211818eed871f4aaef53"
 }

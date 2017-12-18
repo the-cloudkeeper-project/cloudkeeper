@@ -56,7 +56,7 @@ module Cloudkeeper
         grpc_client.appliances(
           CloudkeeperGrpc::ImageListIdentifier.new(image_list_identifier: image_list_identifier),
           return_op: true
-        )
+        ), raise_exception: true
       ) do |response|
         response.inject({}) do |acc, elem|
           image = convert_image_proto(elem.image)

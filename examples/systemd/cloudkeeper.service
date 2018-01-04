@@ -1,0 +1,18 @@
+[Unit]
+Description="Cloudkeeper Oneshot Service"
+After=network.target
+
+[Service]
+Type=oneshot
+
+User=cloudkeeper
+Group=cloudkeeper
+PermissionsStartOnly=true
+
+ExecStartPre=/bin/mkdir -p /var/run/cloudkeeper /var/lock/cloudkeeper /var/spool/cloudkeeper/images /var/log/cloudkeeper
+ExecStartPre=/bin/chown -R cloudkeeper:cloudkeeper /var/run/cloudkeeper /var/lock/cloudkeeper /var/spool/cloudkeeper /var/log/cloudkeeper
+
+ExecStart=/usr/bin/cloudkeeper
+
+[Install]
+WantedBy=multi-user.target

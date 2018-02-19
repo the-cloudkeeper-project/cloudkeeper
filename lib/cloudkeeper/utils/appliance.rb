@@ -53,7 +53,7 @@ module Cloudkeeper
         appliance.image.add_image_file image_file.send("to_#{format}".to_sym)
       rescue Cloudkeeper::Errors::Image::Format::NoRequiredFormatAvailableError, Cloudkeeper::Errors::CommandExecutionError,
              Cloudkeeper::Errors::ArgumentError, ::IOError => ex
-        raise Cloudkeeper::Errors::Image::ConversionError, ex
+        raise Cloudkeeper::Errors::Image::ConversionError, "Image #{appliance.image.uri.inspect} conversion error: #{ex.message}"
       end
     end
   end

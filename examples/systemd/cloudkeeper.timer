@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Cloudkeeper every 2 hours and 15 minutes after boot
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=2h 
+
+[Install]
+WantedBy=timers.target

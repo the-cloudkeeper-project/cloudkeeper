@@ -63,6 +63,11 @@ Metrics/ParameterLists:
   Exclude:
     - 'lib/cloudkeeper/entities/*.rb'
 
+Naming/UncommunicativeMethodParamName:
+  Exclude:
+    - 'lib/cloudkeeper/entities/image_list.rb'
+    - 'lib/cloudkeeper/entities/appliance.rb'
+
 Metrics/BlockLength:
   Exclude:
     - 'Rakefile'

@@ -72,7 +72,7 @@ module Cloudkeeper
               end
 
               response.value
-              open(filename, 'w') { |file| response.read_body { |chunk| file.write(chunk) } }
+              File.open(filename, 'w') { |file| response.read_body { |chunk| file.write(chunk) } }
             end
           end
         rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, Errno::ECONNREFUSED, Net::HTTPBadResponse,

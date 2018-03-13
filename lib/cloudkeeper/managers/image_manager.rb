@@ -88,7 +88,7 @@ module Cloudkeeper
         end
 
         def generate_filename(uri)
-          File.join(Cloudkeeper::Settings[:'image-dir'], Zaru.sanitize!(File.basename(uri.path)))
+          File.join(Cloudkeeper::Settings[:'image-dir'], Cloudkeeper::Utils::Filename.sanitize(File.basename(uri.path)))
         end
       end
     end

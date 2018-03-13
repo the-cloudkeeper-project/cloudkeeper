@@ -1,6 +1,5 @@
 require 'tmpdir'
 require 'faraday'
-require 'zaru'
 require 'openssl'
 require 'json'
 
@@ -67,7 +66,7 @@ module Cloudkeeper
       end
 
       def generate_filename(uri, dir)
-        File.join(dir, Zaru.sanitize!("#{uri.host}#{uri.path}"))
+        File.join(dir, Cloudkeeper::Utils::Filename.sanitize("#{uri.host}#{uri.path}"))
       end
 
       def convert_image_list(image_list_hash)

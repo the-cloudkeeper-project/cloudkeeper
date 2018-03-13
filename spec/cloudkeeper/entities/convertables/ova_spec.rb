@@ -118,6 +118,28 @@ describe Cloudkeeper::Entities::Convertables::Ova do
     it 'extracts disk file and returns its location' do
       expect(convertable_instance_ova.send(:extract_disk)).to eq(convertable_instance_vmdk.file)
     end
+
+    context 'with wierdly named VMDK file' do
+      let(:filename) { 'Some //wierd// filename.vmdk' }
+      let(:output) { "image.ovf\n#{filename}\nimage.mf\n" }
+      let(:sanitized) { File.join(MOCK_DIR, 'image_conversions', 'Some_wierd_filename.vmdk') }
+
+      before do
+        allow(Cloudkeeper::CommandExecutioner).to receive(:execute).with('tar',
+                                                                         '-x',
+                                                                         '-f',
+                                                                         convertable_instance_ova.file,
+                                                                         '-C',
+                                                                         File.join(MOCK_DIR, 'image_conversions'),
+                                                                         filename)
+        allow(File).to receive(:rename).with(File.join(MOCK_DIR, 'image_conversions', filename),
+                                             sanitized)
+      end
+
+      it 'extracts disk file and returns its location sanitized' do
+        expect(convertable_instance_ova.send(:extract_disk)).to eq(sanitized)
+      end
+    end
   end
 
   describe '.to_vmdk' do

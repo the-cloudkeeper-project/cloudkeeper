@@ -33,12 +33,22 @@ module Cloudkeeper
 
         def extract_disk
           archived_disk = disk_file
+          archived_disk_sanitized = Cloudkeeper::Utils::Filename.sanitize archived_disk
+
           disk_directory = File.dirname(file)
           extracted_file = File.join(disk_directory, archived_disk)
           Cloudkeeper::CommandExecutioner.execute('tar', '-x', '-f', file, '-C', disk_directory, archived_disk)
-          extracted_file
-        rescue Cloudkeeper::Errors::CommandExecutionError => ex
+
+          return extracted_file if archived_disk == archived_disk_sanitized
+
+          extracted_file_sanitized = File.join(disk_directory, archived_disk_sanitized)
+          logger.debug "Renaming file #{extracted_file.inspect} to #{extracted_file_sanitized.inspect}"
+          File.rename extracted_file, extracted_file_sanitized
+
+          extracted_file_sanitized
+        rescue Cloudkeeper::Errors::CommandExecutionError, ::SystemCallError => ex
           delete_if_exists extracted_file
+          delete_if_exists extracted_file_sanitized
           raise ex
         end
 

@@ -72,7 +72,7 @@ module Cloudkeeper
               end
 
               response.value
-              open(filename, 'w') { |file| response.read_body { |chunk| file.write(chunk) } }
+              File.open(filename, 'w') { |file| response.read_body { |chunk| file.write(chunk) } }
             end
           end
         rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, Errno::ECONNREFUSED, Net::HTTPBadResponse,
@@ -88,7 +88,7 @@ module Cloudkeeper
         end
 
         def generate_filename(uri)
-          File.join(Cloudkeeper::Settings[:'image-dir'], Zaru.sanitize!(File.basename(uri.path)))
+          File.join(Cloudkeeper::Settings[:'image-dir'], Cloudkeeper::Utils::Filename.sanitize(File.basename(uri.path)))
         end
       end
     end

@@ -5,5 +5,6 @@ module Cloudkeeper
     autoload :URL, 'cloudkeeper/utils/url'
     autoload :Appliance, 'cloudkeeper/utils/appliance'
     autoload :Date, 'cloudkeeper/utils/date'
+    autoload :Filename, 'cloudkeeper/utils/filename'
   end
 end

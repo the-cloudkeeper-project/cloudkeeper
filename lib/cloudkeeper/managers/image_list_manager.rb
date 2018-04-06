@@ -54,7 +54,7 @@ module Cloudkeeper
         raise Cloudkeeper::Errors::ImageList::RetrievalError,
               "couldn't download image list from url #{url.inspect}\n#{response.to_hash.inspect}"
       rescue Cloudkeeper::Errors::ImageList::RetrievalError, Cloudkeeper::Errors::InvalidURLError, ::IOError,
-             ::Faraday::ConnectionFailed, ::Faraday::SSLError => ex
+             ::Faraday::ClientError => ex
         raise Cloudkeeper::Errors::ImageList::DownloadError, ex
       end
 

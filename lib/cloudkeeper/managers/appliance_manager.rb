@@ -32,7 +32,7 @@ module Cloudkeeper
       def sync_expired_image_lists
         logger.debug 'Removing appliances from expired image lists...'
         image_list_manager.image_lists.each_value do |image_list|
-          backend_connector.remove_image_list image_list if image_list.expired?
+          backend_connector.remove_image_list image_list.identifier if image_list.expired?
         end
       end
 
@@ -105,10 +105,20 @@ module Cloudkeeper
             next
           end
 
-          image_update = update_image?(image_list_appliance, backend_appliance)
-          image_list_appliance.image = nil unless image_update
-          update_appliance image_list_appliance if image_update || update_metadata?(image_list_appliance, backend_appliance)
+          method = :update_appliance_metadata if update_metadata?(image_list_appliance, backend_appliance)
+          method = :update_appliance if update_image?(image_list_appliance, backend_appliance)
+
+          send method, image_list_appliance if method
         end
+      end
+
+      def update_appliance(appliance)
+        modify_appliance :update_appliance, appliance
+      end
+
+      def update_appliance_metadata(appliance)
+        appliance.image = nil
+        modify_appliance :update_appliance_metadata, appliance
       end
 
       def add_appliance(appliance)

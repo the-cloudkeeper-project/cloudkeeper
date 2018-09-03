@@ -5,7 +5,7 @@ describe Cloudkeeper::Entities::Image do
 
   describe '#new' do
     it 'returns instance of Image' do
-      is_expected.to be_instance_of described_class
+      expect(image).to be_instance_of described_class
     end
 
     it 'without setting prepares image_files attribute as an array instance' do

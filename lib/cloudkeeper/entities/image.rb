@@ -1,14 +1,20 @@
+require 'digest'
+require 'json'
+
 module Cloudkeeper
   module Entities
     class Image
-      attr_accessor :image_files, :size, :uri, :checksum
+      IMAGE_LIST_IMAGE_ATTRIBUTES = %i[hv:uri sl:checksum:sha512 hv:size hv:version].freeze
 
-      def initialize(uri, checksum, size = 0, image_files = [])
+      attr_accessor :image_files, :size, :uri, :checksum, :digest
+
+      def initialize(uri, checksum, size = 0, digest = '', image_files = [])
         raise Cloudkeeper::Errors::ArgumentError, 'uri and checksum cannot be nil nor empty' if uri.blank? || checksum.blank?
 
         @uri = uri
         @checksum = checksum
         @size = size
+        @digest = digest
         @image_files = image_files
       end
 
@@ -30,7 +36,10 @@ module Cloudkeeper
         raise Cloudkeeper::Errors::Parsing::InvalidImageHashError, 'invalid image hash' if image_hash.blank?
 
         image_hash.deep_symbolize_keys!
-        Image.new image_hash[:'hv:uri'], image_hash[:'sl:checksum:sha512'], image_hash[:'hv:size']
+        image_hash.keep_if { |key| IMAGE_LIST_IMAGE_ATTRIBUTES.include? key }
+
+        Image.new image_hash[:'hv:uri'], image_hash[:'sl:checksum:sha512'], image_hash[:'hv:size'],
+                  Digest::SHA512.hexdigest(image_hash.to_json)
       rescue Cloudkeeper::Errors::ArgumentError => ex
         raise Cloudkeeper::Errors::Parsing::InvalidImageHashError, ex, "image hash #{image_hash.inspect} " \
                                                                        "doesn't contain all the necessary data"

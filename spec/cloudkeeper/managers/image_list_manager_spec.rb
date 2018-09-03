@@ -12,7 +12,7 @@ describe Cloudkeeper::Managers::ImageListManager do
 
   describe '#new' do
     it 'returns an instance of ImageListManager' do
-      is_expected.to be_instance_of described_class
+      expect(ilm).to be_instance_of described_class
     end
 
     it 'prepares image_lists attribute as an hash instance' do
@@ -269,183 +269,6 @@ describe Cloudkeeper::Managers::ImageListManager do
 
   describe '.download_image_lists' do
     let(:expiration) { Time.new(2499, 12, 31, 22) }
-    let(:attributes1) do
-      { 'dc:description': 'This version of CERNVM has been modified - default OS extended to 40GB of disk '\
-        '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources',
-        'dc:identifier': 'c0482bc2-bf41-5d49-cccc-a750174a186b',
-        'ad:mpuri': 'https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-cccc-a750174a186b:484/',
-        'dc:title': 'Image for CernVM [Scientific Linux/6.0/KVM]',
-        'ad:group': 'General group',
-        'hv:hypervisor': 'KVM',
-        'hv:format': 'OVA',
-        'hv:ram_minimum': '512',
-        'ad:ram_recommended': '1024',
-        'hv:core_minimum': '1',
-        'ad:core_recommended': '4',
-        'hv:size': '121243136',
-        'hv:uri': 'https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova',
-        'hv:version': '3.3.0-1',
-        "dc:date:expires": '2499-12-31T22:00:00Z',
-        'sl:arch': 'x86_64',
-        'sl:checksum:sha512': '5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4'\
-        'b5dc3d68a3b22581b3318db35dd3364e83dab0',
-        'sl:comments': '',
-        'sl:os': 'Linux',
-        'sl:osname': 'Scientific Linux',
-        'sl:osversion': '6.0',
-        'ad:user:fullname': 'Clark Kent',
-        'ad:user:guid': '9d9dd6cf-b61a-cccc-b1df-b5731adf717c',
-        'ad:user:uri': 'https://appdb.somewhere.net/store/person/clark.kent',
-        'dc:creator': 'Applications Database',
-        'hv:ca': '/DC=XXX/DC=YYY/CN=SOME TEST CA',
-        'hv:dn': '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-        'hv:email': 'dontwriteme@please.net' }.deep_stringify_keys
-    end
-    let(:attributes2) do
-      { 'dc:description': '',
-        'dc:identifier': '662b0e71-3e21-dddd-b6a1-cc2f51319fa7',
-        'ad:mpuri': 'https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-dddd-b6a1-cc2f51319fa7:485/',
-        'dc:title': 'Image for CentOS 6 minimal [CentOS/6.x/KVM]',
-        'ad:group': 'General group',
-        'hv:hypervisor': 'KVM',
-        'hv:format': 'OVA',
-        'hv:size': '581816320',
-        'hv:uri': 'https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova',
-        'hv:version': '20141029',
-        "dc:date:expires": '2499-12-31T22:00:00Z',
-        'sl:arch': 'x86_64',
-        'sl:checksum:sha512': '02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a85465'\
-        '4ff645097c47da236e46ad54806c6fc72a29ce',
-        'sl:comments': '',
-        'sl:os': 'Linux',
-        'sl:osname': 'CentOS',
-        'sl:osversion': '6.6',
-        'ad:user:fullname': 'Oliver Queen',
-        'ad:user:guid': 'e85470d8-2af9-dddd-8c26-0014c23dfd8c',
-        'ad:user:uri': 'https://appdb.somewhere.net/store/person/oliver.queen',
-        'dc:creator': 'Applications Database',
-        'hv:ca': '/DC=XXX/DC=YYY/CN=SOME TEST CA',
-        'hv:dn': '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-        'hv:email': 'dontwriteme@please.net' }.deep_stringify_keys
-    end
-    let(:attributes3) do
-      { 'dc:description': 'This version of CERNVM has been modified - default OS extended to 40GB of disk '\
-        '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources',
-        'dc:identifier': 'c0482bc2-bf41-5d49-gggg-a750174a186b',
-        'ad:mpuri': 'https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-gggg-a750174a186b:484/',
-        'dc:title': 'Image for CernVM [Scientific Linux/6.0/KVM]',
-        'ad:group': 'General group',
-        'hv:hypervisor': 'KVM',
-        'hv:format': 'OVA',
-        'hv:ram_minimum': '512',
-        'ad:ram_recommended': '1024',
-        'hv:core_minimum': '1',
-        'ad:core_recommended': '4',
-        'hv:size': '121243136',
-        'hv:uri': 'https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova',
-        'hv:version': '3.3.0-1',
-        "dc:date:expires": '2499-12-31T22:00:00Z',
-        'sl:arch': 'x86_64',
-        'sl:checksum:sha512': '5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4'\
-        'b5dc3d68a3b22581b3318db35dd3364e83dab0',
-        'sl:comments': '',
-        'sl:os': 'Linux',
-        'sl:osname': 'Scientific Linux',
-        'sl:osversion': '6.0',
-        'ad:user:fullname': 'Victor Stone',
-        'ad:user:guid': '9d9dd6cf-b61a-gggg-b1df-b5731adf717c',
-        'ad:user:uri': 'https://appdb.somewhere.net/store/person/victor.stone',
-        'dc:creator': 'Applications Database',
-        'hv:ca': '/DC=XXX/DC=YYY/CN=SOME TEST CA',
-        'hv:dn': '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-        'hv:email': 'dontwriteme@please.net' }.deep_stringify_keys
-    end
-    let(:attributes4) do
-      { 'dc:description': '',
-        'dc:identifier': '662b0e71-3e21-hhhh-b6a1-cc2f51319fa7',
-        'ad:mpuri': 'https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-hhhh-b6a1-cc2f51319fa7:485/',
-        'dc:title': 'Image for CentOS 6 minimal [CentOS/6.x/KVM]',
-        'ad:group': 'General group',
-        'hv:hypervisor': 'KVM',
-        'hv:format': 'OVA',
-        'hv:size': '581816320',
-        'hv:uri': 'https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova',
-        'hv:version': '20141029',
-        "dc:date:expires": '2499-12-31T22:00:00Z',
-        'sl:arch': 'x86_64',
-        'sl:checksum:sha512': '02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a85465'\
-        '4ff645097c47da236e46ad54806c6fc72a29ce',
-        'sl:comments': '',
-        'sl:os': 'Linux',
-        'sl:osname': 'CentOS',
-        'sl:osversion': '6.6',
-        'ad:user:fullname': 'Billy Batson',
-        'ad:user:guid': 'e85470d8-2af9-hhhh-8c26-0014c23dfd8c',
-        'ad:user:uri': 'https://appdb.somewhere.net/store/person/billy.batson',
-        'dc:creator': 'Applications Database',
-        'hv:ca': '/DC=XXX/DC=YYY/CN=SOME TEST CA',
-        'hv:dn': '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-        'hv:email': 'dontwriteme@please.net' }.deep_stringify_keys
-    end
-    let(:attributes5) do
-      { 'dc:description': 'This version of CERNVM has been modified - default OS extended to 40GB of disk '\
-        '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources',
-        'dc:identifier': 'c0482bc2-bf41-5d49-eeee-a750174a186b',
-        'ad:mpuri': 'https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-eeee-a750174a186b:484/',
-        'dc:title': 'Image for CernVM [Scientific Linux/6.0/KVM]',
-        'ad:group': 'General group',
-        'hv:hypervisor': 'KVM',
-        'hv:format': 'OVA',
-        'hv:ram_minimum': '512',
-        'ad:ram_recommended': '1024',
-        'hv:core_minimum': '1',
-        'ad:core_recommended': '4',
-        'hv:size': '121243136',
-        'hv:uri': 'https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova',
-        'hv:version': '3.3.0-1',
-        "dc:date:expires": '2499-12-31T22:00:00Z',
-        'sl:arch': 'x86_64',
-        'sl:checksum:sha512': '5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4'\
-        'b5dc3d68a3b22581b3318db35dd3364e83dab0',
-        'sl:comments': '',
-        'sl:os': 'Linux',
-        'sl:osname': 'Scientific Linux',
-        'sl:osversion': '6.0',
-        'ad:user:fullname': 'Arthur Curry',
-        'ad:user:guid': '9d9dd6cf-b61a-eeee-b1df-b5731adf717c',
-        'ad:user:uri': 'https://appdb.somewhere.net/store/person/arthur.curry',
-        'dc:creator': 'Applications Database',
-        'hv:ca': '/DC=XXX/DC=YYY/CN=SOME TEST CA',
-        'hv:dn': '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-        'hv:email': 'dontwriteme@please.net' }.deep_stringify_keys
-    end
-    let(:attributes6) do
-      { 'dc:description': '',
-        'dc:identifier': '662b0e71-3e21-ffff-b6a1-cc2f51319fa7',
-        'ad:mpuri': 'https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-ffff-b6a1-cc2f51319fa7:485/',
-        'dc:title': 'Image for CentOS 6 minimal [CentOS/6.x/KVM]',
-        'ad:group': 'General group',
-        'hv:hypervisor': 'KVM',
-        'hv:format': 'OVA',
-        'hv:size': '581816320',
-        'hv:uri': 'https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova',
-        'hv:version': '20141029',
-        "dc:date:expires": '2499-12-31T22:00:00Z',
-        'sl:arch': 'x86_64',
-        'sl:checksum:sha512': '02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a85465'\
-        '4ff645097c47da236e46ad54806c6fc72a29ce',
-        'sl:comments': '',
-        'sl:os': 'Linux',
-        'sl:osname': 'CentOS',
-        'sl:osversion': '6.6',
-        'ad:user:fullname': 'Ray Palmer',
-        'ad:user:guid': 'e85470d8-2af9-ffff-8c26-0014c23dfd8c',
-        'ad:user:uri': 'https://appdb.somewhere.net/store/person/ray.palmer',
-        'dc:creator': 'Applications Database',
-        'hv:ca': '/DC=XXX/DC=YYY/CN=SOME TEST CA',
-        'hv:dn': '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-        'hv:email': 'dontwriteme@please.net' }.deep_stringify_keys
-    end
 
     before do
       Cloudkeeper::Settings[:'ca-dir'] = File.join(MOCK_DIR, 'ca')
@@ -489,7 +312,6 @@ describe Cloudkeeper::Managers::ImageListManager do
           expect(appliance.vo).to eq('some2.vo.net')
           expect(appliance.expiration_date).to eq(expiration)
           expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
-          expect(appliance.attributes).to eq(attributes1)
 
           appliance = il.appliances[il.appliances.keys.last]
 
@@ -506,7 +328,6 @@ describe Cloudkeeper::Managers::ImageListManager do
           expect(appliance.vo).to eq('some2.vo.net')
           expect(appliance.expiration_date).to eq(expiration)
           expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
-          expect(appliance.attributes).to eq(attributes2)
 
           il = ilm.image_lists['76fdee70-8119-5d33-gggg-3c57e1c60df1']
 
@@ -532,7 +353,6 @@ describe Cloudkeeper::Managers::ImageListManager do
           expect(appliance.vo).to eq('some4.vo.net')
           expect(appliance.expiration_date).to eq(expiration)
           expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
-          expect(appliance.attributes).to eq(attributes3)
 
           appliance = il.appliances[il.appliances.keys.last]
 
@@ -549,7 +369,6 @@ describe Cloudkeeper::Managers::ImageListManager do
           expect(appliance.vo).to eq('some4.vo.net')
           expect(appliance.expiration_date).to eq(expiration)
           expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
-          expect(appliance.attributes).to eq(attributes4)
 
           il = ilm.image_lists['76fdee70-8119-5d33-eeee-3c57e1c60df1']
 
@@ -575,7 +394,6 @@ describe Cloudkeeper::Managers::ImageListManager do
           expect(appliance.vo).to eq('some3.vo.net')
           expect(appliance.expiration_date).to eq(expiration)
           expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
-          expect(appliance.attributes).to eq(attributes5)
 
           appliance = il.appliances[il.appliances.keys.last]
 
@@ -592,7 +410,6 @@ describe Cloudkeeper::Managers::ImageListManager do
           expect(appliance.vo).to eq('some3.vo.net')
           expect(appliance.expiration_date).to eq(expiration)
           expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
-          expect(appliance.attributes).to eq(attributes6)
         end
       end
     end
@@ -631,7 +448,6 @@ describe Cloudkeeper::Managers::ImageListManager do
           expect(appliance.vo).to eq('some2.vo.net')
           expect(appliance.expiration_date).to eq(expiration)
           expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
-          expect(appliance.attributes).to eq(attributes1)
 
           appliance = il.appliances[il.appliances.keys.last]
 
@@ -648,7 +464,6 @@ describe Cloudkeeper::Managers::ImageListManager do
           expect(appliance.vo).to eq('some2.vo.net')
           expect(appliance.expiration_date).to eq(expiration)
           expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-cccc-3c57e1c60df1')
-          expect(appliance.attributes).to eq(attributes2)
 
           il = ilm.image_lists['76fdee70-8119-5d33-gggg-3c57e1c60df1']
 
@@ -674,7 +489,6 @@ describe Cloudkeeper::Managers::ImageListManager do
           expect(appliance.vo).to eq('some4.vo.net')
           expect(appliance.expiration_date).to eq(expiration)
           expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
-          expect(appliance.attributes).to eq(attributes3)
 
           appliance = il.appliances[il.appliances.keys.last]
 
@@ -691,7 +505,6 @@ describe Cloudkeeper::Managers::ImageListManager do
           expect(appliance.vo).to eq('some4.vo.net')
           expect(appliance.expiration_date).to eq(expiration)
           expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-gggg-3c57e1c60df1')
-          expect(appliance.attributes).to eq(attributes4)
 
           il = ilm.image_lists['76fdee70-8119-5d33-eeee-3c57e1c60df1']
 
@@ -717,7 +530,6 @@ describe Cloudkeeper::Managers::ImageListManager do
           expect(appliance.vo).to eq('some3.vo.net')
           expect(appliance.expiration_date).to eq(expiration)
           expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
-          expect(appliance.attributes).to eq(attributes5)
 
           appliance = il.appliances[il.appliances.keys.last]
 
@@ -734,7 +546,6 @@ describe Cloudkeeper::Managers::ImageListManager do
           expect(appliance.vo).to eq('some3.vo.net')
           expect(appliance.expiration_date).to eq(expiration)
           expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-eeee-3c57e1c60df1')
-          expect(appliance.attributes).to eq(attributes6)
         end
       end
     end

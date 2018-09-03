@@ -6,7 +6,7 @@ describe Cloudkeeper::Entities::ImageFile do
   describe '#new' do
     context 'when not OVA image' do
       it 'returns ImageFile instance' do
-        is_expected.to be_instance_of described_class
+        expect(image_file).to be_instance_of described_class
       end
 
       it 'returns ImageFile instance extended of Convertable module' do
@@ -18,7 +18,7 @@ describe Cloudkeeper::Entities::ImageFile do
       subject(:image_file) { described_class.new '/some/file.ova', :ova, '123456', 666, true }
 
       it 'returns ImageFile instance' do
-        is_expected.to be_instance_of described_class
+        expect(image_file).to be_instance_of described_class
       end
 
       it 'returns ImageFile instance extended of Convertable module' do

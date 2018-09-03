@@ -41,7 +41,9 @@
           "sl:osversion": "6.0",
           "ad:user:fullname": "Bruce Wayne",
           "ad:user:guid": "9d9dd6cf-b61a-aaaa-b1df-b5731adf717c",
-          "ad:user:uri": "https://appdb.somewhere.net/store/person/bruce.wayne"
+          "ad:user:uri": "https://appdb.somewhere.net/store/person/bruce.wayne",
+          "ad:base_mpuri": "https://appdb.somewhere.net/store/vm/image/2a5451eb-91f3-aaaa-95a7-9cff7362d553:6450:1469784811/",
+          "ad:appid": "993"
         }
       },
       {
@@ -65,7 +67,9 @@
           "sl:osversion": "6.6",
           "ad:user:fullname": "Barry Allen",
           "ad:user:guid": "e85470d8-2af9-bbbb-8c26-0014c23dfd8c",
-          "ad:user:uri": "https://appdb.somewhere.net/store/person/barry.allen"
+          "ad:user:uri": "https://appdb.somewhere.net/store/person/barry.allen",
+          "ad:base_mpuri": "https://appdb.somewhere.net/store/vm/image/662b0e71-3e21-bbbb-b6a1-cc2f51319fa7:485/",
+          "ad:appid": "111"
         }
       }
     ],

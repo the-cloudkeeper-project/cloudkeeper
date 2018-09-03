@@ -7,7 +7,7 @@ module Cloudkeeper
         image_file = acceptable_image_file image
 
         CloudkeeperGrpc::Image.new mode: :LOCAL, location: image_file.file, format: image_file.format.upcase,
-                                   checksum: image_file.checksum, size: image_file.size.to_i, uri: image.uri
+                                   checksum: image_file.checksum, size: image_file.size.to_i, uri: image.uri, digest: image.digest
       end
 
       def convert_appliance(appliance, image_proto)
@@ -16,13 +16,12 @@ module Cloudkeeper
                                        ram: appliance.ram.to_i, core: appliance.core.to_i, version: appliance.version.to_s,
                                        architecture: appliance.architecture.to_s, operating_system: appliance.operating_system.to_s,
                                        vo: appliance.vo.to_s, image: image_proto, expiration_date: appliance.expiration_date.to_i,
-                                       image_list_identifier: appliance.image_list_identifier.to_s, attributes: appliance.attributes
+                                       image_list_identifier: appliance.image_list_identifier.to_s, appid: appliance.appid.to_s,
+                                       base_mpuri: appliance.base_mpuri.to_s, digest: appliance.digest.to_s
       end
 
       def convert_image_proto(image_proto)
-        return nil unless image_proto
-
-        Cloudkeeper::Entities::Image.new image_proto.uri, image_proto.checksum, image_proto.size
+        Cloudkeeper::Entities::Image.new image_proto.uri, image_proto.checksum, image_proto.size, image_proto.digest
       end
 
       def convert_appliance_proto(appliance_proto, image)
@@ -31,7 +30,8 @@ module Cloudkeeper
                                              appliance_proto.image_list_identifier, appliance_proto.title,
                                              appliance_proto.description, appliance_proto.group, appliance_proto.ram,
                                              appliance_proto.core, appliance_proto.version, appliance_proto.architecture,
-                                             appliance_proto.operating_system, image, appliance_proto.attributes.to_h
+                                             appliance_proto.base_mpuri, appliance_proto.appid, appliance_proto.digest,
+                                             appliance_proto.operating_system, image
       end
 
       def acceptable_image_file(image)

@@ -24,5 +24,7 @@
   "ad:user:uri": "https://appdb.somewhere.net/store/person/bruce.wayne",
   "vo": "some.vo",
   "dc:date:expires": "2016-10-25T15:57:45Z",
-  "image_list_identifier": "76fdee70-8119-5d33-xxxx-3c57e1c60df1"
+  "image_list_identifier": "76fdee70-8119-5d33-xxxx-3c57e1c60df1",
+  "ad:base_mpuri": "https://appdb.somewhere.net/store/vm/image/2a5451eb-91f3-aaaa-95a7-9cff7362d553:6450:1469784811/",
+  "ad:appid": "993"
 }

@@ -1,13 +1,19 @@
+require 'digest'
+require 'json'
+
 module Cloudkeeper
   module Entities
     class Appliance
-      attr_accessor :identifier, :description, :mpuri, :title, :group, :ram, :core, :version, :architecture
-      attr_accessor :operating_system, :image, :attributes, :vo, :expiration_date, :image_list_identifier
+      IMAGE_LIST_APPLIANCE_ATTRIBUTES = %i[dc:identifier ad:mpuri dc:date:expires dc:title dc:description
+                                           ad:group hv:ram_minimum hv:core_minimum hv:version sl:arch
+                                           ad:base_mpuri ad:appid sl:os sl:osname sl:osversion].freeze
 
-      REJECTED_ATTRIBUTES = %i[vo image_list_identifier].freeze
+      attr_accessor :identifier, :description, :mpuri, :title, :group, :ram, :core, :version, :architecture
+      attr_accessor :operating_system, :image, :vo, :expiration_date, :image_list_identifier, :base_mpuri, :appid, :digest
 
       def initialize(identifier, mpuri, vo, expiration_date, image_list_identifier, title = '', description = '', group = '',
-                     ram = 1024, core = 1, version = '', architecture = '', operating_system = '', image = nil, attributes = {})
+                     ram = 1024, core = 1, version = '', architecture = '', base_mpuri = '', appid = '', digest = '',
+                     operating_system = '', image = nil)
         if identifier.blank? || \
            mpuri.blank? || \
            vo.blank? || \
@@ -28,10 +34,12 @@ module Cloudkeeper
         @architecture = architecture
         @operating_system = operating_system
         @image = image
-        @attributes = attributes
         @vo = vo
         @expiration_date = expiration_date
         @image_list_identifier = image_list_identifier
+        @base_mpuri = base_mpuri
+        @appid = appid
+        @digest = digest
       end
 
       def expired?
@@ -52,7 +60,7 @@ module Cloudkeeper
 
           appliance = construct_appliance(appliance_hash)
           construct_os_name!(appliance, appliance_hash)
-          populate_attributes!(appliance, appliance_hash)
+          compute_digest!(appliance, appliance_hash)
 
           appliance
         rescue Cloudkeeper::Errors::ArgumentError => ex
@@ -72,7 +80,9 @@ module Cloudkeeper
                         appliance_hash[:'hv:ram_minimum'],
                         appliance_hash[:'hv:core_minimum'],
                         appliance_hash[:'hv:version'],
-                        appliance_hash[:'sl:arch']
+                        appliance_hash[:'sl:arch'],
+                        appliance_hash[:'ad:base_mpuri'],
+                        appliance_hash[:'ad:appid']
         end
 
         def construct_os_name!(appliance, appliance_hash)
@@ -81,9 +91,9 @@ module Cloudkeeper
           appliance.operating_system = "#{appliance.operating_system} #{appliance_hash[:'sl:osversion']}".strip
         end
 
-        def populate_attributes!(appliance, appliance_hash)
-          appliance_hash.reject! { |k, _v| REJECTED_ATTRIBUTES.include? k }
-          appliance.attributes = appliance_hash.map { |k, v| [k.to_s, v.to_s] }.to_h
+        def compute_digest!(appliance, appliance_hash)
+          digest_hash = appliance_hash.select { |key| IMAGE_LIST_APPLIANCE_ATTRIBUTES.include? key }
+          appliance.digest = Digest::SHA512.hexdigest(digest_hash.to_json)
         end
       end
     end

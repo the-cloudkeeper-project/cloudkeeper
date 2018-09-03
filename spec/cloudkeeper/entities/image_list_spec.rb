@@ -5,7 +5,7 @@ describe Cloudkeeper::Entities::ImageList do
 
   describe '#new' do
     it 'returns an instance of ImageList' do
-      is_expected.to be_instance_of described_class
+      expect(image_list).to be_instance_of described_class
     end
 
     it 'prepares appliances attribute as an hash instance' do
@@ -135,8 +135,6 @@ describe Cloudkeeper::Entities::ImageList do
   describe '#populate_appliances!' do
     let(:expiration) { Time.new(2499, 12, 31, 22) }
     let(:image_list_hash) { load_file 'image_list07.json', symbolize: true }
-    let(:attributes1) { load_file 'image_list08.json' }
-    let(:attributes2) { load_file 'image_list09.json' }
 
     before do
       image_list.identifier = '76fdee70-8119-5d33-aaaa-3c57e1c60df1'
@@ -162,7 +160,10 @@ describe Cloudkeeper::Entities::ImageList do
         expect(appliance.vo).to eq('some1.vo.net')
         expect(appliance.expiration_date).to eq(expiration)
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
-        expect(appliance.attributes).to eq(attributes1)
+        expect(appliance.base_mpuri).to eq('https://appdb.somewhere.net/store/vm/image/2a5451eb-91f3-aaaa-95a7-9cff7362d553:6450:1469784811/')
+        expect(appliance.appid).to eq('993')
+        expect(appliance.digest).to eq('1ce845c07468bd628b74518a6b5a98fe2b1510b6ff8c23b0c848493c19da6289244ffdf7fa9f66c097951dfea'\
+                                       'e8f6f950eca2b9fecc50f217f81695785ed1272')
 
         appliance = image_list.appliances[image_list.appliances.keys.last]
 
@@ -179,7 +180,10 @@ describe Cloudkeeper::Entities::ImageList do
         expect(appliance.vo).to eq('some1.vo.net')
         expect(appliance.expiration_date).to eq(expiration)
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
-        expect(appliance.attributes).to eq(attributes2)
+        expect(appliance.base_mpuri).to eq('https://appdb.somewhere.net/store/vm/image/662b0e71-3e21-bbbb-b6a1-cc2f51319fa7:485/')
+        expect(appliance.appid).to eq('111')
+        expect(appliance.digest).to eq('a9f49096f292726ae236844dd91653c2deb47fb36dad6cde4906112243496ebb2bdaaf165c0116e29c6e87eda'\
+                                       '65d08eadc6352888f4a32d376b59d01c3815f12')
       end
     end
   end
@@ -188,8 +192,6 @@ describe Cloudkeeper::Entities::ImageList do
     context 'with image list in form of hash' do
       let(:expiration) { Time.new(2499, 12, 31, 22) }
       let(:image_list_hash) { load_file 'image_list10.json' }
-      let(:attributes1) { load_file 'image_list11.json' }
-      let(:attributes2) { load_file 'image_list12.json' }
 
       it 'returns fully populated image list' do
         il = described_class.from_hash image_list_hash
@@ -216,7 +218,8 @@ describe Cloudkeeper::Entities::ImageList do
         expect(appliance.vo).to eq('some1.vo.net')
         expect(appliance.expiration_date).to eq(expiration)
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
-        expect(appliance.attributes).to eq(attributes1)
+        expect(appliance.base_mpuri).to eq('https://appdb.somewhere.net/store/vm/image/2a5451eb-91f3-aaaa-95a7-9cff7362d553:6450:1469784811/')
+        expect(appliance.appid).to eq('993')
 
         appliance = il.appliances[il.appliances.keys.last]
 
@@ -233,7 +236,8 @@ describe Cloudkeeper::Entities::ImageList do
         expect(appliance.vo).to eq('some1.vo.net')
         expect(appliance.expiration_date).to eq(expiration)
         expect(appliance.image_list_identifier).to eq('76fdee70-8119-5d33-aaaa-3c57e1c60df1')
-        expect(appliance.attributes).to eq(attributes2)
+        expect(appliance.base_mpuri).to eq('https://appdb.somewhere.net/store/vm/image/662b0e71-3e21-bbbb-b6a1-cc2f51319fa7:485/')
+        expect(appliance.appid).to eq('111')
       end
     end
   end

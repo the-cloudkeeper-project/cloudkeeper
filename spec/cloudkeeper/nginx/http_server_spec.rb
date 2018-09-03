@@ -5,7 +5,7 @@ describe Cloudkeeper::Nginx::HttpServer do
 
   describe '#new' do
     it 'returns an instance of HttpServer' do
-      is_expected.to be_instance_of described_class
+      expect(http_server).to be_instance_of described_class
     end
 
     it 'prepares acces_data attribute as an instance of Hash' do

@@ -13,7 +13,7 @@ describe Cloudkeeper::Managers::ImageManager do
 
   describe '#new' do
     it 'returns an instance of ImageManager' do
-      is_expected.to be_instance_of described_class
+      expect(im).to be_instance_of described_class
     end
   end
 
@@ -42,12 +42,12 @@ describe Cloudkeeper::Managers::ImageManager do
         file
       end
 
-      it 'raise a PermissionDeniedError exception' do
-        expect { described_class.check_file! file }.to raise_error(Cloudkeeper::Errors::PermissionDeniedError)
-      end
-
       after do
         file.unlink
+      end
+
+      it 'raise a PermissionDeniedError exception' do
+        expect { described_class.check_file! file }.to raise_error(Cloudkeeper::Errors::PermissionDeniedError)
       end
     end
   end
@@ -194,12 +194,12 @@ describe Cloudkeeper::Managers::ImageManager do
         file
       end
 
-      it 'raises Image::FormatRecognitionError exception' do
-        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::Image::Format::RecognitionError)
-      end
-
       after do
         file.unlink
+      end
+
+      it 'raises Image::FormatRecognitionError exception' do
+        expect { described_class.format file }.to raise_error(Cloudkeeper::Errors::Image::Format::RecognitionError)
       end
     end
 

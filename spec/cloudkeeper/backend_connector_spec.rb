@@ -1,19 +1,9 @@
 require 'spec_helper'
 
-class Operation
-  attr_reader :execute, :trailing_metadata
-
-  def initialize(return_value, trailing_metadata)
-    @execute = return_value
-    @trailing_metadata = trailing_metadata
-  end
-end
-
 describe Cloudkeeper::BackendConnector do
   subject(:backend_connector) { described_class.new }
 
-  let(:operation_success) { Operation.new nil, 'status' => 'SUCCESS' }
-  let(:operation_error) { Operation.new nil, 'status' => 'ERROR', 'message' => 'Well, that escalated quickly' }
+  let(:empty) { Google::Protobuf::Empty.new }
 
   before do
     Cloudkeeper::Settings[:'backend-endpoint'] = '127.0.0.1:50051'
@@ -22,7 +12,7 @@ describe Cloudkeeper::BackendConnector do
 
   describe '#new' do
     it 'returns instance of BackendConnector' do
-      is_expected.to be_instance_of described_class
+      expect(backend_connector).to be_instance_of described_class
     end
 
     it 'initializes grpc client and nginx manager' do
@@ -39,24 +29,24 @@ describe Cloudkeeper::BackendConnector do
 
   describe '.pre_action' do
     before do
-      allow(backend_connector.grpc_client).to receive(:pre_action) { operation }
+      allow(backend_connector.grpc_client).to receive(:pre_action) { empty }
     end
 
     context 'with successfull run' do
-      let(:operation) { operation_success }
-
       it "doesn't raise any errors" do
         expect { backend_connector.pre_action }.not_to raise_error
       end
 
       it 'calls method on gRPC client instance' do
         backend_connector.pre_action
-        expect(backend_connector.grpc_client).to have_received(:pre_action) { operation }
+        expect(backend_connector.grpc_client).to have_received(:pre_action) { empty }
       end
     end
 
     context 'with an error' do
-      let(:operation) { operation_error }
+      before do
+        allow(backend_connector.grpc_client).to receive(:pre_action).and_raise(GRPC::BadStatus.new(42, 'pre_action error'))
+      end
 
       it 'raises BackendError exception' do
         expect { backend_connector.pre_action }.to raise_error(Cloudkeeper::Errors::BackendError)
@@ -66,27 +56,24 @@ describe Cloudkeeper::BackendConnector do
 
   describe '.post_action' do
     before do
-      allow(backend_connector.grpc_client).to receive(:post_action) { operation }
+      allow(backend_connector.grpc_client).to receive(:post_action) { empty }
     end
 
     context 'with successfull run' do
-      let(:operation) { operation_success }
-
       it "doesn't raise any errors" do
         expect { backend_connector.post_action }.not_to raise_error
       end
 
       it 'calls method on gRPC client instance' do
         backend_connector.post_action
-        expect(backend_connector.grpc_client).to have_received(:post_action) { operation }
+        expect(backend_connector.grpc_client).to have_received(:post_action) { empty }
       end
     end
 
     context 'with an error' do
-      let(:operation) { operation_error }
-
       before do
         allow(backend_connector.logger).to receive(:error)
+        allow(backend_connector.grpc_client).to receive(:post_action).and_raise(GRPC::BadStatus.new(42, 'post_action error'))
       end
 
       it 'logs an error' do
@@ -103,29 +90,26 @@ describe Cloudkeeper::BackendConnector do
     before do
       allow(CloudkeeperGrpc::ImageListIdentifier).to receive(:new).with(image_list_identifier: image_list_identifier) \
         { image_list_identifier_proto }
-      allow(backend_connector.grpc_client).to receive(:remove_image_list).with(image_list_identifier_proto, return_op: true) \
-        { operation }
+      allow(backend_connector.grpc_client).to receive(:remove_image_list).with(image_list_identifier_proto) \
+        { empty }
     end
 
     context 'with successfull run' do
-      let(:operation) { operation_success }
-
       it "doesn't raise any errors" do
         expect { backend_connector.remove_image_list(image_list_identifier) }.not_to raise_error
       end
 
       it 'calls method on gRPC client instance' do
         backend_connector.remove_image_list(image_list_identifier)
-        expect(backend_connector.grpc_client).to have_received(:remove_image_list).with(image_list_identifier_proto, return_op: true) \
-          { operation }
+        expect(backend_connector.grpc_client).to have_received(:remove_image_list).with(image_list_identifier_proto) { empty }
       end
     end
 
     context 'with an error' do
-      let(:operation) { operation_error }
-
       before do
         allow(backend_connector.logger).to receive(:error)
+        allow(backend_connector.grpc_client).to \
+          receive(:remove_image_list).and_raise(GRPC::BadStatus.new(42, 'remove_image_list error'))
       end
 
       it 'logs an error' do
@@ -144,45 +128,29 @@ describe Cloudkeeper::BackendConnector do
         Struct.new(:image_list_identifier).new('id789')
       ]
     end
-    let(:operation) { Operation.new image_list_identifiers_proto, 'status' => 'SUCCESS' }
 
-    before do
-      allow(backend_connector.grpc_client).to receive(:image_lists) { operation }
-    end
+    context 'with successfull run' do
+      before do
+        allow(backend_connector.grpc_client).to receive(:image_lists) { image_list_identifiers_proto }
+      end
 
-    it 'returns a list of image list identifiers' do
-      expect(backend_connector.image_lists).to eq(image_list_identifiers)
-    end
+      it 'returns a list of image list identifiers' do
+        expect(backend_connector.image_lists).to eq(image_list_identifiers)
+      end
 
-    it 'calls method on gRPC client instance' do
-      backend_connector.image_lists
-      expect(backend_connector.grpc_client).to have_received(:image_lists) { operation }
-    end
-  end
-
-  describe '.check_status' do
-    context 'with status success' do
-      it "won't raise any exceptions" do
-        expect { backend_connector.send(:check_status, operation_success.trailing_metadata) }.not_to raise_error
+      it 'calls method on gRPC client instance' do
+        backend_connector.image_lists
+        expect(backend_connector.grpc_client).to have_received(:image_lists) { image_list_identifiers_proto }
       end
     end
 
-    context 'with other status then success' do
-      context 'with exception raising flag' do
-        it 'raises BackendError exception' do
-          expect { backend_connector.send(:check_status, operation_error.trailing_metadata, raise_exception: true) }.to \
-            raise_error(Cloudkeeper::Errors::BackendError)
-        end
+    context 'with an error' do
+      before do
+        allow(backend_connector.grpc_client).to receive(:image_lists).and_raise(GRPC::BadStatus.new(42, 'image_lists error'))
       end
-      context 'without exception raising flag' do
-        before do
-          allow(backend_connector.logger).to receive(:error)
-        end
 
-        it 'logs an error' do
-          backend_connector.send(:check_status, operation_error.trailing_metadata)
-          expect(backend_connector.logger).to have_received(:error)
-        end
+      it 'raises BackendError exception' do
+        expect { backend_connector.image_lists }.to raise_error(Cloudkeeper::Errors::BackendError)
       end
     end
   end
@@ -195,7 +163,7 @@ describe Cloudkeeper::BackendConnector do
         Struct.new(:format).new(:raw)
       ]
     end
-    let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, image_files }
+    let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, 'd4c3b2a1', image_files }
 
     before do
       Cloudkeeper::Settings[:formats] = %w[qcow2 vmdk]
@@ -239,7 +207,7 @@ describe Cloudkeeper::BackendConnector do
         Struct.new(:format).new(:raw)
       ]
     end
-    let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, image_files }
+    let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, 'd4c3b2a1', image_files }
 
     before do
       Cloudkeeper::Settings[:formats] = %w[qcow2 vmdk]
@@ -253,6 +221,7 @@ describe Cloudkeeper::BackendConnector do
       expect(image_proto.checksum).to eq('1a2b3c4d5e')
       expect(image_proto.size).to eq(154)
       expect(image_proto.uri).to eq('http://some.uri.net')
+      expect(image_proto.digest).to eq('d4c3b2a1')
     end
   end
 
@@ -260,8 +229,9 @@ describe Cloudkeeper::BackendConnector do
     let(:date) { Time.now }
     let(:image_proto) { CloudkeeperGrpc::Image.new }
     let(:appliance) do
-      Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title',
-                                           'description', 'group', 2048, 6, 'v01', 'x86_64', 'Linux', nil, 'key' => 'value'
+      Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title', 'description',
+                                           'group', 2048, 6, 'v01', 'x86_64', 'http://basemp.uri.net', '64156', '6dfe12a',
+                                           'Linux', image_proto
     end
 
     it 'converts appliance entity into appliance proto entity' do
@@ -281,12 +251,14 @@ describe Cloudkeeper::BackendConnector do
       expect(appliance_proto.expiration_date).to eq(date.to_i)
       expect(appliance_proto.image_list_identifier).to eq('ilid12345')
       expect(appliance_proto.image).to eq(image_proto)
-      expect(appliance_proto.attributes).to eq('key' => 'value')
+      expect(appliance_proto.base_mpuri).to eq('http://basemp.uri.net')
+      expect(appliance_proto.appid).to eq('64156')
+      expect(appliance_proto.digest).to eq('6dfe12a')
     end
   end
 
   describe '.convert_image_proto' do
-    let(:image_proto) { Struct.new(:uri, :checksum, :size).new 'http://some.uri.net', '1a2b3c4d5e', 15 }
+    let(:image_proto) { Struct.new(:uri, :checksum, :size, :digest).new 'http://some.uri.net', '1a2b3c4d5e', 15, '6dfe12a' }
 
     it 'convetrs image proto instance to image entity instance' do
       image = backend_connector.send(:convert_image_proto, image_proto)
@@ -294,12 +266,7 @@ describe Cloudkeeper::BackendConnector do
       expect(image.uri).to eq('http://some.uri.net')
       expect(image.checksum).to eq('1a2b3c4d5e')
       expect(image.size).to eq(15)
-    end
-
-    context 'with nil input' do
-      it 'returns nil' do
-        expect(backend_connector.send(:convert_image_proto, nil)).to be_nil
-      end
+      expect(image.digest).to eq('6dfe12a')
     end
   end
 
@@ -309,9 +276,10 @@ describe Cloudkeeper::BackendConnector do
     let(:appliance_proto) do
       Struct.new(:identifier, :description, :mpuri, :title, :group,
                  :ram, :core, :version, :architecture, :operating_system,
-                 :image, :attributes, :vo, :expiration_date,
+                 :image, :vo, :expiration_date, :base_mpuri, :appid, :digest,
                  :image_list_identifier).new 'id12345', 'description', 'http://mp.uri.net', 'title', 'group', 2048, 6, 'v01',
-                                             'x86_64', 'Linux', image, { 'key' => 'value' }, 'vo', date.to_i, 'ilid12345'
+                                             'x86_64', 'Linux', image, 'vo', date.to_i, 'http://basemp.uri.net', '564184',
+                                             '6dfe12a', 'ilid12345'
     end
 
     it 'converts appliance proto inatance to appliance entity instance' do
@@ -331,24 +299,37 @@ describe Cloudkeeper::BackendConnector do
       expect(appliance.expiration_date.to_date).to eq(date.to_date)
       expect(appliance.image_list_identifier).to eq('ilid12345')
       expect(appliance.image).to eq(image)
-      expect(appliance.attributes).to eq('key' => 'value')
+      expect(appliance.base_mpuri).to eq('http://basemp.uri.net')
+      expect(appliance.appid).to eq('564184')
+      expect(appliance.digest).to eq('6dfe12a')
     end
   end
 
   describe '.manage_appliance' do
     let(:date) { Time.now }
+    let(:selected_image_file) { Struct.new(:format, :checksum, :file, :size).new(:qcow2, '1a2b3c4d5e', '/some/image/file.ext', 154) }
+    let(:image_files) do
+      [
+        selected_image_file,
+        Struct.new(:format).new(:raw)
+      ]
+    end
+    let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, 'd4c3b2a1', image_files }
     let(:appliance) do
       Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title',
-                                           'description', 'group', 2048, 6, 'v01', 'x86_64', 'Linux', nil, 'key' => 'value'
+                                           'description', 'group', 2048, 6, 'v01', 'x86_64', 'http://basemp.uri.net', '64156',
+                                           '6dfe12a', 'Linux', image
     end
+    let(:image_proto) { CloudkeeperGrpc::Image.new }
     let(:appliance_proto) do
       Struct.new(:identifier, :description, :mpuri, :title, :group,
                  :ram, :core, :version, :architecture, :operating_system,
-                 :image, :attributes, :vo, :expiration_date,
+                 :image, :vo, :expiration_date, :base_mpuri, :appid, :digest,
                  :image_list_identifier).new 'id12345', 'description', 'http://mp.uri.net', 'title', 'group', 2048, 6, 'v01',
-                                             'x86_64', 'Linux', nil, { 'key' => 'value' }, 'vo', date.to_i, 'ilid12345'
+                                             'x86_64', 'Linux', image_proto, 'vo', date.to_i, 'http://basemp.uri.net', '564184',
+                                             '6dfe12a', 'ilid12345'
     end
-    let(:call) { :remove_appliance }
+    let(:call) { :add_appliance }
 
     before do
       Cloudkeeper::Settings[:formats] = %w[qcow2 vmdk]
@@ -359,34 +340,33 @@ describe Cloudkeeper::BackendConnector do
         Cloudkeeper::Settings[:'remote-mode'] = false
         allow(backend_connector.nginx).to receive(:start)
         allow(backend_connector.nginx).to receive(:stop)
-        allow(backend_connector.grpc_client).to receive(call) { operation }
+        allow(backend_connector.grpc_client).to receive(call) { empty }
       end
 
       context 'with successfull run' do
-        let(:operation) { operation_success }
-
         it 'converts appliance' do
           expect { backend_connector.send(:manage_appliance, appliance, call) }.not_to raise_error
         end
 
         it 'calls method on gRPC client instance' do
           backend_connector.send(:manage_appliance, appliance, call)
-          expect(backend_connector.grpc_client).to have_received(call) { operation }
+          expect(backend_connector.grpc_client).to have_received(call) { empty }
         end
 
-        it 'starts nginx server' do
+        it 'doesn\'t starts nginx server' do
+          backend_connector.send(:manage_appliance, appliance, call)
           expect(backend_connector.nginx).not_to have_received(:start)
         end
 
-        it 'stops nginx server' do
+        it 'doesn\'t stops nginx server' do
+          backend_connector.send(:manage_appliance, appliance, call)
           expect(backend_connector.nginx).not_to have_received(:stop)
         end
       end
 
       context 'with an error in backend communication' do
-        let(:operation) { operation_error }
-
         before do
+          allow(backend_connector.grpc_client).to receive(call).and_raise(GRPC::BadStatus.new(42, 'manage_appliance_with_image error'))
           allow(backend_connector.logger).to receive(:error)
         end
 
@@ -397,14 +377,14 @@ describe Cloudkeeper::BackendConnector do
       end
     end
 
-    context 'when in remote mode with image' do
+    context 'when in remote mode' do
       let(:image_files) do
         [
           Struct.new(:format, :checksum, :file).new(:qcow2, '1a2b3c4d5e', '/some/image/file.ext'),
           Struct.new(:format).new(:raw)
         ]
       end
-      let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, image_files }
+      let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, '123abcd', image_files }
       let(:image_proto) { Struct.new(:uri, :checksum, :size, :location, :mode, :username, :password).new }
 
       before do
@@ -416,10 +396,8 @@ describe Cloudkeeper::BackendConnector do
       end
 
       context 'with successfull run' do
-        let(:operation) { operation_success }
-
         before do
-          allow(backend_connector.grpc_client).to receive(call) { operation }
+          allow(backend_connector.grpc_client).to receive(call) { empty }
         end
 
         it 'converts appliance' do
@@ -428,23 +406,23 @@ describe Cloudkeeper::BackendConnector do
 
         it 'calls method on gRPC client instance' do
           backend_connector.send(:manage_appliance, appliance, call)
-          expect(backend_connector.grpc_client).to have_received(call) { operation }
+          expect(backend_connector.grpc_client).to have_received(call) { empty }
         end
 
         it 'starts nginx server' do
-          expect(backend_connector.nginx).not_to have_received(:start)
+          backend_connector.send(:manage_appliance, appliance, call)
+          expect(backend_connector.nginx).to have_received(:start)
         end
 
         it 'stops nginx server' do
-          expect(backend_connector.nginx).not_to have_received(:stop)
+          backend_connector.send(:manage_appliance, appliance, call)
+          expect(backend_connector.nginx).to have_received(:stop)
         end
       end
 
       context 'with an error in backend communication' do
-        let(:operation) { operation_error }
-
         before do
-          allow(backend_connector.grpc_client).to receive(call) { operation }
+          allow(backend_connector.grpc_client).to receive(call).and_raise(GRPC::BadStatus.new(42, 'manage_appliance error'))
           allow(backend_connector.logger).to receive(:error)
         end
 
@@ -455,15 +433,7 @@ describe Cloudkeeper::BackendConnector do
 
         it 'calls method on gRPC client instance' do
           backend_connector.send(:manage_appliance, appliance, call)
-          expect(backend_connector.grpc_client).to have_received(call) { operation }
-        end
-
-        it 'starts nginx server' do
-          expect(backend_connector.nginx).not_to have_received(:start)
-        end
-
-        it 'stops nginx server' do
-          expect(backend_connector.nginx).not_to have_received(:stop)
+          expect(backend_connector.grpc_client).to have_received(call) { empty }
         end
       end
 
@@ -489,57 +459,21 @@ describe Cloudkeeper::BackendConnector do
         end
       end
     end
-
-    context 'when in remote mode without image' do
-      before do
-        Cloudkeeper::Settings[:'remote-mode'] = true
-        allow(backend_connector.nginx).to receive(:start)
-        allow(backend_connector.nginx).to receive(:stop)
-        allow(backend_connector.nginx).to receive(:access_data).and_return(url: '', username: '', password: '')
-        allow(backend_connector.grpc_client).to receive(call) { operation }
-      end
-
-      context 'with successfull run' do
-        let(:operation) { operation_success }
-
-        it 'converts appliance' do
-          expect { backend_connector.send(:manage_appliance, appliance, call) }.not_to raise_error
-        end
-
-        it 'calls method on gRPC client instance' do
-          backend_connector.send(:manage_appliance, appliance, call)
-          expect(backend_connector.grpc_client).to have_received(call) { operation }
-        end
-
-        it 'starts nginx server' do
-          expect(backend_connector.nginx).not_to have_received(:start)
-        end
-
-        it 'stops nginx server' do
-          expect(backend_connector.nginx).not_to have_received(:stop)
-        end
-      end
-
-      context 'with an error' do
-        let(:operation) { operation_error }
-
-        before do
-          allow(backend_connector.logger).to receive(:error)
-        end
-
-        it 'raises BackendError exception' do
-          backend_connector.send(:manage_appliance, appliance, call)
-          expect(backend_connector.logger).to have_received(:error)
-        end
-      end
-    end
   end
 
   describe '.add_appliance' do
     let(:date) { Time.now }
+    let(:image_files) do
+      [
+        Struct.new(:format, :checksum, :file).new(:qcow2, '1a2b3c4d5e', '/some/image/file.ext'),
+        Struct.new(:format).new(:raw)
+      ]
+    end
+    let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, '123abcd', image_files }
     let(:appliance) do
-      Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title',
-                                           'description', 'group', 2048, 6, 'v01', 'x86_64', 'Linux', nil, 'key' => 'value'
+      Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title', 'description',
+                                           'group', 2048, 6, 'v01', 'x86_64', 'http://basemp.uri.net', '64156', '6dfe12a',
+                                           'Linux', image
     end
 
     before do
@@ -555,9 +489,17 @@ describe Cloudkeeper::BackendConnector do
 
   describe '.update_appliance' do
     let(:date) { Time.now }
+    let(:image_files) do
+      [
+        Struct.new(:format, :checksum, :file).new(:qcow2, '1a2b3c4d5e', '/some/image/file.ext'),
+        Struct.new(:format).new(:raw)
+      ]
+    end
+    let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, '123abcd', image_files }
     let(:appliance) do
-      Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title',
-                                           'description', 'group', 2048, 6, 'v01', 'x86_64', 'Linux', nil, 'key' => 'value'
+      Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title', 'description',
+                                           'group', 2048, 6, 'v01', 'x86_64', 'http://basemp.uri.net', '64156', '6dfe12a',
+                                           'Linux', image
     end
 
     before do
@@ -571,11 +513,45 @@ describe Cloudkeeper::BackendConnector do
     end
   end
 
+  describe '.update_appliance_metadata' do
+    let(:date) { Time.now }
+    let(:image_files) do
+      [
+        Struct.new(:format, :checksum, :file).new(:qcow2, '1a2b3c4d5e', '/some/image/file.ext'),
+        Struct.new(:format).new(:raw)
+      ]
+    end
+    let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, '123abcd', image_files }
+    let(:appliance) do
+      Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title', 'description',
+                                           'group', 2048, 6, 'v01', 'x86_64', 'http://basemp.uri.net', '64156', '6dfe12a',
+                                           'Linux', image
+    end
+
+    before do
+      allow(backend_connector).to receive(:manage_appliance).with(appliance, :update_appliance_metadata)
+    end
+
+    it 'calls remote method to add appliance' do
+      backend_connector.update_appliance_metadata(appliance)
+
+      expect(backend_connector).to have_received(:manage_appliance).with(appliance, :update_appliance_metadata)
+    end
+  end
+
   describe '.remove_appliance' do
     let(:date) { Time.now }
+    let(:image_files) do
+      [
+        Struct.new(:format, :checksum, :file).new(:qcow2, '1a2b3c4d5e', '/some/image/file.ext'),
+        Struct.new(:format).new(:raw)
+      ]
+    end
+    let(:image) { Cloudkeeper::Entities::Image.new 'http://some.uri.net', '1a2b3c4d', 10, '123abcd', image_files }
     let(:appliance) do
-      Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title',
-                                           'description', 'group', 2048, 6, 'v01', 'x86_64', 'Linux', nil, 'key' => 'value'
+      Cloudkeeper::Entities::Appliance.new 'id12345', 'http://mp.uri.net', 'vo', date, 'ilid12345', 'title', 'description',
+                                           'group', 2048, 6, 'v01', 'x86_64', 'http://basemp.uri.net', '64156', '6dfe12a',
+                                           'Linux', image
     end
 
     before do
@@ -592,29 +568,32 @@ describe Cloudkeeper::BackendConnector do
   describe '.appliances' do
     let(:date) { Time.now }
     let(:image_list_identifier) { 'id12345' }
+    let(:image_proto) { Struct.new(:uri, :checksum, :digest).new('http://some.uri', '123456789abcdef', 'abcde123') }
     let(:appliances_proto) do
       [
         Struct.new(:identifier, :description, :mpuri, :title, :group,
                    :ram, :core, :version, :architecture, :operating_system,
-                   :image, :attributes, :vo, :expiration_date,
+                   :image, :vo, :expiration_date, :base_mpuri, :appid, :digest,
                    :image_list_identifier).new('id123', 'description', 'http://mp.uri.net', 'title1', 'group', 2048, 6, 'v01',
-                                               'x86_64', 'Linux', nil, { 'key' => 'value' }, 'vo', date.to_i, 'id12345'),
+                                               'x86_64', 'Linux', image_proto, 'vo', date.to_i, 'http://basemp.uri.net', '564184',
+                                               '6dfe12a', 'id12345'),
         Struct.new(:identifier, :description, :mpuri, :title, :group,
                    :ram, :core, :version, :architecture, :operating_system,
-                   :image, :attributes, :vo, :expiration_date,
+                   :image, :vo, :expiration_date, :base_mpuri, :appid, :digest,
                    :image_list_identifier).new('id456', 'description', 'http://mp.uri.net', 'title2', 'group', 2048, 6, 'v01',
-                                               'x86_64', 'Linux', nil, { 'key' => 'value' }, 'vo', date.to_i, 'id12345'),
+                                               'x86_64', 'Linux', image_proto, 'vo', date.to_i, 'http://basemp.uri.net', '185484',
+                                               '1b56fa1', 'id12345'),
         Struct.new(:identifier, :description, :mpuri, :title, :group,
                    :ram, :core, :version, :architecture, :operating_system,
-                   :image, :attributes, :vo, :expiration_date,
+                   :image, :vo, :expiration_date, :base_mpuri, :appid, :digest,
                    :image_list_identifier).new('id789', 'description', 'http://mp.uri.net', 'title3', 'group', 2048, 6, 'v01',
-                                               'x86_64', 'Linux', nil, { 'key' => 'value' }, 'vo', date.to_i, 'id12345')
+                                               'x86_64', 'Linux', image_proto, 'vo', date.to_i, 'http://basemp.uri.net', '215485',
+                                               '826c74ae', 'id12345')
       ]
     end
-    let(:operation) { Operation.new appliances_proto, 'status' => 'SUCCESS' }
 
     before do
-      allow(backend_connector.grpc_client).to receive(:appliances) { operation }
+      allow(backend_connector.grpc_client).to receive(:appliances) { appliances_proto }
     end
 
     it 'returns list of appliances for specified image list identifier' do
@@ -631,11 +610,12 @@ describe Cloudkeeper::BackendConnector do
       expect(appliance.version).to eq('v01')
       expect(appliance.architecture).to eq('x86_64')
       expect(appliance.operating_system).to eq('Linux')
-      expect(appliance.attributes).to eq('key' => 'value')
       expect(appliance.vo).to eq('vo')
       expect(appliance.expiration_date.to_date).to eq(date.to_date)
       expect(appliance.image_list_identifier).to eq('id12345')
-      expect(appliance.image).to eq(nil)
+      expect(appliance.base_mpuri).to eq('http://basemp.uri.net')
+      expect(appliance.appid).to eq('564184')
+      expect(appliance.digest).to eq('6dfe12a')
 
       appliance = appliances['id456']
       expect(appliance.identifier).to eq('id456')
@@ -648,11 +628,12 @@ describe Cloudkeeper::BackendConnector do
       expect(appliance.version).to eq('v01')
       expect(appliance.architecture).to eq('x86_64')
       expect(appliance.operating_system).to eq('Linux')
-      expect(appliance.attributes).to eq('key' => 'value')
       expect(appliance.vo).to eq('vo')
       expect(appliance.expiration_date.to_date).to eq(date.to_date)
       expect(appliance.image_list_identifier).to eq('id12345')
-      expect(appliance.image).to eq(nil)
+      expect(appliance.base_mpuri).to eq('http://basemp.uri.net')
+      expect(appliance.appid).to eq('185484')
+      expect(appliance.digest).to eq('1b56fa1')
 
       appliance = appliances['id789']
       expect(appliance.identifier).to eq('id789')
@@ -665,16 +646,17 @@ describe Cloudkeeper::BackendConnector do
       expect(appliance.version).to eq('v01')
       expect(appliance.architecture).to eq('x86_64')
       expect(appliance.operating_system).to eq('Linux')
-      expect(appliance.attributes).to eq('key' => 'value')
       expect(appliance.vo).to eq('vo')
       expect(appliance.expiration_date.to_date).to eq(date.to_date)
       expect(appliance.image_list_identifier).to eq('id12345')
-      expect(appliance.image).to eq(nil)
+      expect(appliance.base_mpuri).to eq('http://basemp.uri.net')
+      expect(appliance.appid).to eq('215485')
+      expect(appliance.digest).to eq('826c74ae')
     end
 
     it 'calls method on gRPC client instance' do
       backend_connector.appliances(image_list_identifier)
-      expect(backend_connector.grpc_client).to have_received(:appliances) { operation }
+      expect(backend_connector.grpc_client).to have_received(:appliances) { appliances_proto }
     end
   end
 

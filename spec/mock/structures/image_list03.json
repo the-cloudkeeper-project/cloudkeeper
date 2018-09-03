@@ -28,5 +28,7 @@
   "dc:creator": "Applications Database",
   "hv:ca": "/DC=XXX/DC=YYY/CN=SOME TEST CA",
   "hv:dn": "/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source",
-  "hv:email": "dontwriteme@please.net"
+  "hv:email": "dontwriteme@please.net",
+  "ad:base_mpuri": "https://appdb.somewhere.net/store/vm/image/2a5451eb-91f3-aaaa-95a7-9cff7362d553:6450:1469784811/",
+  "ad:appid": "993"
 }

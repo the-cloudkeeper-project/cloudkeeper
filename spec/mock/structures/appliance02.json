@@ -1,7 +1,7 @@
 {
   "dc:identifier": "2a5451eb-91f3-46a2-95a7-9cff7362d553",
   "dc:description": "This is a special Virtual Appliance entry used only for monitoring purposes.",
-  "ad:mpuri": "https://appdb.somewhere.net/store/vm/image/2a5451eb-91f3-aaaa-95a7-9cff7362d553:6450:1469784811/",
+  "ad:mpuri": "https://appdb.somewhere.net/store/vo/image/2a5451eb-91f3-aaaa-95a7-9cff7362d553:6450:1469784811/",
   "dc:title": "Some Image",
   "ad:group": "General group",
   "hv:ram_minimum": 2048,
@@ -16,5 +16,7 @@
   "hv:size": 42,
   "hv:uri": "http://some.uri.net/some/path",
   "dc:date:expires": "2016-10-25T15:57:45Z",
-  "sl:checksum:sha512": "81a106e4f352b2ff21c691280d9bfd3dfafdbe07154f414ae563d1786ff55a254e66e94e6644ae1f17570a502cd46d3e7f2ece043fcd211818eed871f4aaef53"
+  "sl:checksum:sha512": "81a106e4f352b2ff21c691280d9bfd3dfafdbe07154f414ae563d1786ff55a254e66e94e6644ae1f17570a502cd46d3e7f2ece043fcd211818eed871f4aaef53",
+  "ad:base_mpuri": "https://appdb.somewhere.net/store/vm/image/2a5451eb-91f3-aaaa-95a7-9cff7362d553:6450:1469784811/",
+  "ad:appid": "993"
 }

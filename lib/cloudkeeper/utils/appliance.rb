@@ -27,7 +27,7 @@ module Cloudkeeper
       end
 
       def prepare_image!(appliance)
-        image_file = Cloudkeeper::Managers::ImageManager.download_image(appliance.image.uri)
+        image_file = Cloudkeeper::Managers::ImageManager.secure_download_image(appliance.image.uri, appliance.image.checksum)
         appliance.image.add_image_file image_file
         return if acceptable_formats.include? image_file.format
 

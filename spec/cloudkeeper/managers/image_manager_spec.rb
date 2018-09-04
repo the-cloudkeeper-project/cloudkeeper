@@ -224,9 +224,13 @@ describe Cloudkeeper::Managers::ImageManager do
     end
   end
 
-  describe '#download_image' do
+  describe '#secure_download_image' do
     let(:url) { 'http://localhost:9292/image.ext' }
     let(:tmpdir) { Dir.mktmpdir('cloudkeeper-test') }
+    let(:checksum) do
+      '9a8093f874bdf4c19b6deacd2208e347292452df008a61d815dcd8395a2487e263364a85ca569d71c27dd9e' \
+      '349fd31227094644c39e9a734b199b2dbdefa9c35'
+    end
 
     after do
       FileUtils.remove_entry tmpdir
@@ -234,28 +238,37 @@ describe Cloudkeeper::Managers::ImageManager do
 
     before do
       Cloudkeeper::Settings[:'image-dir'] = tmpdir
+      allow(described_class).to receive(:format).and_return(:qcow2)
     end
 
     context 'with invalid url' do
       let(:url) { 'NOT_AN_URL' }
 
       it 'raise InvalidURLError exception' do
-        expect { described_class.download_image url }.to raise_error(Cloudkeeper::Errors::Image::DownloadError)
+        expect { described_class.secure_download_image url, checksum }.to raise_error(Cloudkeeper::Errors::Image::DownloadError)
       end
     end
 
-    context 'with valid url' do
-      before do
-        allow(described_class).to receive(:format).and_return(:qcow2)
+    context 'with invalid checksum' do
+      let(:checksum) do
+        '9a8093f874bdf4c19b6deacd2208e347292452df008a61d815dcd8395a2487e263364a85ca569d71c27dd9e' \
+        '349fd31227094644c39e9a734b199b2dbdefa9c30'
       end
 
+      it 'raise ChecksumError exception' do
+        VCR.use_cassette('image-download') do
+          expect { described_class.secure_download_image(url, checksum) }.to raise_error(Cloudkeeper::Errors::Image::ChecksumError)
+        end
+      end
+    end
+
+    context 'with valid url and checksum' do
       it 'returns populated image file instance' do
         VCR.use_cassette('image-download') do
-          image_file = described_class.download_image(url)
+          image_file = described_class.secure_download_image(url, checksum)
           expect(image_file.file).to eq(File.join(tmpdir, 'image.ext'))
           expect(image_file.format).to eq(:qcow2)
-          expect(image_file.checksum).to eq('9a8093f874bdf4c19b6deacd2208e347292452df008a61d815dcd8395a2487e263364a85ca569d71c27dd9e' \
-                                            '349fd31227094644c39e9a734b199b2dbdefa9c35')
+          expect(image_file.checksum).to eq(checksum)
           expect(image_file.size).to eq(524_288)
         end
       end

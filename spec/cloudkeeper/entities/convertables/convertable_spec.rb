@@ -38,7 +38,6 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
       expect(image_file.file).to eq(convertable_instance_raw.file)
       expect(image_file.format).to eq(:raw)
       expect(image_file.checksum).to eq(convertable_instance_raw.checksum)
-      expect(image_file.original).to be_falsy
     end
   end
 
@@ -83,7 +82,6 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
         expect(image_file.file).to eq(convertable_instance_qcow2.file)
         expect(image_file.format).to eq(:qcow2)
         expect(image_file.checksum).to eq(convertable_instance_qcow2.checksum)
-        expect(image_file.original).to be_falsy
       end
     end
   end
@@ -106,7 +104,6 @@ describe Cloudkeeper::Entities::Convertables::Convertable do
         expect(image_file.file).to eq(convertable_instance_qcow2.file)
         expect(image_file.format).to eq(:qcow2)
         expect(image_file.checksum).to eq(convertable_instance_qcow2.checksum)
-        expect(image_file.original).to be_falsy
       end
     end
 

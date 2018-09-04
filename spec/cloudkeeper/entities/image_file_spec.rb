@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Cloudkeeper::Entities::ImageFile do
-  subject(:image_file) { described_class.new '/some/file.raw', :raw, '123456', 555, true }
+  subject(:image_file) { described_class.new '/some/file.raw', :raw, '123456', 555 }
 
   describe '#new' do
     context 'when not OVA image' do
@@ -15,7 +15,7 @@ describe Cloudkeeper::Entities::ImageFile do
     end
 
     context 'when OVA image' do
-      subject(:image_file) { described_class.new '/some/file.ova', :ova, '123456', 666, true }
+      subject(:image_file) { described_class.new '/some/file.ova', :ova, '123456', 666 }
 
       it 'returns ImageFile instance' do
         expect(image_file).to be_instance_of described_class

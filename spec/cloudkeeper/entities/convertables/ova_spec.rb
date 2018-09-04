@@ -161,7 +161,6 @@ describe Cloudkeeper::Entities::Convertables::Ova do
       expect(vmdk_image.file).to eq(convertable_instance_vmdk.file)
       expect(vmdk_image.format).to eq(convertable_instance_vmdk.format)
       expect(vmdk_image.checksum).to eq(convertable_instance_vmdk.checksum)
-      expect(vmdk_image.original).to be_falsy
     end
   end
 
@@ -193,7 +192,6 @@ describe Cloudkeeper::Entities::Convertables::Ova do
       expect(image_file.file).to eq(convertable_instance_qcow2.file)
       expect(image_file.format).to eq(:qcow2)
       expect(image_file.checksum).to eq(convertable_instance_qcow2.checksum)
-      expect(image_file.original).to be_falsy
     end
   end
 

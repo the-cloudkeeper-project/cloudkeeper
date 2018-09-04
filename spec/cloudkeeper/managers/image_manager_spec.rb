@@ -256,7 +256,6 @@ describe Cloudkeeper::Managers::ImageManager do
           expect(image_file.format).to eq(:qcow2)
           expect(image_file.checksum).to eq('9a8093f874bdf4c19b6deacd2208e347292452df008a61d815dcd8395a2487e263364a85ca569d71c27dd9e' \
                                             '349fd31227094644c39e9a734b199b2dbdefa9c35')
-          expect(image_file.original).to be_truthy
           expect(image_file.size).to eq(524_288)
         end
       end

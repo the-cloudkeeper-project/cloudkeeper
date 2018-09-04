@@ -1,4 +1,5 @@
 require 'net/https'
+require 'digest'
 
 module Cloudkeeper
   module Managers
@@ -46,19 +47,26 @@ module Cloudkeeper
           raise Cloudkeeper::Errors::Image::Format::NoFormatRecognizedError, "No image format recognized for file #{file.inspect}"
         end
 
-        def download_image(url)
+        def secure_download_image(url, checksum)
           logger.debug "Downloading image from #{url.inspect}"
           Cloudkeeper::Utils::URL.check!(url)
 
           uri = URI.parse url
           filename = generate_filename(uri)
           retrieve_image(uri, filename)
+          check_image_checksum!(filename, checksum)
 
           Cloudkeeper::Entities::ImageFile.new filename, format(filename), Cloudkeeper::Utils::Checksum.compute(filename),
                                                File.size(filename)
         rescue Cloudkeeper::Errors::InvalidURLError, Cloudkeeper::Errors::Image::Format::RecognitionError,
                Cloudkeeper::Errors::ArgumentError, Cloudkeeper::Errors::NetworkConnectionError, ::IOError => ex
           raise Cloudkeeper::Errors::Image::DownloadError, "Image #{url.inspect} download error: #{ex.message}"
+        end
+
+        def check_image_checksum!(filename, checksum)
+          computed = Digest::SHA512.file(filename).hexdigest
+          raise Cloudkeeper::Errors::Image::ChecksumError, "Checksum mismatch, expecting #{checksum.inspect} got #{computed.inspect}" \
+            unless checksum == computed
         end
 
         def retrieve_image(uri, filename)

@@ -3,6 +3,9 @@ require 'yell'
 
 module Cloudkeeper
   class CLI < Thor
+    IMAGE_LIST_ERROR_CODE = 11
+    BACKEND_ERROR_CODE = 12
+
     class_option :'logging-level',
                  required: true,
                  default: Cloudkeeper::Settings['logging']['level'],
@@ -129,7 +132,7 @@ module Cloudkeeper
       initialize_sync options
       File.open(Cloudkeeper::Settings[:'lock-file'], File::RDWR | File::CREAT, 0o644) do |file|
         lock = file.flock(File::LOCK_EX | File::LOCK_NB)
-        Cloudkeeper::Managers::ApplianceManager.new.synchronize_appliances if lock
+        run_sync if lock
         abort 'cloudkeeper instance is already running, quitting' unless lock
       end
     rescue Cloudkeeper::Errors::InvalidConfigurationError => ex
@@ -147,6 +150,19 @@ module Cloudkeeper
     default_task :sync
 
     private
+
+    def run_sync
+      appliance_manager = Cloudkeeper::Managers::ApplianceManager.new
+      appliance_manager.synchronize_appliances
+
+      exit_with_message IMAGE_LIST_ERROR_CODE if appliance_manager.errors[:image_list_errors]
+      exit_with_message BACKEND_ERROR_CODE if appliance_manager.errors[:backend_errors]
+    end
+
+    def exit_with_message(code)
+      warn 'Some errors occured during the run. See logs for more info.'
+      exit code
+    end
 
     def initialize_sync(options)
       initialize_configuration options

@@ -2,11 +2,12 @@ module Cloudkeeper
   class BackendConnector
     include Cloudkeeper::Entities::Conversions
 
-    attr_reader :grpc_client, :nginx
+    attr_reader :grpc_client, :nginx, :errors
 
     def initialize
       @grpc_client = CloudkeeperGrpc::Communicator::Stub.new(Cloudkeeper::Settings[:'backend-endpoint'], credentials)
       @nginx = Cloudkeeper::Nginx::HttpServer.new
+      @errors = false
     end
 
     def pre_action
@@ -87,6 +88,7 @@ module Cloudkeeper
       errors = CloudkeeperGrpc::Constants.constants.reduce({}) { |acc, el| acc.merge(CloudkeeperGrpc::Constants.const_get(el) => el) }
       message = "#{errors[ex.code]}: #{ex.details}"
       logger.error "Backend error: #{message}"
+      @errors = true
       raise Cloudkeeper::Errors::BackendError, message if exception
       default
     end

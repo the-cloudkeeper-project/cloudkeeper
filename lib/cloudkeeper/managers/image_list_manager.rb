@@ -6,10 +6,11 @@ require 'json'
 module Cloudkeeper
   module Managers
     class ImageListManager
-      attr_reader :image_lists, :openssl_store
+      attr_reader :image_lists, :openssl_store, :errors
 
       def initialize
         @image_lists = {}
+        @errors = false
 
         @openssl_store = OpenSSL::X509::Store.new
         @openssl_store.add_path Cloudkeeper::Settings[:'ca-dir'] if Cloudkeeper::Settings[:'ca-dir']
@@ -33,6 +34,7 @@ module Cloudkeeper
           rescue Cloudkeeper::Errors::ImageList::DownloadError, Cloudkeeper::Errors::ImageList::VerificationError,
                  Cloudkeeper::Errors::Parsing::ParsingError => ex
             logger.warn "Image list #{url} couldn't be downloaded\n#{ex.message}"
+            @errors = true
             next
           end
         end

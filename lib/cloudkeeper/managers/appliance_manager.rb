@@ -27,6 +27,10 @@ module Cloudkeeper
         abort ex.message
       end
 
+      def errors
+        { backend_errors: backend_connector.errors, image_list_errors: image_list_manager.errors }
+      end
+
       private
 
       def sync_expired_image_lists

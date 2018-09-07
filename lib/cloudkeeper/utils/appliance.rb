@@ -1,8 +1,8 @@
 module Cloudkeeper
   module Utils
     module Appliance
-      def log_expired(appliance, message)
-        logger.info "#{message} #{appliance.identifier.inspect}"
+      def log_expired(expirable, message)
+        logger.info "#{message} #{expirable.identifier.inspect}"
       end
 
       def clean_image_files(appliance)

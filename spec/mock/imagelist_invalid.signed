@@ -25,7 +25,7 @@ This is an S/MIME signed message
          {
             "hv:image": {
                "dc:description": "This version of CERNVM has been modified - default OS extended to 40GB of disk - updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources",
-               "dc:identifier": "c0482bc2-bf41-5d49-aaaa-a751174a186b",
+               "dc:identifier": "c0482bc2-bf41-5d49-aaaa-a750174a186b",
                "ad:mpuri": "https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-aaaa-a750174a186b:484/",
                "dc:title": "Image for CernVM [Scientific Linux/6.0/KVM]",
                "ad:group": "General group",
@@ -38,6 +38,7 @@ This is an S/MIME signed message
                "hv:size": "121243136",
                "hv:uri": "https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova",
                "hv:version": "3.3.0-1",
+               "dc:date:expires": "2499-12-31T22:00:00Z",
                "sl:arch": "x86_64",
                "sl:checksum:sha512": "5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4b5dc3d68a3b22581b3318db35dd3364e83dab0",
                "sl:comments": "",
@@ -61,11 +62,12 @@ This is an S/MIME signed message
                "hv:size": "581816320",
                "hv:uri": "https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova",
                "hv:version": "20141029",
+               "dc:date:expires": "2499-12-31T22:00:00Z",
                "sl:arch": "x86_64",
                "sl:checksum:sha512": "02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a854654ff645097c47da236e46ad54806c6fc72a29ce",
                "sl:comments": "",
                "sl:os": "Linux",
-               "sl:osname": "CentOs",
+               "sl:osname": "CentOS",
                "sl:osversion": "6.6",
                "ad:user:fullname": "Barry Allen",
                "ad:user:guid": "e85470d8-2af9-bbbb-8c26-0014c23dfd8c",
@@ -136,4 +138,3 @@ fghNoNyBWx66dsE9cqRlLgS+L4+5gP+PQd4EY1Ku+QMhXP4Dh6PrHHT0065IrTWu
 gj5rUkKyU2YKUA1bSNvhTI+JdR8=
 
 ------435C39D8012B59C785F1BFC03C034C87--
-

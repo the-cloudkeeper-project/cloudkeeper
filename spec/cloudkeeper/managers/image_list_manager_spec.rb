@@ -98,89 +98,123 @@ describe Cloudkeeper::Managers::ImageListManager do
       Cloudkeeper::Settings[:'ca-dir'] = File.join(MOCK_DIR, 'ca')
     end
 
-    context 'with valid image list' do
-      let(:image_list_file) { File.join(MOCK_DIR, 'imagelist01.signed') }
-      let(:image_list_hash) do
-        { 'hv:imagelist' =>
-          { 'dc:date:created' => '2015-06-18T21:14:00Z',
-            'dc:date:expires' => '2499-12-31T22:00:00Z',
-            'dc:description' => 'This is a VO-wide image list for some1.vo.net VO.',
-            'dc:identifier' => '76fdee70-8119-5d33-aaaa-3c57e1c60df1',
-            'dc:source' => 'https://some.unknown.source/',
-            'dc:title' => 'Dummy image list number 1.',
-            'ad:vo' => 'some1.vo.net',
-            'hv:endorser' =>
-            { 'hv:x509' =>
-              { 'dc:creator' => 'Applications Database',
-                'hv:ca' => '/DC=XXX/DC=YYY/CN=SOME TEST CA',
-                'hv:dn' => '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
-                'hv:email' => 'dontwriteme@please.net' } },
-            'hv:images' =>
-            [
-              { 'hv:image' =>
-                { 'dc:description' => 'This version of CERNVM has been modified - default OS extended to 40GB of disk '\
-                  '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources',
-                  'dc:identifier' => 'c0482bc2-bf41-5d49-aaaa-a750174a186b',
-                  'ad:mpuri' => 'https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-aaaa-a750174a186b:484/',
-                  'dc:title' => 'Image for CernVM [Scientific Linux/6.0/KVM]',
-                  'ad:group' => 'General group',
-                  'hv:hypervisor' => 'KVM',
-                  'hv:format' => 'OVA',
-                  'hv:ram_minimum' => '512',
-                  'ad:ram_recommended' => '1024',
-                  'hv:core_minimum' => '1',
-                  'ad:core_recommended' => '4',
-                  'hv:size' => '121243136', 'hv:uri' => 'https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova',
-                  'hv:version' => '3.3.0-1',
-                  'dc:date:expires' => '2499-12-31T22:00:00Z',
-                  'sl:arch' => 'x86_64',
-                  'sl:checksum:sha512' => '5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4'\
-                  'b5dc3d68a3b22581b3318db35dd3364e83dab0',
-                  'sl:comments' => '',
-                  'sl:os' => 'Linux',
-                  'sl:osname' => 'Scientific Linux',
-                  'sl:osversion' => '6.0',
-                  'ad:user:fullname' => 'Bruce Wayne',
-                  'ad:user:guid' => '9d9dd6cf-b61a-aaaa-b1df-b5731adf717c',
-                  'ad:user:uri' => 'https://appdb.somewhere.net/store/person/bruce.wayne' } },
-              { 'hv:image' =>
-                { 'dc:description' => '',
-                  'dc:identifier' => '662b0e71-3e21-bbbb-b6a1-cc2f51319fa7',
-                  'ad:mpuri' => 'https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-bbbb-b6a1-cc2f51319fa7:485/',
-                  'dc:title' => 'Image for CentOS 6 minimal [CentOS/6.x/KVM]',
-                  'ad:group' => 'General group',
-                  'hv:hypervisor' => 'KVM',
-                  'hv:format' => 'OVA',
-                  'hv:size' => '581816320',
-                  'hv:uri' => 'https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova',
-                  'hv:version' => '20141029',
-                  'dc:date:expires' => '2499-12-31T22:00:00Z',
-                  'sl:arch' => 'x86_64',
-                  'sl:checksum:sha512' => '02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a85465'\
-                  '4ff645097c47da236e46ad54806c6fc72a29ce',
-                  'sl:comments' => '',
-                  'sl:os' => 'Linux',
-                  'sl:osname' => 'CentOS',
-                  'sl:osversion' => '6.6',
-                  'ad:user:fullname' => 'Barry Allen',
-                  'ad:user:guid' => 'e85470d8-2af9-bbbb-8c26-0014c23dfd8c',
-                  'ad:user:uri' => 'https://appdb.somewhere.net/store/person/barry.allen' } }
-            ],
-            'hv:uri' => 'https://appdb.somewhere.net/store/vo/some1.vo.net/image.list',
-            'hv:version' => '20150618211400' } }
+    let(:image_list_file) { File.join(MOCK_DIR, 'imagelist01.signed') }
+    let(:image_list_hash) do
+      { 'hv:imagelist' =>
+        { 'dc:date:created' => '2015-06-18T21:14:00Z',
+          'dc:date:expires' => '2499-12-31T22:00:00Z',
+          'dc:description' => 'This is a VO-wide image list for some1.vo.net VO.',
+          'dc:identifier' => '76fdee70-8119-5d33-aaaa-3c57e1c60df1',
+          'dc:source' => 'https://some.unknown.source/',
+          'dc:title' => 'Dummy image list number 1.',
+          'ad:vo' => 'some1.vo.net',
+          'hv:endorser' =>
+          { 'hv:x509' =>
+            { 'dc:creator' => 'Applications Database',
+              'hv:ca' => '/DC=XXX/DC=YYY/CN=SOME TEST CA',
+              'hv:dn' => '/DC=XXX/DC=YYY/C=ZZZ/O=Hosts/O=AA.net/CN=some.unknown.source',
+              'hv:email' => 'dontwriteme@please.net' } },
+          'hv:images' =>
+          [
+            { 'hv:image' =>
+              { 'dc:description' => 'This version of CERNVM has been modified - default OS extended to 40GB of disk '\
+                '- updated OpenNebula Cloud-Init driver to latest version 0.7.5 - enabled all Cloud-Init data sources',
+                'dc:identifier' => 'c0482bc2-bf41-5d49-aaaa-a750174a186b',
+                'ad:mpuri' => 'https://appdb.somewhere.net/store/vo/image/c0482bc2-bf41-5d49-aaaa-a750174a186b:484/',
+                'dc:title' => 'Image for CernVM [Scientific Linux/6.0/KVM]',
+                'ad:group' => 'General group',
+                'hv:hypervisor' => 'KVM',
+                'hv:format' => 'OVA',
+                'hv:ram_minimum' => '512',
+                'ad:ram_recommended' => '1024',
+                'hv:core_minimum' => '1',
+                'ad:core_recommended' => '4',
+                'hv:size' => '121243136', 'hv:uri' => 'https://appdb.somewhere.net/images/base/CERNVM/3.3.0/CERNVM-3.3.0-40GB.ova',
+                'hv:version' => '3.3.0-1',
+                'dc:date:expires' => '2499-12-31T22:00:00Z',
+                'sl:arch' => 'x86_64',
+                'sl:checksum:sha512' => '5c548a09467df6ff6ee77659a8cfe15115ef366b94baa30c47e079b711119652a17c8f947ab437e70c799480b4'\
+                'b5dc3d68a3b22581b3318db35dd3364e83dab0',
+                'sl:comments' => '',
+                'sl:os' => 'Linux',
+                'sl:osname' => 'Scientific Linux',
+                'sl:osversion' => '6.0',
+                'ad:user:fullname' => 'Bruce Wayne',
+                'ad:user:guid' => '9d9dd6cf-b61a-aaaa-b1df-b5731adf717c',
+                'ad:user:uri' => 'https://appdb.somewhere.net/store/person/bruce.wayne' } },
+            { 'hv:image' =>
+              { 'dc:description' => '',
+                'dc:identifier' => '662b0e71-3e21-bbbb-b6a1-cc2f51319fa7',
+                'ad:mpuri' => 'https://appdb.somewhere.net/store/vo/image/662b0e71-3e21-bbbb-b6a1-cc2f51319fa7:485/',
+                'dc:title' => 'Image for CentOS 6 minimal [CentOS/6.x/KVM]',
+                'ad:group' => 'General group',
+                'hv:hypervisor' => 'KVM',
+                'hv:format' => 'OVA',
+                'hv:size' => '581816320',
+                'hv:uri' => 'https://appdb.somewhere.net/images/base/CentOS-6.x-x86_64/20141029/CentOS-6.5-20141029.ova',
+                'hv:version' => '20141029',
+                'dc:date:expires' => '2499-12-31T22:00:00Z',
+                'sl:arch' => 'x86_64',
+                'sl:checksum:sha512' => '02a2b436e8f10c22527795c33bf623a1a0ef2e7036166e8831f653c3662f8f2222821f4751d774947e32a85465'\
+                '4ff645097c47da236e46ad54806c6fc72a29ce',
+                'sl:comments' => '',
+                'sl:os' => 'Linux',
+                'sl:osname' => 'CentOS',
+                'sl:osversion' => '6.6',
+                'ad:user:fullname' => 'Barry Allen',
+                'ad:user:guid' => 'e85470d8-2af9-bbbb-8c26-0014c23dfd8c',
+                'ad:user:uri' => 'https://appdb.somewhere.net/store/person/barry.allen' } }
+          ],
+          'hv:uri' => 'https://appdb.somewhere.net/store/vo/some1.vo.net/image.list',
+          'hv:version' => '20150618211400' } }
+    end
+
+    context 'with image list signature verification' do
+      before do
+        Cloudkeeper::Settings[:'verify-image-lists'] = true
       end
 
-      it 'returns parsed image list as hash' do
-        expect(ilm.send(:load_image_list, image_list_file)).to eq(image_list_hash)
+      context 'with valid image list' do
+        it 'returns parsed image list as hash' do
+          expect(ilm.send(:load_image_list, image_list_file)).to eq(image_list_hash)
+        end
+      end
+
+      context 'with invalid image list' do
+        let(:image_list_file) { File.join(MOCK_DIR, 'imagelist_invalid.signed') }
+
+        it 'raise ImageListVerificationError exception' do
+          expect { ilm.send(:load_image_list, image_list_file) }.to \
+            raise_error(Cloudkeeper::Errors::ImageList::VerificationError)
+        end
       end
     end
 
-    context 'with invalid image list' do
-      let(:image_list_file) { File.join(MOCK_DIR, 'imagelist_invalid.signed') }
+    context 'without image list verification' do
+      before do
+        Cloudkeeper::Settings[:'verify-image-lists'] = false
+      end
 
-      it 'raise ImageListVerificationError exception' do
-        expect { ilm.send(:load_image_list, image_list_file) }.to \
-          raise_error(Cloudkeeper::Errors::ImageList::VerificationError)
+      context 'with valid image list' do
+        it 'returns parsed image list as hash' do
+          expect(ilm.send(:load_image_list, image_list_file)).to eq(image_list_hash)
+        end
+      end
+
+      context 'with invalid image list' do
+        let(:image_list_file) { File.join(MOCK_DIR, 'imagelist_invalid.signed') }
+
+        it 'returns parsed image list as hash' do
+          expect(ilm.send(:load_image_list, image_list_file)).to eq(image_list_hash)
+        end
+      end
+
+      context 'with bare image list - no signature' do
+        let(:image_list_file) { File.join(MOCK_DIR, 'imagelist01.unsigned') }
+
+        it 'returns parsed image list as hash' do
+          expect(ilm.send(:load_image_list, image_list_file)).to eq(image_list_hash)
+        end
       end
     end
   end

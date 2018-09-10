@@ -32,7 +32,7 @@ module Cloudkeeper
             image_list = convert_image_list(load_image_list(download_image_list(url, dir)))
             image_lists[image_list.identifier] = image_list
           rescue Cloudkeeper::Errors::ImageList::DownloadError, Cloudkeeper::Errors::ImageList::VerificationError,
-                 Cloudkeeper::Errors::Parsing::ParsingError => ex
+                 Cloudkeeper::Errors::Parsing::ParsingError, OpenSSL::PKCS7::PKCS7Error, JSON::ParserError => ex
             logger.warn "Image list #{url} couldn't be downloaded\n#{ex.message}"
             @errors = true
             next
@@ -76,10 +76,15 @@ module Cloudkeeper
       end
 
       def load_image_list(file)
-        pkcs7 = OpenSSL::PKCS7.read_smime(File.read(file))
-        verify_image_list!(pkcs7, file)
+        content = File.read(file)
+        pkcs7 = OpenSSL::PKCS7.read_smime(content)
+        verify_image_list!(pkcs7, file) if Cloudkeeper::Settings[:'verify-image-lists']
 
         JSON.parse pkcs7.data
+      rescue OpenSSL::PKCS7::PKCS7Error => ex
+        raise ex if Cloudkeeper::Settings[:'verify-image-lists']
+
+        JSON.parse content
       end
 
       def verify_image_list!(pkcs7, file)

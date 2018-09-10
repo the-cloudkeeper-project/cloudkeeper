@@ -90,6 +90,7 @@ module Cloudkeeper
       logger.error "Backend error: #{message}"
       @errors = true
       raise Cloudkeeper::Errors::BackendError, message if exception
+
       default
     end
 

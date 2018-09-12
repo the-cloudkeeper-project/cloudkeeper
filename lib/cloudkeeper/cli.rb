@@ -33,6 +33,10 @@ module Cloudkeeper
                   default: Cloudkeeper::Settings['image-lists-file'],
                   type: :string,
                   desc: 'File containing list of image lists to sync against'
+    method_option :'verify-image-lists',
+                  default: Cloudkeeper::Settings['verify-image-lists'],
+                  type: :boolean,
+                  desc: 'Verify SMIME signature on image lists'
     method_option :'ca-dir',
                   required: false,
                   default: Cloudkeeper::Settings['ca-dir'],

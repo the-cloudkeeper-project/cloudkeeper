@@ -25,6 +25,7 @@ module Cloudkeeper
           result = method.to_s.match(format_regex)
           if result && result[:format]
             return self if format.to_sym == result[:format].to_sym
+
             return convert result[:format]
           end
 

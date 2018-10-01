@@ -6,41 +6,29 @@ require 'json'
 module Cloudkeeper
   module Managers
     class ImageListManager
-      attr_reader :image_lists, :openssl_store, :errors
+      attr_reader :image_list, :openssl_store
 
       def initialize
-        @image_lists = {}
-        @errors = false
-
         @openssl_store = OpenSSL::X509::Store.new
         @openssl_store.add_path Cloudkeeper::Settings[:'ca-dir'] if Cloudkeeper::Settings[:'ca-dir']
       end
 
-      def download_image_lists
+      def download_image_list
         logger.debug 'Downloading fresh image lists...'
-        Dir.mktmpdir('cloudkeeper') do |dir|
-          urls = Cloudkeeper::Settings[:'image-lists'] || File.read(Cloudkeeper::Settings[:'image-lists-file']).split("\n")
-          retrieve_image_lists urls, dir
-        end
+        url = Cloudkeeper::Settings[:'image-list']
+        Dir.mktmpdir('cloudkeeper') { |dir| retrieve_image_list url, dir }
+      rescue Cloudkeeper::Errors::ImageList::DownloadError, Cloudkeeper::Errors::ImageList::VerificationError,
+             Cloudkeeper::Errors::Parsing::ParsingError, OpenSSL::PKCS7::PKCS7Error, JSON::ParserError => ex
+        raise Cloudkeeper::Errors::ImageList::ImageListError, "Image list #{url.inspect} couldn't be downloaded\n#{ex.message}"
       end
 
       private
 
-      def retrieve_image_lists(urls, dir)
-        urls.each do |url|
-          begin
-            image_list = convert_image_list(load_image_list(download_image_list(url, dir)))
-            image_lists[image_list.identifier] = image_list
-          rescue Cloudkeeper::Errors::ImageList::DownloadError, Cloudkeeper::Errors::ImageList::VerificationError,
-                 Cloudkeeper::Errors::Parsing::ParsingError, OpenSSL::PKCS7::PKCS7Error, JSON::ParserError => ex
-            logger.warn "Image list #{url} couldn't be downloaded\n#{ex.message}"
-            @errors = true
-            next
-          end
-        end
+      def retrieve_image_list(url, dir)
+        @image_list = convert_image_list(load_image_list(download_image_list_file(url, dir)))
       end
 
-      def download_image_list(url, dir)
+      def download_image_list_file(url, dir)
         logger.debug "Downloading image list from #{url.inspect}"
         Cloudkeeper::Utils::URL.check!(url)
         uri = URI.parse url

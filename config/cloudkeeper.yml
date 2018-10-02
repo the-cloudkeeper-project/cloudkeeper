@@ -1,7 +1,6 @@
 cloudkeeper:
-  image-lists: # List of image lists to sync against
-  image-lists-file: # File containing list of image lists to sync against
-  verify-image-lists: true # Verify SMIME signature on image lists
+  image-list: # Image list to sync against
+  verify-image-list: true # Verify SMIME signature on image list
   ca-dir: /etc/grid-security/certificates/ # CA directory
   authentication: false # core (client) <-> backend (server) authentication (certificate, key and backend-certificate options)
   certificate: /etc/grid-security/hostcert.pem # Core's host certificate

@@ -3,7 +3,6 @@ require 'yell'
 
 module Cloudkeeper
   class CLI < Thor
-    IMAGE_LIST_ERROR_CODE = 11
     BACKEND_ERROR_CODE = 12
 
     class_option :'logging-level',
@@ -25,18 +24,14 @@ module Cloudkeeper
                  type: :boolean,
                  desc: 'Runs cloudkeeper in debug mode'
 
-    method_option :'image-lists',
-                  default: Cloudkeeper::Settings['image-lists'],
-                  type: :array,
-                  desc: 'List of image lists to sync against'
-    method_option :'image-lists-file',
-                  default: Cloudkeeper::Settings['image-lists-file'],
+    method_option :'image-list',
+                  default: Cloudkeeper::Settings['image-list'],
                   type: :string,
-                  desc: 'File containing list of image lists to sync against'
-    method_option :'verify-image-lists',
-                  default: Cloudkeeper::Settings['verify-image-lists'],
+                  desc: 'Image list to sync against'
+    method_option :'verify-image-list',
+                  default: Cloudkeeper::Settings['verify-image-list'],
                   type: :boolean,
-                  desc: 'Verify SMIME signature on image lists'
+                  desc: 'Verify SMIME signature on image list'
     method_option :'ca-dir',
                   required: false,
                   default: Cloudkeeper::Settings['ca-dir'],
@@ -159,7 +154,6 @@ module Cloudkeeper
       appliance_manager = Cloudkeeper::Managers::ApplianceManager.new
       appliance_manager.synchronize_appliances
 
-      exit_with_message IMAGE_LIST_ERROR_CODE if appliance_manager.errors[:image_list_errors]
       exit_with_message BACKEND_ERROR_CODE if appliance_manager.errors[:backend_errors]
     end
 
@@ -191,23 +185,12 @@ module Cloudkeeper
       validate_configuration_group! %i[remote-mode nginx-proxy-ip-address],
                                     %i[nginx-proxy-port],
                                     'NGINX proxy configuration missing'
-      validate_contradictory_options! %i[image-lists image-lists-file], one_required: true
     end
 
     def validate_configuration_group!(flags, required_options, error_message)
       return unless flags.reduce(true) { |acc, elem| Cloudkeeper::Settings[elem] && acc }
 
       raise Cloudkeeper::Errors::InvalidConfigurationError, error_message unless all_options_available(required_options)
-    end
-
-    def validate_contradictory_options!(flags, options)
-      filled = flags.select { |flag| Cloudkeeper::Settings[flag] }
-      if filled.count > 1
-        raise Cloudkeeper::Errors::InvalidConfigurationError, "Following options cannot be used together: #{filled.join(', ')}"
-      end
-
-      return unless options[:one_required]
-      raise Cloudkeeper::Errors::InvalidConfigurationError, "One of the options #{flags.join(', ')} required" if filled.empty?
     end
 
     def all_options_available(required_options)

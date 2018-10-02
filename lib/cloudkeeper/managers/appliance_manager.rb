@@ -16,36 +16,35 @@ module Cloudkeeper
         backend_connector.pre_action
 
         backend_image_lists = backend_connector.image_lists
-        image_list_manager.download_image_lists
+        image_list_manager.download_image_list
 
-        sync_new_image_lists(backend_image_lists)
-        sync_old_image_lists(backend_image_lists)
+        image_list = image_list_manager.image_list
+        if backend_image_lists.include? image_list.identifier
+          sync_old_image_list image_list
+        else
+          sync_new_image_list image_list
+        end
 
         backend_connector.post_action
-      rescue Cloudkeeper::Errors::BackendError => ex
+      rescue Cloudkeeper::Errors::BackendError, Cloudkeeper::Errors::ImageList::ImageListError => ex
         abort ex.message
       end
 
       def errors
-        { backend_errors: backend_connector.errors, image_list_errors: image_list_manager.errors }
+        { backend_errors: backend_connector.errors }
       end
 
       private
 
-      def sync_new_image_lists(backend_image_lists)
-        logger.debug 'Registering appliances from new image lists...'
-        add_list = image_list_manager.image_lists.keys - backend_image_lists
-        logger.debug "Image lists to register: #{add_list.inspect}"
-        add_list.each do |image_list_identifier|
-          image_list = image_list_manager.image_lists[image_list_identifier]
+      def sync_new_image_list(image_list)
+        logger.debug "Registering appliances from new image list #{image_list.identifier.inspect}"
 
-          if image_list.expired?
-            log_expired image_list, 'Skipping expired image list'
-            next
-          end
-
-          add_new_appliances image_list
+        if image_list.expired?
+          log_expired image_list, 'Not registering expired image list'
+          return
         end
+
+        add_new_appliances image_list
       end
 
       def add_new_appliances(image_list)
@@ -59,23 +58,19 @@ module Cloudkeeper
         end
       end
 
-      def sync_old_image_lists(backend_image_lists)
-        logger.debug 'Synchronizing registered appliances...'
-        sync_list = image_list_manager.image_lists.keys & backend_image_lists
-        logger.debug "Image lists to synchronize: #{sync_list.inspect}"
-        sync_list.each { |image_list_identifier| sync_image_list image_list_identifier }
-      end
-
-      def sync_image_list(image_list_identifier)
-        image_list = image_list_manager.image_lists[image_list_identifier]
+      def sync_old_image_list(image_list)
+        logger.debug "Synchronizing registered appliances from image list #{image_list.identifier.inspect}"
 
         if image_list.expired?
           remove_expired_image_list image_list
           return
         end
 
-        logger.debug "Synchronizing appliances for image list with id #{image_list_identifier.inspect}"
-        backend_appliances = backend_connector.appliances image_list_identifier
+        sync_image_list image_list
+      end
+
+      def sync_image_list(image_list)
+        backend_appliances = backend_connector.appliances image_list.identifier
         image_list_appliances = image_list.appliances
 
         remove_appliances backend_appliances, image_list_appliances

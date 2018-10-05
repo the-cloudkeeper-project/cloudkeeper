@@ -4,13 +4,6 @@ require 'tempfile'
 describe Cloudkeeper::Managers::ImageManager do
   subject(:im) { described_class.new }
 
-  before do
-    VCR.configure do |config|
-      config.cassette_library_dir = File.join(MOCK_DIR, 'cassettes')
-      config.hook_into :webmock
-    end
-  end
-
   describe '#new' do
     it 'returns an instance of ImageManager' do
       expect(im).to be_instance_of described_class
@@ -249,28 +242,24 @@ describe Cloudkeeper::Managers::ImageManager do
       end
     end
 
-    context 'with invalid checksum' do
+    context 'with invalid checksum', :vcr do
       let(:checksum) do
         '9a8093f874bdf4c19b6deacd2208e347292452df008a61d815dcd8395a2487e263364a85ca569d71c27dd9e' \
         '349fd31227094644c39e9a734b199b2dbdefa9c30'
       end
 
       it 'raise ChecksumError exception' do
-        VCR.use_cassette('image-download') do
-          expect { described_class.secure_download_image(url, checksum) }.to raise_error(Cloudkeeper::Errors::Image::ChecksumError)
-        end
+        expect { described_class.secure_download_image(url, checksum) }.to raise_error(Cloudkeeper::Errors::Image::ChecksumError)
       end
     end
 
-    context 'with valid url and checksum' do
+    context 'with valid url and checksum', :vcr do
       it 'returns populated image file instance' do
-        VCR.use_cassette('image-download') do
-          image_file = described_class.secure_download_image(url, checksum)
-          expect(image_file.file).to eq(File.join(tmpdir, 'image.ext'))
-          expect(image_file.format).to eq(:qcow2)
-          expect(image_file.checksum).to eq(checksum)
-          expect(image_file.size).to eq(524_288)
-        end
+        image_file = described_class.secure_download_image(url, checksum)
+        expect(image_file.file).to eq(File.join(tmpdir, 'image.ext'))
+        expect(image_file.format).to eq(:qcow2)
+        expect(image_file.checksum).to eq(checksum)
+        expect(image_file.size).to eq(524_288)
       end
     end
   end

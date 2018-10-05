@@ -11686,6 +11686,6 @@ http_interactions:
         K6ghRBdVoLS1hpFp74mJQX2Y4WculMn0Y1bSL7ocgrhrCdA1OeTIZfLTT1ts
         fz3YUPepvGS/vZO1cGzuQBCzUbTyFlH80hNzoKzC+q0FiZMp1QFqzWnlBz0J
         A6GYgCMTCJWbv7BUw2y3yIDFCFpon9aprXAbutBmQg6JfHcPxag=
-    http_version: 
+    http_version:
   recorded_at: Tue, 29 Nov 2016 12:13:08 GMT
 recorded_with: VCR 3.0.3

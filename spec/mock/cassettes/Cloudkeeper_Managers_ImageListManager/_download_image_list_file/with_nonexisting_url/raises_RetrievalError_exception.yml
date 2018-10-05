@@ -60,6 +60,6 @@ http_interactions:
           </div>
         </body>
         </html>
-    http_version: 
+    http_version:
   recorded_at: Mon, 16 Jan 2017 14:24:04 GMT
 recorded_with: VCR 3.0.3

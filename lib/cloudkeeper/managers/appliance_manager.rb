@@ -15,15 +15,7 @@ module Cloudkeeper
         logger.debug 'Running appliance synchronization...'
         backend_connector.pre_action
 
-        backend_image_lists = backend_connector.image_lists
-        image_list_manager.download_image_list
-
-        image_list = image_list_manager.image_list
-        if backend_image_lists.include? image_list.identifier
-          sync_old_image_list image_list
-        else
-          sync_new_image_list image_list
-        end
+        synchronize
 
         backend_connector.post_action
       rescue Cloudkeeper::Errors::BackendError, Cloudkeeper::Errors::ImageList::ImageListError => ex
@@ -35,6 +27,19 @@ module Cloudkeeper
       end
 
       private
+
+      def synchronize
+        backend_connector.remove_expired_appliances
+
+        image_list_manager.download_image_list
+
+        image_list = image_list_manager.image_list
+        if backend_connector.image_lists.include? image_list.identifier
+          sync_old_image_list image_list
+        else
+          sync_new_image_list image_list
+        end
+      end
 
       def sync_new_image_list(image_list)
         logger.debug "Registering appliances from new image list #{image_list.identifier.inspect}"

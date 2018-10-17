@@ -660,6 +660,36 @@ describe Cloudkeeper::BackendConnector do
     end
   end
 
+  describe '.remove_expired_appliances' do
+    before do
+      allow(backend_connector.grpc_client).to receive(:remove_expired_appliances) { empty }
+    end
+
+    context 'with successfull run' do
+      it "doesn't raise any errors" do
+        expect { backend_connector.remove_expired_appliances }.not_to raise_error
+      end
+
+      it 'calls method on gRPC client instance' do
+        backend_connector.remove_expired_appliances
+        expect(backend_connector.grpc_client).to have_received(:remove_expired_appliances) { empty }
+      end
+    end
+
+    context 'with an error' do
+      before do
+        allow(backend_connector.logger).to receive(:error)
+        allow(backend_connector.grpc_client).to \
+          receive(:remove_expired_appliances).and_raise(GRPC::BadStatus.new(42, 'remove_expired_appliances error'))
+      end
+
+      it 'logs an error' do
+        backend_connector.remove_expired_appliances
+        expect(backend_connector.logger).to have_received(:error)
+      end
+    end
+  end
+
   describe '.credentials' do
     context 'with enabled authentication' do
       before do

@@ -68,6 +68,11 @@ module Cloudkeeper
       end
     end
 
+    def remove_expired_appliances
+      logger.debug "'remove_expired_appliances' gRPC method call"
+      handle_errors { grpc_client.remove_expired_appliances(Google::Protobuf::Empty.new) }
+    end
+
     private
 
     def credentials

@@ -2,8 +2,8 @@ module Cloudkeeper
   module Entities
     module ImageFormats
       module Ova
-        OVF_REGEX = /^.+\.ovf$/i
-        VMDK_REGEX = /^.+\.vmdk$/i
+        OVF_REGEX = /^.+\.ovf$/i.freeze
+        VMDK_REGEX = /^.+\.vmdk$/i.freeze
         ARCHIVE_MAX_FILES = 100
 
         def ova?(archive)

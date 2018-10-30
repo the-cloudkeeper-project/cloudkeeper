@@ -1,15 +1,21 @@
-# cloudkeeper
-cloudkeeper is an AppDB <-> cloud synchronization utility
+<h1 align="center">
+  <img src="https://i.imgur.com/dObI6KR.png" alt="Logo Cloudkeeper" title="Logo Cloudkeeper" style="width: 256px;"/>
+  <p>Cloudkeeper</p>
+</h1>
 
-[![Travis](https://img.shields.io/travis/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square)](http://travis-ci.org/the-cloudkeeper-project/cloudkeeper)
-[![Gemnasium](https://img.shields.io/gemnasium/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square)](https://gemnasium.com/the-cloudkeeper-project/cloudkeeper)
-[![Gem](https://img.shields.io/gem/v/cloudkeeper.svg?style=flat-square)](https://rubygems.org/gems/cloudkeeper)
-[![Code Climate](https://img.shields.io/codeclimate/maintainability/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square)](https://codeclimate.com/github/the-cloudkeeper-project/cloudkeeper)
-[![DockerHub](https://img.shields.io/badge/docker-ready-blue.svg?style=flat-square)](https://hub.docker.com/r/cloudkeeper/cloudkeeper/)
-[![DOI](https://img.shields.io/badge/dynamic/json.svg?label=DOI&colorB=0D7EBE&prefix=&suffix=&query=$.doi&uri=https%3A%2F%2Fzenodo.org%2Fapi%2Frecords%2F891886&style=flat-square)](https://zenodo.org/record/891886)
+<p align="center">
+  <a href="http://travis-ci.org/the-cloudkeeper-project/cloudkeeper"><img src="https://img.shields.io/travis/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square" alt="Travis"></a>
+  <a href="https://depfu.com/repos/the-cloudkeeper-project/cloudkeeper"><img src="https://img.shields.io/depfu/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square" alt="Depfu"></a>
+  <a href="https://rubygems.org/gems/cloudkeeper"><img src="https://img.shields.io/gem/v/cloudkeeper.svg?style=flat-square" alt="Gem"></a>
+  <a href="https://codeclimate.com/github/the-cloudkeeper-project/cloudkeeper"><img src="https://img.shields.io/codeclimate/maintainability/the-cloudkeeper-project/cloudkeeper.svg?style=flat-square" alt="Code Climate"></a>
+  <a href="https://hub.docker.com/r/cloudkeeper/cloudkeeper/"><img src="https://img.shields.io/badge/docker-ready-blue.svg?style=flat-square" alt="DockerHub"></a>
+  <a href="https://zenodo.org/record/891885"><img src="https://img.shields.io/badge/dynamic/json.svg?label=DOI&colorB=0D7EBE&prefix=&suffix=&query=$.doi&uri=https%3A%2F%2Fzenodo.org%2Fapi%2Frecords%2F891885&style=flat-square" alt="DOI"></a>
+</p>
 
-## What does cloudkeeper do?
-cloudkeeper is able to read image lists provided by EGI AppDB, parse their content and decide what cloud appliances should be added, updated or removed from managed cloud. During the addition and update cloudkeeper is able to download an appliance's image and convert it to the format supported by the managed cloud.
+<h4 align="center">EGI AppDB <-> CMF synchronization utility</h4>
+
+## What does Cloudkeeper do?
+Cloudkeeper is able to read image lists provided by EGI AppDB, parse their content and decide what cloud appliances should be added, updated or removed from managed cloud. During the addition and update Cloudkeeper is able to download an appliance's image and convert it to the format supported by the managed cloud.
 
 Currently supported image formats are:
 * QCOW2
@@ -17,12 +23,13 @@ Currently supported image formats are:
 * VMDK
 * OVA
 
-## How does cloudkeeper work?
-cloudkeeper communicates with cloud specific components via [gRPC](http://www.grpc.io/) communication framework to manage individual clouds.
+## How does Cloudkeeper work?
+Cloudkeeper communicates with cloud specific components via [gRPC](http://www.grpc.io/) communication framework to manage individual clouds.
 
 Currently supported clouds:
-* [OpenNebula](https://opennebula.org/) - component [cloudkeeper-one](https://github.com/the-cloudkeeper-project/cloudkeeper-one)
-* [OpenStack](https://www.openstack.org/) - component [cloudkeeper-os](https://github.com/the-cloudkeeper-project/cloudkeeper-os) (under development)
+* [OpenNebula](https://opennebula.org/) - component [Cloudkeeper-ONE](https://github.com/the-cloudkeeper-project/cloudkeeper-one)
+* [OpenStack](https://www.openstack.org/) - component [Cloudkeeper-OS](https://github.com/the-cloudkeeper-project/cloudkeeper-os)
+* [Amazon Web Services](https://aws.amazon.com/) - component [Cloudkeeper-AWS](https://github.com/the-cloudkeeper-project/cloudkeeper-aws)
 
 ## Requirements
 * Ruby >= 2.2.0
@@ -55,8 +62,8 @@ bundle exec rake spec
 ```
 
 ## Configuration
-### Create a configuration file for cloudkeeper
-Configuration file can be read by cloudkeeper from these
+### Create a configuration file for Cloudkeeper
+Configuration file can be read by Cloudkeeper from these
 three locations:
 
 * `~/.cloudkeeper/cloudkeeper.yml`
@@ -67,16 +74,17 @@ The default configuration file can be found at the last location
 `PATH_TO_GEM_DIR/config/cloudkeeper.yml`.
 
 ## Usage
-cloudkeeper is run with executable `cloudkeeper`. For further assistance run `cloudkeeper help sync`:
+Cloudkeeper is run with executable `cloudkeeper`. For further assistance run `cloudkeeper help sync`:
 ```bash
 $ cloudkeeper help sync
 
 Usage:
-  cloudkeeper sync --backend-endpoint=BACKEND-ENDPOINT --external-tools-execution-timeout=N --formats=one two three --image-dir=IMAGE-DIR --image-lists=one two three --qemu-img-binary=QEMU-IMG-BINARY
+  cloudkeeper sync --backend-endpoint=BACKEND-ENDPOINT --external-tools-execution-timeout=N --formats=one two three --image-dir=IMAGE-DIR --image-list=IMAGE-LIST --qemu-img-binary=QEMU-IMG-BINARY
 
 Options:
-  [--image-lists=one two three]                      # List of image lists to sync against
-  [--image-lists-file=IMAGE-LISTS-FILE]              # File containing list of image lists to sync against
+  --image-list=IMAGE-LIST                            # Image list to sync against
+  [--verify-image-list], [--no-verify-image-list]    # Verify SMIME signature on image list
+                                                     # Default: true
   [--ca-dir=CA-DIR]                                  # CA directory
                                                      # Default: /etc/grid-security/certificates/
   [--authentication], [--no-authentication]          # Client <-> server authentication
@@ -93,6 +101,8 @@ Options:
   --external-tools-execution-timeout=N               # Timeout for execution of external tools in seconds
                                                      # Default: 600
   [--remote-mode], [--no-remote-mode]                # Remote mode starts HTTP server (NGINX) and serves images to backend via HTTP
+  [--nginx-runtime-dir=NGINX-RUNTIME-DIR]            # Runtime directory for NGINX
+                                                     # Default: /var/run/cloudkeeper/
   [--nginx-error-log-file=NGINX-ERROR-LOG-FILE]      # NGINX error log file
                                                      # Default: /var/log/cloudkeeper/nginx-error.log
   [--nginx-access-log-file=NGINX-ACCESS-LOG-FILE]    # NGINX access log file

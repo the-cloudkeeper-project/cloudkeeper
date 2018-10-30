@@ -25,6 +25,7 @@ module Cloudkeeper
                  desc: 'Runs cloudkeeper in debug mode'
 
     method_option :'image-list',
+                  required: true,
                   default: Cloudkeeper::Settings['image-list'],
                   type: :string,
                   desc: 'Image list to sync against'

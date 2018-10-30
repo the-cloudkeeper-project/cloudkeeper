@@ -1,7 +1,7 @@
 module Cloudkeeper
   module Utils
     class URL
-      URL_REGEXP = /\A#{URI.regexp(%w[http https])}\z/
+      URL_REGEXP = /\A#{URI.regexp(%w[http https])}\z/.freeze
 
       def self.check!(url)
         raise Cloudkeeper::Errors::InvalidURLError, "#{url.inspect} is not a valid URL" unless url =~ URL_REGEXP

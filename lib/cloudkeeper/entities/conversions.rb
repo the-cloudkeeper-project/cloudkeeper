@@ -26,7 +26,7 @@ module Cloudkeeper
 
       def convert_appliance_proto(appliance_proto, image)
         Cloudkeeper::Entities::Appliance.new appliance_proto.identifier, appliance_proto.mpuri, appliance_proto.vo,
-                                             Time.at(appliance_proto.expiration_date).to_datetime,
+                                             Time.at(appliance_proto.expiration_date).to_time,
                                              appliance_proto.image_list_identifier, appliance_proto.title,
                                              appliance_proto.description, appliance_proto.group, appliance_proto.ram,
                                              appliance_proto.core, appliance_proto.version, appliance_proto.architecture,

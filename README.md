@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://i.imgur.com/dObI6KR.png" alt="Logo Cloudkeeper" title="Logo Cloudkeeper" style="width: 256px;"/>
+  <img src="https://i.imgur.com/dObI6KR.png" alt="Logo Cloudkeeper" title="Logo Cloudkeeper" width="256"/>
   <p>Cloudkeeper</p>
 </h1>
 

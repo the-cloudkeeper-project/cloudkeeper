@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 ARG branch=master
 ARG version
@@ -23,7 +23,7 @@ SHELL ["/bin/bash", "-c"]
 # update + dependencies
 RUN apt-get update && \
     apt-get --assume-yes upgrade && \
-    apt-get --assume-yes install ruby qemu-utils curl nginx file
+    apt-get --assume-yes install ruby qemu-utils curl nginx file gnupg
 
 # EGI trust anchors
 RUN set -o pipefail && \

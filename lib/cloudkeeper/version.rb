@@ -1,3 +1,3 @@
 module Cloudkeeper
-  VERSION = '1.7.1'.freeze
+  VERSION = '2.0.0'.freeze
 end

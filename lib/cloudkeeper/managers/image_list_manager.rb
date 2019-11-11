@@ -15,8 +15,10 @@ module Cloudkeeper
 
       def download_image_list
         logger.debug 'Downloading fresh image lists...'
-        url = Cloudkeeper::Settings[:'image-list']
-        Dir.mktmpdir('cloudkeeper') { |dir| retrieve_image_list url, dir }
+        urls = Cloudkeeper::Settings[:'image-list']
+        for url in urls
+          Dir.mktmpdir('cloudkeeper') { |dir| retrieve_image_list url, dir }
+        end
       rescue Cloudkeeper::Errors::ImageList::DownloadError, Cloudkeeper::Errors::ImageList::VerificationError,
              Cloudkeeper::Errors::Parsing::ParsingError, OpenSSL::PKCS7::PKCS7Error, JSON::ParserError => ex
         raise Cloudkeeper::Errors::ImageList::ImageListError, "Image list #{url.inspect} couldn't be downloaded\n#{ex.message}"

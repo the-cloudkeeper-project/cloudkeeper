@@ -85,7 +85,7 @@ module Cloudkeeper
           end
         rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, Errno::ECONNREFUSED, Net::HTTPBadResponse,
                Net::HTTPHeaderSyntaxError, EOFError, Net::HTTPServerException, Net::HTTPRetriableError,
-               OpenSSL::SSL::SSLError => ex
+               Net::HTTPFatalError, OpenSSL::SSL::SSLError => ex
           raise Cloudkeeper::Errors::NetworkConnectionError, ex
         end
 
